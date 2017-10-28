@@ -7,11 +7,7 @@
 
   $conn = mysqli_connect(SERVER, USER, PASSWORD, DATABASE);
   if (mysqli_connect_errno()) {
-<<<<<<< HEAD
-  	echo "<p>Connection failed:".mysqli_connect_error()."</p>\n"; //Test
-=======
   	echo "<p>Connection failed:".mysqli_connect_error()."</p>\n";
->>>>>>> 4d9cace372f0eb8df47d74d43b8b0b33ed1ba5d2
   }
 ?>
 
