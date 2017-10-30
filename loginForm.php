@@ -36,7 +36,7 @@ include 'db/database_conn.php'; //include database
 </form>
 
 <?php
-if (isset($_POST['btnLogin'])) {
+if (isset($_POST['btnLogin'])) { //Clicked on login button
   //Obtain user input from textbox
   $email = filter_has_var(INPUT_POST, 'email') ? $_POST['email']: null;
   $password = filter_has_var(INPUT_POST, 'password') ? $_POST['password']: null;
@@ -52,8 +52,7 @@ if (isset($_POST['btnLogin'])) {
   if (empty($email) || empty($password)) {
     echo "<p class='errorMessage'>You have not entered all of the required fields!</p>\n";
   }
-  else {
-    //Email exists if passwordHash is returned
+  else { //Check if user exists; User exists if passwordHash is returned
     $loginSQL = "SELECT passwordHash, userType, userStatus, username FROM user WHERE emailAddr = ?";
     $stmt = mysqli_prepare($conn, $loginSQL);
     mysqli_stmt_bind_param($stmt, "s", $email);
@@ -61,9 +60,7 @@ if (isset($_POST['btnLogin'])) {
     mysqli_stmt_bind_result($stmt, $passwordHashDB, $userType, $userStatus, $username);
 
     if (mysqli_stmt_fetch($stmt)) {
-      if (password_verify($password, $passwordHashDB)) {
-        $_SESSION['email'] = $email;
-
+      if (password_verify($password, $passwordHashDB)) { //Check if password matches email
         if ($userStatus == "active") {
           if ($userType == "mainAdmin" || $userType == "admin") {
             ($userType == "mainAdmin")? $_SESSION['userType'] = "mainAdmin" :  $_SESSION['userType'] = "admin";
@@ -71,8 +68,12 @@ if (isset($_POST['btnLogin'])) {
           else { //userType == junior/senior
             ($userType == "junior")? $_SESSION['userType'] = "junior" :  $_SESSION['userType'] = "senior";
           }
+
           $_SESSION['logged-in'] = true;
           $_SESSION['username'] = $username;
+          $_SESSION['email'] = $email;
+
+          header("Refresh:0;url=staff/staff_main.php"); //TODO: Change URL
         }
         else { //userStatus == pending/banned
           if ($userStatus == "pending") {
@@ -82,7 +83,6 @@ if (isset($_POST['btnLogin'])) {
             echo "<p class='errorMessage'>You are not allowed to access the application!</p>";
           }
         }
-        header("Refresh:0;url=staff/staff_main.php");
         //Set initial time when user logged in (To identify if user is inactive)
         //$_SESSION['logged-in-time'] = time();
         //$redirect = $_SESSION['origin'];
