@@ -24,15 +24,17 @@ $(document).ready(function() {
 </script>
 
 <h3>New to Ima's Official Fanbase? Sign Up<h3>
-  <p>Full Name: <input type="text" id='txtFullName' style="width:200px;"/></p>
-  <p>Email Address: <input type="text" id='txtEmail' style="width:200px;"/></p>
-  <p>Username: <input type="text" id='txtUsername' style="width:200px;"/></p>
-  <p>
-    Password: <input type="text" id='txtPassword' style="width:200px;"/>
-    Confirm Password: <input type="text" id='txtConfirmPassword' style="width:200px;"/>
-  </p>
-  <p>Date of Birth: <input id='txtDOB' size='8' maxlength="11" readonly/></p>
-  <p>Shipping Address: <input type="text" id='txtAddress' style="width:200px;"/></p>
+<p>Full Name: <input type="text" id='txtFullName' style="width:200px;"/></p>
+<p>Email Address: <input type="text" id='txtEmail' style="width:200px;"/></p>
+<p>Username: <input type="text" id='txtUsername' style="width:200px;"/></p>
+<p>
+  Password: <input type="text" id='txtPassword' style="width:200px;"/>
+  Confirm Password: <input type="text" id='txtConfirmPassword' style="width:200px;"/>
+</p>
+<p>Date of Birth: <input id='txtDOB' size='8' maxlength="11" readonly/></p>
+<p>Shipping Address: <input type="text" id='txtAddress' style="width:200px;"/></p>
+<p class='errorMessage'><small>*All fields are required to complete the registration</small></p>
+<input type='submit' value='Submit' name='btnSubmit'/>
 
   <?php
   echo makeFooter();
