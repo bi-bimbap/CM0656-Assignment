@@ -30,7 +30,7 @@ include 'db/database_conn.php'; //include database
   <div id="password"><p>Password</p><input type="password" name="password"></div>
   <p>
     <a href='forgotPassword.php'>Forgot password?</a>
-    <a href='signUp.php'>Sign Up</a>
+    <a href='signUp.php' accesskey="S">S&#818;ign Up</a>
   </p>
   <div id="button"><input type="submit" value="L&#818;ogin" accesskey="L" name="btnLogin"></div>
 </form>
@@ -73,7 +73,17 @@ if (isset($_POST['btnLogin'])) { //Clicked on login button
           $_SESSION['username'] = $username;
           $_SESSION['email'] = $email;
 
-          header("Refresh:0;url=staff/staff_main.php"); //TODO: Change URL
+          //Set initial time when user logged in (To identify if user is inactive)
+          //$_SESSION['logged-in-time'] = time();
+          if ($_SESSION['origin'] != "") {
+            $redirect = "homePage.php";
+          }
+          else {
+            $redirect = $_SESSION['origin'];
+          }
+          header('Location:' . $redirect);
+          exit();
+          //header("Refresh:0;url=staff/staff_main.php");
         }
         else { //userStatus == pending/banned
           if ($userStatus == "pending") {
@@ -83,11 +93,6 @@ if (isset($_POST['btnLogin'])) { //Clicked on login button
             echo "<p class='errorMessage'>You are not allowed to access the application!</p>";
           }
         }
-        //Set initial time when user logged in (To identify if user is inactive)
-        //$_SESSION['logged-in-time'] = time();
-        //$redirect = $_SESSION['origin'];
-        //header('Location:' . $redirect);
-        //exit();
       }
       else {
         echo "<p class='errorMessage'>Your credientials are incorrect!</p>";
