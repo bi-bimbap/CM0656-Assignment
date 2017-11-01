@@ -1,5 +1,5 @@
 <?php
-ini_set("session.save_path", "../../../../sessionData");
+ini_set("session.save_path", "../../sessionData");
 session_start(); //start session
 include '../db/database_conn.php'; //include database
 require_once('../controls.php');
