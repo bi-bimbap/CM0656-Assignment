@@ -166,7 +166,7 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
 
             $url = "http://localhost/CM0656-Assignment/administration/Member_confirmMembership.php?mail=" . $email . "&exDate=" . $memberConfirmationExpiryDate;
             if (sendReminderEmail($email, $fullName, 'Please Verify Your Email Address', '../email/notifier_eventFeedback.html', $url)) {
-              header('Location:' . "Member_Signup_Successful.php");
+              header('Location:' . "Member_signupSuccessful.php");
             }
             else {
               echo "<script>alert('Failed to send email!')</script>";
