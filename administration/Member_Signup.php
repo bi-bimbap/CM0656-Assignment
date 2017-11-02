@@ -5,6 +5,7 @@ ini_set("session.save_path", "");
 session_start();
 include '../db/database_conn.php';
 require_once('../controls.php');
+require_once('../functions.php');
 echo makePageStart("Sign Up");
 echo makeHeader("Sign Up");
 ?>
@@ -122,6 +123,9 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
 
   $userStatus = "pending";
 
+  $memberConfirmationExpiryDate = time(); //Get current date
+  $memberConfirmationExpiryDate = date('Y-m-d H:i:s', strtotime('+1 day', $memberConfirmationExpiryDate)); //Calculate url expiration date
+
   $emailSQL = "SELECT userID FROM user WHERE emailAddr = ?";
   $stmt = mysqli_prepare($conn, $emailSQL) or die( mysqli_error($conn));
   mysqli_stmt_bind_param($stmt, "s", $email);
@@ -144,18 +148,29 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
 
     if ($count == 0) {
       try {
-        //echo "<script>alert('Registration successful!')</script>";
-        $signupSQL = "INSERT INTO user (fullName, username, emailAddr, passwordHash, shippingAddr, dob, userType,
-          userStatus, securityQuestion, securityAns) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+          //echo "<script>alert('Registration successful!')</script>";
+          $signupSQL = "INSERT INTO user (fullName, username, emailAddr, passwordHash, shippingAddr, dob, userType,
+          userStatus, memberConfirmationExpiryDate, securityQuestion, securityAns) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
           $stmt = mysqli_prepare($conn, $signupSQL);
           mysqli_stmt_bind_param($stmt, "ssssssssss", $fullName, $username, $email, $password, $shippingAddr, $dob, $userType,
-          $userStatus, $securityQuestion, $securityAns);
+          $userStatus, $memberConfirmationExpiryDate, $securityQuestion, $securityAns);
           mysqli_stmt_execute($stmt);
 
           if (mysqli_stmt_affected_rows($stmt) > 0) {
             mysqli_stmt_close($stmt);
             mysqli_close($conn);
-            header('Location:' . "Member_Signup_Successful.php");
+
+            //Encode variables to be used in url
+            $email = urlencode(base64_encode($email));
+            $memberConfirmationExpiryDate = urlencode(base64_encode($memberConfirmationExpiryDate));
+
+            $url = "http://localhost/CM0656-Assignment/administration/Member_confirmMembership.php?mail=" . $email . "&exDate=" . $memberConfirmationExpiryDate;
+            if (sendReminderEmail($email, $fullName, 'Please Verify Your Email Address', '../email/notifier_eventFeedback.html', $url)) {
+              header('Location:' . "Member_Signup_Successful.php");
+            }
+            else {
+              echo "<script>alert('Failed to send email!')</script>";
+            }
           }
       }
       catch(Exception $e) {
@@ -167,17 +182,6 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
       echo "<script>alert('This username has been taken!')</script>";
     }
   }
-
-  // echo "1. $fullName <br />";
-  // echo "2. $email <br />";
-  // echo "3. $username <br />";
-  // echo "4. $password <br />";
-  // echo "5. $confirmPassword <br />";
-  // echo "6. $dob <br />";
-  // echo "7. $shippingAddr <br />";
-  // echo "8. $securityQuestion <br />";
-  // echo "9. $securityAns <br />";
-  // echo "10. $userStatus <br />";
 }
 ?>
 
