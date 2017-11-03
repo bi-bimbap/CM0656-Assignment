@@ -32,7 +32,7 @@ function sendEmail($recipientEmail, $recipientName, $subject, $body, $url) {
 
   $mail->Subject = $subject;
 
-  $message = file_get_contents($body); 
+  $message = file_get_contents($body);
   $message = str_replace('%subject%', $subject, $message);
   $message = str_replace('%name%', $recipientName, $message);
   $message = str_replace('%emailAddr%', $recipientEmail, $message);
@@ -41,7 +41,7 @@ function sendEmail($recipientEmail, $recipientName, $subject, $body, $url) {
 
   if(!$mail->send()) {
       //echo 'Message could not be sent.';
-      //echo 'Mailer Error: ' . $mail->ErrorInfo;
+      echo 'Mailer Error: ' . $mail->ErrorInfo;
       return false;
   } else {
       //echo 'Message has been sent';
