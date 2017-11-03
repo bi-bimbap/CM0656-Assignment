@@ -14,6 +14,11 @@ $environment = LOCAL;
 <script src="../scripts/jquery.js"></script>
 <script src="../scripts/bootstrap.min.js"></script>
 
+<?php //Only show content to admin/main admin
+if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
+(isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
+?>
+
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
   <li class="nav-item">
@@ -25,9 +30,13 @@ $environment = LOCAL;
   <li class="nav-item">
     <a class="nav-link" data-toggle="tab" href="#messages" role="tab">Banned Members</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Admin</a>
-  </li>
+  <?php
+  if ($_SESSION['userType'] == "mainAdmin") {
+    echo "<li class='nav-item'>";
+    echo "<a class='nav-link' data-toggle='tab' href='#settings' role='tab'>Admin</a>";
+    echo "</li>";
+  }
+  ?>
 </ul>
 
 <!-- Tab panes -->
@@ -44,6 +53,14 @@ $environment = LOCAL;
   <div class="tab-pane" id="messages" role="tabpanel">...</div>
   <div class="tab-pane" id="settings" role="tabpanel">...</div>
 </div>
+
+<?php
+}
+else { //Redirect user to home page
+  echo "<script>alert('You are not allowed here!')</script>";
+  header("Refresh:1;url=index.php"); //TODO: change url
+}
+?>
 
 <script src="../scripts/parsley.min.js"></script>
 <link rel="stylesheet" href="../css/parsley.css" type="text/css" />
