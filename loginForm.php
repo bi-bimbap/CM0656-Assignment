@@ -37,11 +37,11 @@ if (isset($_POST['btnLogin'])) { //Clicked on login button
   $password = filter_var($password, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
   //Check if user exists; User exists if passwordHash is returned
-  $loginSQL = "SELECT passwordHash, userType, userStatus, username FROM user WHERE emailAddr = ?";
+  $loginSQL = "SELECT passwordHash, userType, userStatus, username, fullName FROM user WHERE emailAddr = ?";
   $stmt = mysqli_prepare($conn, $loginSQL);
   mysqli_stmt_bind_param($stmt, "s", $email);
   mysqli_stmt_execute($stmt);
-  mysqli_stmt_bind_result($stmt, $passwordHashDB, $userType, $userStatus, $username);
+  mysqli_stmt_bind_result($stmt, $passwordHashDB, $userType, $userStatus, $username, $fullName);
   mysqli_stmt_fetch($stmt);
 
   if (password_verify($password, $passwordHashDB)) { //Check if password matches email
@@ -55,6 +55,9 @@ if (isset($_POST['btnLogin'])) { //Clicked on login button
 
       $_SESSION['logged-in'] = true;
       $_SESSION['username'] = $username;
+      if ($username == "") {
+        $_SESSION['username'] = $fullName;
+      }
       $_SESSION['email'] = $email;
 
       if (isset($_SESSION['origin']) && $_SESSION['origin'] != "") {
