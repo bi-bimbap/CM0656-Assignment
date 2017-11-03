@@ -2,10 +2,12 @@
 ini_set("session.save_path", "");
 session_start();
 include '../db/database_conn.php';
+include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Membership Confirmation");
 echo makeHeader("Membership Confirmation");
+$environment = LOCAL;
 ?>
 
 <?php
@@ -44,7 +46,7 @@ if (isset($_GET['mail']) && isset($_GET['exDate'])) { //Get email address & memb
       mysqli_stmt_execute($stmt);
 
       if (mysqli_stmt_affected_rows($stmt) > 0) { //Update successful
-        $url = "http://localhost/CM0656-Assignment/administration/Member_confirmMembership.php?mail=" . $emailAddr . "&exDate=" . $memberConfirmationExpiryDate;
+        $url = $environment . "/CM0656-Assignment/administration/Member_confirmMembership.php?mail=" . $emailAddr . "&exDate=" . $memberConfirmationExpiryDate;
         if (sendEmail($emailAddr, $fullName, 'Please Verify Your Email Address', '../email/notifier_verifyEmail.html', $url)) { //Email sent
           echo "<p>The link you clicked on has expired. Another email has been sent to your email address.</p>";
           echo "<p>Follow the instructions to complete the registration process.</p>";
