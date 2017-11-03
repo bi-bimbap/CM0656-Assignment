@@ -54,8 +54,22 @@ FOOT;
     return $footContent;
 }
 
-function makeLoginLogoutBtn()
-{
+function makeNavMenu() {
+  $navBar = <<<NAVBAR
+<nav><ul>
+<li><a href="#">Home</a></li>
+<li><a href="#">Auction</a></li>
+<li><a href="#">Gallery</a></li>
+<li><a href="#">Discussion Board</a></li>
+<li><a href="#">Competitions</a></li>
+<li><a href="administration/Admin_userManagement.php">User Management</a></li>
+</ul></nav>
+NAVBAR;
+
+  return $navBar;
+}
+
+function makeLoginLogoutBtn() {
  //Display login/logout button based on session
     $output = "<div id='loginLogoutDiv'>";
 
