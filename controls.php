@@ -62,11 +62,28 @@ function makeNavMenu() {
 <li><a href="#">Gallery</a></li>
 <li><a href="#">Discussion Board</a></li>
 <li><a href="#">Competitions</a></li>
-<li><a href="administration/Admin_userManagement.php">User Management</a></li>
 </ul></nav>
 NAVBAR;
 
   return $navBar;
+}
+
+function makeProfileButton() {
+  $profileButton = "<div class='dropdown'>";
+  $profileButton .= "<button class='btn btn-secondary dropdown-toggle' type='button' id='btnAccountInfo' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
+  $profileButton .= "Account Info"; //TODO: Substitute as profile image
+  $profileButton .= "</button>";
+
+  $profileButton .= "<div class='dropdown-menu' aria-labelledby='btnAccountInfo'>";
+  $profileButton .= "<a class='dropdown-item' href='#'>Profile</a>";
+  if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
+  (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
+  $profileButton .= "<a class='dropdown-item' href='#'>User Management</a>";
+  }
+  $profileButton .= "</div>";
+  $profileButton .= "</div>";
+
+  return $profileButton;
 }
 
 function makeLoginLogoutBtn() {
@@ -76,7 +93,8 @@ function makeLoginLogoutBtn() {
     if (isset($_SESSION['logged-in']) && ($_SESSION['logged-in'] == true)) {
         $output .= "<p>Welcome, " . $_SESSION['username'] . "\n";
         $output .= "<input type='submit' name='btnLogout' value='L&#818;ogout' accessKey='L'></p>";
-    } else {
+    }
+    else {
         $output .= "<p><input type='submit' name='btnLogin' value='L&#818;ogin' accessKey='L'></p>";
     }
     $output .= "</div>";
