@@ -6,6 +6,8 @@ include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("User Management");
+echo makeProfileButton();
+echo makeNavMenu();
 echo makeHeader("User Management");
 $environment = LOCAL;
 ?>
