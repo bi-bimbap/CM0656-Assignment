@@ -4,6 +4,8 @@ session_start();
 include 'db/database_conn.php';
 require_once('controls.php');
 echo makePageStart("Login");
+echo makeLoginLogoutBtn();
+echo makeProfileButton();
 echo makeNavMenu();
 echo makeHeader("Login");
 ?>
@@ -11,6 +13,8 @@ echo makeHeader("Login");
 <script src="scripts/jquery.js"></script>
 <script src="scripts/parsley.min.js"></script>
 <link rel="stylesheet" href="css/parsley.css" type="text/css" />
+<link href="css/bootstrap.css" rel="stylesheet">
+<script src="scripts/bootstrap.min.js"></script>
 
 <form class="login" method="post" data-parsley-validate>
   <div id="email"><p>Email Address</p><input type="text" placeholder="name@email.com" id="email" name="email" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled></div>
@@ -37,11 +41,11 @@ if (isset($_POST['btnLogin'])) { //Clicked on login button
   $password = filter_var($password, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
   //Check if user exists; User exists if passwordHash is returned
-  $loginSQL = "SELECT passwordHash, userType, userStatus, username, fullName FROM user WHERE emailAddr = ?";
+  $loginSQL = "SELECT passwordHash, userType, userStatus, username, fullName, userID FROM user WHERE emailAddr = ?";
   $stmt = mysqli_prepare($conn, $loginSQL);
   mysqli_stmt_bind_param($stmt, "s", $email);
   mysqli_stmt_execute($stmt);
-  mysqli_stmt_bind_result($stmt, $passwordHashDB, $userType, $userStatus, $username, $fullName);
+  mysqli_stmt_bind_result($stmt, $passwordHashDB, $userType, $userStatus, $username, $fullName, $userID);
   mysqli_stmt_fetch($stmt);
 
   if (password_verify($password, $passwordHashDB)) { //Check if password matches email
@@ -54,6 +58,7 @@ if (isset($_POST['btnLogin'])) { //Clicked on login button
       }
 
       $_SESSION['logged-in'] = true;
+      $_SESSION['userID'] = $userID;
       $_SESSION['username'] = $username;
       if ($username == "") {
         $_SESSION['username'] = $fullName;
