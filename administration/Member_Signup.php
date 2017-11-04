@@ -60,7 +60,7 @@ $(document).ready(function() {
   ?>
 
   <p>Full Name: <input type="text" id='txtFullName' name='txtFullName' value="<?php if (isset($_POST['txtFullName'])) echo $_POST['txtFullName']; else if (isset($_GET['name'])) echo $fullName; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>*</p>
-  <p>Email Address: <input type="text" id='txtEmail' name='txtEmail' placeholder="name@email.com" value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; else if (isset($_GET['mail'])) echo $email; ?>" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled/>*</p>
+  <p>Email Address: <input type="email" id='txtEmail' name='txtEmail' placeholder="name@email.com" value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; else if (isset($_GET['mail'])) echo $email; ?>" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled/>*</p>
   <?php
   if (!isset($_GET['mail']) && !isset($_GET['name']) && !isset($_GET['exDate'])) { //Only visible to normal members
     echo "<p>Username: <input type='text' id='txtUsername' name='txtUsername' value='" . (isset($_POST['txtUsername']) ? $_POST['txtUsername'] : 'sjm') . "' data-parsley-required='true' data-parsley-errors-messages-disabled/>*</p>";
@@ -199,7 +199,7 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
           //echo "<script>alert('Registration successful!')</script>";
           $signupSQL = "INSERT INTO user (fullName, username, emailAddr, passwordHash, shippingAddr, dob, userType,
             userStatus, memberConfirmationExpiryDate, securityQuestion, securityAns) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $stmt = mysqli_prepare($conn, $signupSQL);
+            $stmt = mysqli_prepare($conn, $signupSQL) or die( mysqli_error($conn));
             mysqli_stmt_bind_param($stmt, "ssssssssss", $fullName, $username, $email, $password, $shippingAddr, $dob, $userType,
             $userStatus, $memberConfirmationExpiryDate, $securityQuestion, $securityAns);
             mysqli_stmt_execute($stmt);
