@@ -8,8 +8,9 @@ include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Sign Up");
+echo makeNavMenu();
 echo makeHeader("Sign Up");
-$environment = LOCAL;
+$environment = LOCAL; //TODO: Change to server
 ?>
 
 <?php //Complete admin registration
