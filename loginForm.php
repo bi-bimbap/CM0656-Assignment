@@ -4,6 +4,7 @@ session_start();
 include 'db/database_conn.php';
 require_once('controls.php');
 echo makePageStart("Login");
+echo makeWrapper();
 echo makeLoginLogoutBtn();
 echo makeProfileButton();
 echo makeNavMenu();
@@ -11,21 +12,29 @@ echo makeHeader("Login");
 ?>
 
 <script src="scripts/jquery.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
 <script src="scripts/parsley.min.js"></script>
 <link rel="stylesheet" href="css/parsley.css" type="text/css" />
+<link rel="stylesheet" href="css/stylesheet.css" type="text/css" />
 <link href="css/bootstrap.css" rel="stylesheet">
 <script src="scripts/bootstrap.min.js"></script>
 
-<form class="login" method="post" data-parsley-validate>
-  <div id="email"><p>Email Address</p><input type="text" placeholder="name@email.com" id="email" name="email" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled></div>
-  <div id="password"><p>Password</p><input type="password"  id="password" name="password" data-parsley-required="true" data-parsley-errors-messages-disabled></div>
-  <p>
-    <a href='forgotPassword.php'>Forgot password?</a>
-    <a href='administration/Member_signup.php' accesskey="S">S&#818;ign Up</a>
-  </p>
-  <div id="button"><input type="submit" value="L&#818;ogin" accesskey="L" name="btnLogin"></div>
-</form>
-
+<div class="content">
+	<div class="container">
+		<form class="login" method="post" data-parsley-validate>
+		  <div id="email"><p>Email Address</p><input type="text" placeholder="name@email.com" id="email" name="email" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled></div>
+		  <div id="password"><p>Password</p><input type="password"  id="password" name="password" data-parsley-required="true" data-parsley-errors-messages-disabled></div>
+		  <p>
+			<a href='forgotPassword.php'>Forgot password?</a>
+			<a href='administration/Member_signup.php' accesskey="S">S&#818;ign Up</a>
+		  </p>
+		  <div id="button"><input type="submit" value="L&#818;ogin" accesskey="L" name="btnLogin"></div>
+		</form>
+	</div>
+</div>
 <?php
 if (isset($_POST['btnLogin'])) { //Clicked on login button
   //Obtain user input from textbox
