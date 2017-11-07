@@ -41,14 +41,39 @@ HEAD;
     $headContent .="\n";
     return $headContent;
 }
-
+function makeWrapper()
+{
+	$wrapper = "<div class='wrapper'><div class='container'><div id='logo'><img src='images/logo.png'/>Ima's Megastar</div>";
+	return $wrapper;
+}
 function makeFooter()
 {
  //Display footer
     $footContent = <<< FOOT
 <footer>
-<p>Testing Footer</p>
+	<div class="container">
+		 <div>
+			<div id='logo'><img src='images/logo.png'/>Ima's Megastar</div>
+		 </div>
+		 <div class="middle">
+			<div><i class="fa fa-envelope"></i> info@imamegastar.forum.com</div>
+			<div><i class="fa fa-phone"></i> +6012-2151725</div>
+		 </div>
+		 <div>
+			<i class="fa fa-facebook"></i>
+			<i class="fa fa-instagram"></i>
+			<i class="fa fa-google-plus"></i>
+			<i class="fa fa-twitter"></i>
+		 </div>
+	</div>
 </footer>
+<div class="powered">
+	<div class="container">
+		<span>2017&copy; Ima's Megastar All rights reserved.</span>
+		<a href="#">Private Policy</a>
+		<a href="#">Terms of Use</a>
+	</div>
+</div>
 FOOT;
     $footContent .="\n";
     return $footContent;
@@ -62,7 +87,7 @@ function makeNavMenu() {
 <li><a href="#">Gallery</a></li>
 <li><a href="#">Discussion Board</a></li>
 <li><a href="#">Competitions</a></li>
-</ul></nav>
+</ul></nav></div></div>
 NAVBAR;
 
   return $navBar;
@@ -71,7 +96,7 @@ NAVBAR;
 function makeProfileButton() {
   $profileButton = "<div class='dropdown'>";
   $profileButton .= "<button class='btn btn-secondary dropdown-toggle' type='button' id='btnAccountInfo' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-  $profileButton .= "Account Info"; //TODO: Substitute as profile image
+  $profileButton .= "<i class='fa fa-user'></i>"; //TODO: Substitute as profile image
   $profileButton .= "</button>";
 
   $profileButton .= "<div class='dropdown-menu' aria-labelledby='btnAccountInfo'>";
