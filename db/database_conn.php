@@ -12,11 +12,11 @@
 ?>
 
 <?php
-	//Set up connection to database
+// 	//Set up connection to database
 //   define ('SERVER', 'localhost');
-//   define ('USER', 'SE209');
-//   define ('PASSWORD','902ES');
-//   define ('DATABASE', 'SE209');
+//   define ('USER', 'ima-fanbase');
+//   define ('PASSWORD','imafanbase123');
+//   define ('DATABASE', 'ima-fanbase');
 //
 //   $conn = mysqli_connect(SERVER, USER, PASSWORD, DATABASE);
 //   if (mysqli_connect_errno()) {
