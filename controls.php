@@ -41,11 +41,13 @@ HEAD;
     $headContent .="\n";
     return $headContent;
 }
+
 function makeWrapper()
 {
-	$wrapper = "<div class='wrapper'><div class='container'><div id='logo'><img src='images/logo.png'/>Ima's Megastar</div>";
+	$wrapper = "<div class='wrapper'><div class='container'><div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>";
 	return $wrapper;
 }
+
 function makeFooter()
 {
  //Display footer
@@ -53,7 +55,7 @@ function makeFooter()
 <footer>
 	<div class="container">
 		 <div>
-			<div id='logo'><img src='images/logo.png'/>Ima's Megastar</div>
+			<div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>
 		 </div>
 		 <div class="middle">
 			<div><i class="fa fa-envelope"></i> info@imamegastar.forum.com</div>
@@ -69,7 +71,7 @@ function makeFooter()
 </footer>
 <div class="powered">
 	<div class="container">
-		<span>2017&copy; Ima's Megastar All rights reserved.</span>
+		<span>2017&copy; Ima's Official Fanbase All rights reserved.</span>
 		<a href="#">Private Policy</a>
 		<a href="#">Terms of Use</a>
 	</div>
