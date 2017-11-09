@@ -68,8 +68,8 @@ $(document).ready(function() {
   }
   ?>
   <p>
-    Password: <input type="password" id='txtPassword' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword"/>*
-    Confirm Password: <input type="password" id='txtConfirmPassword' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword"/>*
+    Password: <input type="password" id='txtPassword' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5"/>*
+    Confirm Password: <input type="password" id='txtConfirmPassword' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5"/>*
   </p>
 
   <?php
