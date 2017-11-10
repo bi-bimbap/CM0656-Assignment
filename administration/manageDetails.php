@@ -47,7 +47,7 @@ mysqli_stmt_close($stmt);
     $('.modal').on('hidden.bs.modal', function(e) { //Reset field values when popup modal is closed
       $(".modal-body select").val("");
       $(".modal-body input").val("");
-    }) ;
+    });
   });
   </script>
 
