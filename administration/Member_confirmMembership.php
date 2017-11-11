@@ -14,7 +14,7 @@ $environment = LOCAL;
 if (isset($_GET['mail']) && isset($_GET['exDate'])) { //Get email address & membership confirmation expiry date
   //Decode url-encoded string
   $emailAddr = urldecode(base64_decode($_GET['mail']));
-  $expiryDate = urldecode(base64_decode($_GET['exDate']));
+  $expiryDate = urldecode($_GET['exDate']);
 
   //Trim white space
   $emailAddr = trim($emailAddr);

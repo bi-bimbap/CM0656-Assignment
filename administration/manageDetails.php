@@ -411,7 +411,7 @@ mysqli_stmt_close($stmt);
           if ($emailChanged) { //Send email to member
             //Encode variables to be used in url
             $emailEncoded = urlencode(base64_encode($email));
-            $memberConfirmationExpiryDateEncoded = urlencode(base64_encode($memberConfirmationExpiryDate));
+            $memberConfirmationExpiryDateEncoded = urlencode($memberConfirmationExpiryDate);
             $url = $environment . "/CM0656-Assignment/administration/Member_confirmMembership.php?mail=" . $emailEncoded .
             "&exDate=" . $memberConfirmationExpiryDateEncoded;
             if (sendEmail($email, $fullName, 'Please Verify Your Email Address', '../email/notifier_verifyEmail.html', $url)) {

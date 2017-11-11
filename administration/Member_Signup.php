@@ -18,7 +18,7 @@ if (isset($_GET['mail']) && isset($_GET['name']) && isset($_GET['exDate'])) { //
   //Decode url-encoded string
   $email = urldecode(base64_decode($_GET['mail']));
   $fullName = urldecode(base64_decode($_GET['name']));
-  $expiryDate = urldecode(base64_decode($_GET['exDate']));
+  $expiryDate = urldecode($_GET['exDate']);
 
   //Trim white space
   $email = trim($email);
@@ -31,8 +31,49 @@ if (isset($_GET['mail']) && isset($_GET['name']) && isset($_GET['exDate'])) { //
   $expiryDate = filter_var($expiryDate, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
   $expiryDate = date('Y-m-d H:i:s', strtotime($expiryDate)); //Convert string to date time
 
-  if (date('Y-m-d H:i:s') > $expiryDate) { //Link expired; Redirect user to "404 Not Found" page
-    header("Location:error404.php");
+  //Check if email address & URL expiry date matches the one in database
+  $validationSQL = "SELECT userID FROM user WHERE emailAddr = ? AND memberConfirmationExpiryDate = ?";
+  $stmt = mysqli_prepare($conn, $validationSQL) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmt, "ss", $email, $expiryDate);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_store_result($stmt);
+  $count = mysqli_stmt_num_rows($stmt);
+  mysqli_stmt_close($stmt);
+
+  if ($count > 0) { //Email & URL expiry date matches
+    if (date('Y-m-d H:i:s') > $expiryDate) { //Link expired; Resend email to new admin
+      $memberConfirmationExpiryDate = time(); //Get current date
+      $memberConfirmationExpiryDate = date('Y-m-d H:i:s', strtotime('+1 day', $memberConfirmationExpiryDate)); //Calculate url expiration date
+
+      $updateDateSQL = "UPDATE user SET memberConfirmationExpiryDate = ? WHERE emailAddr = ?";
+      $stmt = mysqli_prepare($conn, $updateDateSQL);
+      mysqli_stmt_bind_param($stmt, "ss", $memberConfirmationExpiryDate, $email);
+      mysqli_stmt_execute($stmt);
+
+      if (mysqli_stmt_affected_rows($stmt) > 0) { //Update successful
+        //Encode variables to be used in url
+        $emailEncoded = urlencode(base64_encode($email));
+        $fullNameEncoded = urlencode(base64_encode($fullName));
+        $memberConfirmationExpiryDateEncoded = urlencode(base64_encode($memberConfirmationExpiryDate));
+        $url = $environment . "/CM0656-Assignment/administration/Member_signup.php?mail=" . $emailEncoded . "&name=" . $fullNameEncoded
+        . "&exDate=" . $memberConfirmationExpiryDateEncoded;
+
+        if (sendEmail($email, $fullName, 'Please Complete Your Registration', '../email/notifier_completeRegistration.html', $url)) { //Email sent
+          echo "<script>alert('The link you clicked on has expired. Another email has been sent to your email address. Follow the instructions to complete the registration process.')</script>";
+          header("Refresh:1;url=../index.php"); //TODO: Change url
+        }
+        else { //Email failed to send
+          echo "<script>alert('Failed to send email!')</script>";
+          header("Refresh:1;url=../index.php"); //TODO: Change url
+        }
+      }
+      else {
+        echo "<script>alert('Failed to send email!')</script>";
+      }
+    }
+  }
+  else { //Email & URL expiry date does not match; Redirect to error page
+    header("Location:../error404.php");
   }
 }
 ?>
