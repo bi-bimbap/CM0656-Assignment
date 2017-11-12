@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 03, 2017 at 01:53 PM
+-- Generation Time: Nov 12, 2017 at 02:46 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -236,17 +236,41 @@ CREATE TABLE `user` (
   `memberConfirmationExpiryDate` timestamp NULL DEFAULT NULL,
   `penaltyCount` int(10) NOT NULL,
   `securityQuestion` varchar(255) DEFAULT NULL,
-  `securityAns` varchar(255) DEFAULT NULL
+  `securityAns` varchar(255) DEFAULT NULL,
+  `registeredDate` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`userID`, `fullName`, `username`, `emailAddr`, `passwordHash`, `shippingAddr`, `dob`, `userType`, `userStatus`, `memberConfirmationExpiryDate`, `penaltyCount`, `securityQuestion`, `securityAns`) VALUES
-(1, 'sjm', 'seahjm', 'seahjm96@gmail.com', '$2y$10$DiOCuMyjUgHGsByjsjPK0.0LxTszCTS/6777w8l6ghOCFBf7.VqyW', '14, Tanjung Rambutan, Penang', '1996-09-28', 'admin', 'active', NULL, 0, 'favouriteBook', 'StarWars'),
-(2, 'sjm', 'sjm', 'sjm@gmail.com', '$2y$10$QhcmnXerCrhpj.jvc3urA.zC5ugD5khXDP6N6db6OFkRK91ndc4EO', 'test', '2017-11-01', 'junior', 'pending', '2017-11-02 02:20:41', 0, 'favouriteBook', '123'),
-(3, 'sjm', NULL, 'seahjm96@gmail.com', '$2y$10$DiOCuMyjUgHGsByjsjPK0.0LxTszCTS/6777w8l6ghOCFBf7.VqyW', NULL, NULL, 'admin', 'active', NULL, 0, 'favouriteBook', 'StarWars');
+INSERT INTO `user` (`userID`, `fullName`, `username`, `emailAddr`, `passwordHash`, `shippingAddr`, `dob`, `userType`, `userStatus`, `memberConfirmationExpiryDate`, `penaltyCount`, `securityQuestion`, `securityAns`, `registeredDate`) VALUES
+(1, 'Seah Min Min', 'seahjm', 'seahjm96040207@gmail.com', '$2y$10$L79dSkQkm7PqcTS3TllQwuORdYYgbt0fe52A4QPxxZzY08DATjKFC', '14, Tanjung Rambutan, Georgetown, Penang', '1996-09-28', 'junior', 'active', '2017-11-05 09:35:10', 0, 'favouriteBook', 'StarWars', '2017-06-06 00:00:00'),
+(2, 'sjm', 'sjm', 'sjm@gmail.com', '$2y$10$QhcmnXerCrhpj.jvc3urA.zC5ugD5khXDP6N6db6OFkRK91ndc4EO', NULL, NULL, 'admin', 'active', NULL, 0, 'favouriteBook', '123', '2017-09-18 00:00:00'),
+(3, 'Seah Jia-Min', NULL, 'seahjm@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', NULL, NULL, 'mainAdmin', 'active', NULL, 0, 'favouriteBook', 'StarWars', '2017-10-09 00:00:00'),
+(35, 'Zorina Abreu', 'ZA', 'ZA@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2006-11-18', 'junior', 'banned', '0000-00-00 00:00:00', 3, 'maidenName', '123', '2017-05-12 00:00:00'),
+(36, 'Tobias Blattman', 'TB', 'TB@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2006-04-26', 'junior', 'banned', '0000-00-00 00:00:00', 4, 'birthPlace', '123', '2017-04-04 00:00:00'),
+(37, 'Tanzeer Cao', 'TC', 'TC@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2002-02-17', 'junior', 'banned', '0000-00-00 00:00:00', 3, 'favouriteBook', '123', '2017-11-06 00:00:00'),
+(38, 'Sachie Clark', 'SC', 'SC@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2003-05-19', 'junior', 'active', '0000-00-00 00:00:00', 0, 'birthPlace', '123', '2017-10-02 00:00:00'),
+(39, 'Radu Donahue', 'RD', 'RD@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2013-03-16', 'junior', 'active', '0000-00-00 00:00:00', 0, 'school', '123', '2017-09-04 00:00:00'),
+(40, 'Philip Duncan', 'PD', 'PD@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2014-10-14', 'junior', 'banned', '0000-00-00 00:00:00', 0, 'favouriteBook', '123', '2017-08-07 00:00:00'),
+(41, 'Yoon Akin-Aderibigbe', 'YA', 'YA@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2005-07-27', 'junior', 'active', '0000-00-00 00:00:00', 0, 'birthPlace', '123', '2017-10-12 00:00:00'),
+(42, 'Pallavi Fox', 'PF', 'PF@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '1992-04-17', 'senior', 'active', '0000-00-00 00:00:00', 5, 'maidenName', '123', '2017-08-14 00:00:00'),
+(43, 'Muge Graves', 'MG', 'MG@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2012-12-25', 'junior', 'banned', '0000-00-00 00:00:00', 0, 'favouriteBook', '123', '2017-07-10 00:00:00'),
+(44, 'Martinez Hofman', 'MH', 'MH@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2006-05-21', 'junior', 'banned', '0000-00-00 00:00:00', 0, 'maidenName', '123', '2017-11-06 00:00:00'),
+(45, 'Yat Lun Atri', 'YLA', 'YLA@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2011-01-01', 'junior', 'active', '0000-00-00 00:00:00', 0, 'birthPlace', '123', '2017-05-01 00:00:00'),
+(46, 'Yi Feng Rlvarez', 'YFR', 'YFR@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '1992-07-08', 'senior', 'banned', '0000-00-00 00:00:00', 0, 'school', '123', '2017-04-18 00:00:00'),
+(47, 'Yi Baramendia', 'YB', 'YB@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2007-04-12', 'junior', 'active', '0000-00-00 00:00:00', 0, 'favouriteBook', '123', '2017-08-14 00:00:00'),
+(48, 'Yaya Sashkenazi', 'YS', 'YS@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2004-02-12', 'junior', 'active', '0000-00-00 00:00:00', 0, 'maidenName', '123', '2017-09-04 00:00:00'),
+(49, 'Yat Lun Batri', 'YLB', 'YLB@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2011-08-08', 'junior', 'active', '0000-00-00 00:00:00', 0, 'school', '123', '2017-10-30 00:00:00'),
+(50, 'Yasu Hiro Au', 'YHA', 'YHA@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '1998-06-27', 'senior', 'banned', '0000-00-00 00:00:00', 0, 'favouriteBook', '123', '2017-09-04 00:00:00'),
+(51, 'Yan Wen Aurori', 'YWA', 'YWA@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '1991-06-24', 'senior', 'active', '0000-00-00 00:00:00', 0, 'school', '123', '2017-10-12 00:00:00'),
+(52, 'Yan Baustin Zen', 'YBZ', 'YBZ@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '1993-07-15', 'senior', 'active', '0000-00-00 00:00:00', 0, 'maidenName', '123', '2017-07-25 00:00:00'),
+(53, 'Ya Han Bagdat', 'YHB', 'YHB@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2004-02-02', 'junior', 'active', '0000-00-00 00:00:00', 0, 'favouriteBook', '123', '2017-06-13 00:00:00'),
+(54, 'Yael Bala', 'YB', 'YB@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2006-06-13', 'junior', 'active', '0000-00-00 00:00:00', 0, 'maidenName', '123', '2017-07-17 00:00:00'),
+(55, 'Seah Jia-Wei', NULL, 'seahjm96@gmail.com', NULL, NULL, NULL, 'admin', 'pending', '2017-11-11 23:02:04', 0, NULL, NULL, '2017-06-20 00:00:00'),
+(56, 'Cheong Yi Qi', NULL, 'seahjm96@hotmail.com', NULL, NULL, NULL, 'admin', 'banned', '2017-11-12 00:44:57', 0, NULL, NULL, '2017-05-23 00:00:00'),
+(58, 'HHY', NULL, 'hhy@test.com', NULL, NULL, NULL, 'admin', 'pending', '2017-11-12 02:54:17', 0, NULL, NULL, '2017-05-09 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -261,6 +285,15 @@ CREATE TABLE `user_banned` (
   `banBy` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `user_banned`
+--
+
+INSERT INTO `user_banned` (`userID`, `banReason`, `banDate`, `banBy`) VALUES
+(35, 'Test', '2017-11-10 04:17:14', '3'),
+(37, 'TC', '2017-11-10 04:21:14', '3'),
+(50, 'Test ban', '2017-11-10 04:08:13', '3');
+
 -- --------------------------------------------------------
 
 --
@@ -271,6 +304,13 @@ CREATE TABLE `user_blacklist` (
   `userID` int(10) NOT NULL,
   `blacklistReason` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user_blacklist`
+--
+
+INSERT INTO `user_blacklist` (`userID`, `blacklistReason`) VALUES
+(42, 'Test');
 
 -- --------------------------------------------------------
 
@@ -474,17 +514,17 @@ ALTER TABLE `report`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `userID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `userID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 --
 -- AUTO_INCREMENT for table `user_banned`
 --
 ALTER TABLE `user_banned`
-  MODIFY `userID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `userID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 --
 -- AUTO_INCREMENT for table `user_blacklist`
 --
 ALTER TABLE `user_blacklist`
-  MODIFY `userID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `userID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 --
 -- AUTO_INCREMENT for table `watchlist`
 --
