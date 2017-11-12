@@ -61,7 +61,7 @@ else if ($function == "loadBannedMembers") { //Load banned members
   mysqli_stmt_close($stmt);
   mysqli_close($conn);
 }
-else if ($function == "loadAdmin") { //Load banned members
+else if ($function == "loadAdmin") { //Load admin user
   $adminSQL = "SELECT userID, fullName, emailAddr, userStatus FROM user WHERE userType = 'admin'";
   $stmt = mysqli_prepare($conn, $adminSQL) or die( mysqli_error($conn));
   mysqli_stmt_execute($stmt);
@@ -135,7 +135,7 @@ else if ($function == "updateAdminEmail") { //Update email address for admin (wi
   mysqli_stmt_close($stmt);
   mysqli_close($conn);
 }
-else if ($function == "deleteAdmin") {
+else if ($function == "deleteAdmin") { //Remove admin user
   //Obtain passed value, trim whitespace & sanitize value
   $userID = filter_has_var(INPUT_POST, 'userID') ? $_POST['userID']: null;
   $userID = trim($userID);
