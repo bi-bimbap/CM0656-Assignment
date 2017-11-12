@@ -61,9 +61,11 @@ if (isset($_GET['mail']) && isset($_GET['exDate'])) { //Get email address & memb
       mysqli_stmt_close($stmt);
     }
     else { //Link still valid; Verify member's email
-      $updateMembershipSQL = "UPDATE user SET userStatus = 'active', memberConfirmationExpiryDate = NULL WHERE emailAddr = ?";
+      $updateMembershipSQL = "UPDATE user SET userStatus = 'active', memberConfirmationExpiryDate = NULL,
+      registeredDate = ? WHERE emailAddr = ?";
       $stmt = mysqli_prepare($conn, $updateMembershipSQL) or die( mysqli_error($conn));
-      mysqli_stmt_bind_param($stmt, "s", $emailAddr);
+      $registeredDate = date('Y-m-d H:i:s');
+      mysqli_stmt_bind_param($stmt, "ss", $registeredDate, $emailAddr);
       mysqli_stmt_execute($stmt);
 
       if (mysqli_stmt_affected_rows($stmt) > 0) { //Membership confirmed

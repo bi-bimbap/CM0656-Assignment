@@ -45,9 +45,10 @@ if (isset($_GET['mail']) && isset($_GET['name']) && isset($_GET['exDate'])) { //
       $memberConfirmationExpiryDate = time(); //Get current date
       $memberConfirmationExpiryDate = date('Y-m-d H:i:s', strtotime('+1 day', $memberConfirmationExpiryDate)); //Calculate url expiration date
 
-      $updateDateSQL = "UPDATE user SET memberConfirmationExpiryDate = ? WHERE emailAddr = ?";
+      $updateDateSQL = "UPDATE user SET memberConfirmationExpiryDate = ?, registeredDate = ? WHERE emailAddr = ?";
       $stmt = mysqli_prepare($conn, $updateDateSQL);
-      mysqli_stmt_bind_param($stmt, "ss", $memberConfirmationExpiryDate, $email);
+      $registeredDate = date('Y-m-d H:i:s');
+      mysqli_stmt_bind_param($stmt, "sss", $registeredDate, $memberConfirmationExpiryDate, $email);
       mysqli_stmt_execute($stmt);
 
       if (mysqli_stmt_affected_rows($stmt) > 0) { //Update successful
@@ -205,7 +206,7 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
     $currentDate = new DateTime(date("Y-m-d"));
     $diff = $currentDate->diff($birthDate);
 
-    if ($diff->y <= 16) {
+    if ($diff->y <= 18) {
       $userType = "junior";
     }
     else {
