@@ -21,9 +21,9 @@ $environment = LOCAL;
 <script src="../scripts/jquery.dataTables.min.js"></script>
 
 <?php //Only show content to admin/main admin
-$_SESSION['userID'] = '3'; //TODO: Remove
-$_SESSION['userType'] = 'mainAdmin'; //TODO: Remove
-$_SESSION['logged-in'] = true; //TODO: Remove
+// $_SESSION['userID'] = '3'; //TODO: Remove
+// $_SESSION['userType'] = 'mainAdmin'; //TODO: Remove
+// $_SESSION['logged-in'] = true; //TODO: Remove
 
 if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
 (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
@@ -34,7 +34,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
     //Active member list
     var table = $('#tblMemberList').DataTable({ //Data table to display member list
       ajax: {
-        url :"serverProcessing.php", //JSON datasource
+        url :"userManagement_serverProcessing.php", //JSON datasource
         dataSrc: '', //Tell DataTables where the data array is in the JSON structure, left empty if it's an array
         data: { action : "loadAll" },
         type: "POST",
@@ -59,7 +59,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
       var tab = $('.nav-tabs .active').text(); //Get currently selected tab
 
       $.ajax({
-        url :"serverProcessing.php",
+        url :"userManagement_serverProcessing.php",
         type: "POST",
         data: "action=banMember&username=" + username + "&banBy=" + userID + "&tab=" + tab,
         success: function(data) {
@@ -74,7 +74,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
     //Blacklisted member list
     var tblBlacklistMembers = $('#tblBlacklistMembers').DataTable({ //Data table to display blacklisted member list
       ajax: {
-        url :"serverProcessing.php", //JSON datasource
+        url :"userManagement_serverProcessing.php", //JSON datasource
         dataSrc: '', //Tell DataTables where the data array is in the JSON structure, left empty if it's an array
         data: { action : "loadBlacklistedMembers" },
         type: "POST",
@@ -101,7 +101,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
       var tab = $('.nav-tabs .active').text(); //Get currently selected tab
 
       $.ajax({
-        url :"serverProcessing.php",
+        url :"userManagement_serverProcessing.php",
         type: "POST",
         data: "action=banMember&username=" + username + "&banBy=" + userID + "&reason=" + reason + "&tab=" + tab,
         success: function(data) {
@@ -116,7 +116,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
     //Banned member list
     var tblBannedMembers = $('#tblBannedMembers').DataTable({ //Data table to display member list
       ajax: {
-        url :"serverProcessing.php", //JSON datasource
+        url :"userManagement_serverProcessing.php", //JSON datasource
         dataSrc: '', //Tell DataTables where the data array is in the JSON structure, left empty if it's an array
         data: { action : "loadBannedMembers" },
         type: "POST",
@@ -132,7 +132,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
     //Admin list
     var tblAdminList = $('#tblAdminList').DataTable({ //Data table to display member list
       ajax: {
-        url :"serverProcessing.php", //JSON datasource
+        url :"userManagement_serverProcessing.php", //JSON datasource
         dataSrc: '', //Tell DataTables where the data array is in the JSON structure, left empty if it's an array
         data: { action : "loadAdmin" },
         type: "POST",
@@ -179,7 +179,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
       var email = $("#txtEmailAddr").val(); //Obtain email
 
       $.ajax({
-        url :"serverProcessing.php",
+        url :"userManagement_serverProcessing.php",
         type: "POST",
         data: "action=addAdmin&fullName=" + fullName + "&email=" + email,
         success: function(data) {
@@ -221,7 +221,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
       var fullName = $("#modalRequestEmail").find('.modal-body #lblFullName').text(); //Obtain fullName from hidden label
 
       $.ajax({
-        url :"serverProcessing.php",
+        url :"userManagement_serverProcessing.php",
         type: "POST",
         data: "action=updateAdminEmail&userID=" + userID + "&email=" + email + "&fullName=" + fullName,
         success: function(data) {
@@ -258,7 +258,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
       var userID = $("#modalDeleteAdmin").find('.modal-body #lblAdminUserID').text(); //Obtain userID from hidden label
 
       $.ajax({
-        url :"serverProcessing.php",
+        url :"userManagement_serverProcessing.php",
         type: "POST",
         data: "action=deleteAdmin&userID=" + userID,
         success: function(data) {
