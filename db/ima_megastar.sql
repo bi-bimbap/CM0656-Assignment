@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 13, 2017 at 11:34 AM
+-- Generation Time: Nov 13, 2017 at 11:42 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -136,7 +136,7 @@ CREATE TABLE `competition_result` (
   `userID` int(10) NOT NULL,
   `testID` int(10) NOT NULL,
   `result` int(10) NOT NULL,
-  `competitionDuration` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `competitionDuration` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -164,6 +164,14 @@ CREATE TABLE `competition_test` (
   `testEndDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `prize` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `competition_test`
+--
+
+INSERT INTO `competition_test` (`testID`, `testName`, `templateID`, `testStartDate`, `testEndDate`, `prize`) VALUES
+(1, 'Test competition', 1, '2017-10-31 16:00:00', '2017-11-10 16:00:00', 'Prize A'),
+(2, 'Competition B', 1, '2017-08-31 16:00:00', '2017-09-21 16:00:00', 'Prize B');
 
 -- --------------------------------------------------------
 
@@ -502,7 +510,7 @@ ALTER TABLE `competition_template`
 -- AUTO_INCREMENT for table `competition_test`
 --
 ALTER TABLE `competition_test`
-  MODIFY `testID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `testID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `discussion_inappropriate`
 --
