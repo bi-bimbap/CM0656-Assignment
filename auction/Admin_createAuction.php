@@ -7,7 +7,7 @@ require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Create Auction");
 echo makeNavMenu();
-echo makeHeader("Create New Auctionn");
+echo makeHeader("Create New Auction");
 $environment = LOCAL; //TODO: Change to server
 ?>
 
@@ -15,7 +15,24 @@ $environment = LOCAL; //TODO: Change to server
 <script src="../scripts/jquery.js"></script>
 <script src='../scripts/jquery-ui.min.js'></script>
 <script src="../scripts/parsley.min.js"></script>
+<link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
+<link rel="stylesheet" href="../css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="../css/parsley.css" type="text/css" />
+<script>
+$(document).ready(function() {
+  var dateToday = new Date();
+  var yrRange = dateToday.getFullYear() + ":" + (dateToday.getFullYear() + 5); //Allow year range from current year until 5 years later
+
+  $("#txtDOB").datepicker({
+    dateFormat: 'yy-mm-dd', //'Format: 2017-11-01
+    showWeek: true,
+    maxDate: '0d', //Constrain maximum date to today
+    yearRange: yrRange,
+    changeMonth: true,
+    changeYear: true,
+  });
+});
+</script>
 
 <form id="createAuctionForm" data-parsley-validate method="post">
 
@@ -53,3 +70,8 @@ $environment = LOCAL; //TODO: Change to server
   <p class='errorMessage'><small>*All fields are required to complete the registration</small></p>
   <input type='submit' value='Submit' name='btnSubmit'/>
 </form>
+
+<?php
+echo makeFooter();
+echo makePageEnd();
+?>
