@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2017 at 02:46 PM
+-- Generation Time: Nov 13, 2017 at 11:34 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -65,6 +65,14 @@ CREATE TABLE `auction` (
   `currentBid` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `auction`
+--
+
+INSERT INTO `auction` (`auctionID`, `auctionTitle`, `itemName`, `itemDesc`, `startDate`, `endDate`, `startPrice`, `itemPrice`, `currentBid`) VALUES
+(1, 'Test Auction', 'Item A', 'This is an item.', '2017-11-13 04:55:09', '2017-11-09 16:00:00', 50, NULL, 0),
+(2, 'Auction 2', 'Item B', 'This is an item.', '2017-11-13 04:55:12', '2017-11-08 16:00:00', 20, NULL, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -79,6 +87,15 @@ CREATE TABLE `bid` (
   `bidStatus` varchar(30) NOT NULL,
   `bidTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `bid`
+--
+
+INSERT INTO `bid` (`bidID`, `userID`, `auctionID`, `bidAmount`, `bidStatus`, `bidTime`) VALUES
+(1, 1, 1, 55, 'active', '2017-11-11 16:00:00'),
+(2, 42, 1, 60, 'active', '2017-11-12 15:01:22'),
+(3, 46, 1, 100, 'withdrawn', '2017-11-12 15:01:47');
 
 -- --------------------------------------------------------
 
@@ -141,6 +158,7 @@ CREATE TABLE `competition_template` (
 
 CREATE TABLE `competition_test` (
   `testID` int(10) NOT NULL,
+  `testName` varchar(255) NOT NULL,
   `templateID` int(10) NOT NULL,
   `testStartDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `testEndDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -245,7 +263,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`userID`, `fullName`, `username`, `emailAddr`, `passwordHash`, `shippingAddr`, `dob`, `userType`, `userStatus`, `memberConfirmationExpiryDate`, `penaltyCount`, `securityQuestion`, `securityAns`, `registeredDate`) VALUES
-(1, 'Seah Min Min', 'seahjm', 'seahjm96040207@gmail.com', '$2y$10$L79dSkQkm7PqcTS3TllQwuORdYYgbt0fe52A4QPxxZzY08DATjKFC', '14, Tanjung Rambutan, Georgetown, Penang', '1996-09-28', 'junior', 'active', '2017-11-05 09:35:10', 0, 'favouriteBook', 'StarWars', '2017-06-06 00:00:00'),
+(1, 'Seah Min Min', 'seahjm', 'seahjm96040207@gmail.com', '$2y$10$L79dSkQkm7PqcTS3TllQwuORdYYgbt0fe52A4QPxxZzY08DATjKFC', '14, Tanjung Rambutan, Georgetown, Penang', '1996-09-28', 'senior', 'active', '2017-11-05 09:35:10', 0, 'favouriteBook', 'StarWars', '2017-06-06 00:00:00'),
 (2, 'sjm', 'sjm', 'sjm@gmail.com', '$2y$10$QhcmnXerCrhpj.jvc3urA.zC5ugD5khXDP6N6db6OFkRK91ndc4EO', NULL, NULL, 'admin', 'active', NULL, 0, 'favouriteBook', '123', '2017-09-18 00:00:00'),
 (3, 'Seah Jia-Min', NULL, 'seahjm@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', NULL, NULL, 'mainAdmin', 'active', NULL, 0, 'favouriteBook', 'StarWars', '2017-10-09 00:00:00'),
 (35, 'Zorina Abreu', 'ZA', 'ZA@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2006-11-18', 'junior', 'banned', '0000-00-00 00:00:00', 3, 'maidenName', '123', '2017-05-12 00:00:00'),
@@ -454,12 +472,12 @@ ALTER TABLE `article`
 -- AUTO_INCREMENT for table `auction`
 --
 ALTER TABLE `auction`
-  MODIFY `auctionID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `auctionID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `bid`
 --
 ALTER TABLE `bid`
-  MODIFY `bidID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `bidID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `comment`
 --
