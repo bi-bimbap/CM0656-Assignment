@@ -1,3 +1,4 @@
+<!-- TODO: Add autocomplete search box for auction & competition -->
 <?php
 ini_set("session.save_path", "");
 session_start();
@@ -29,16 +30,45 @@ $environment = LOCAL;
   </div>
 
   <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-6">
+      <label for="ddlAuction">Auction: </label>
+
+      <select id='ddlAuction' name='ddlAuction'>
+        <?php
+        $ddlOptionSQL = "SELECT auctionID, auctionTitle FROM auction WHERE CURDATE() > endDate ORDER BY endDate DESC";
+        $stmt = mysqli_prepare($conn, $ddlOptionSQL) or die( mysqli_error($conn));
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $auctionID, $auctionTitle);
+        while (mysqli_stmt_fetch($stmt)) {
+          echo "<option value= '" . $auctionID . "'>" . $auctionTitle . "</option>";
+        }
+        mysqli_stmt_close($stmt);
+        ?>
+      </select>
+
       <canvas id="canvasAuction"></canvas>
     </div>
 
-    <!-- <div class="col-lg-6">
-    <canvas id="canvasRegisteredUsers"></canvas>
-  </div> -->
-</div>
-<!-- <label for="chart">Age Group</label>
-<canvas id="chart"></canvas> -->
+    <div class="col-lg-6">
+      <label for="ddlCompetition">Competition: </label>
+
+      <select id='ddlCompetition' name='ddlCompetition'>
+        <?php
+        $ddlCompetitionSQL = "SELECT testID, testName FROM competition_test WHERE
+        CURDATE() > testEndDate ORDER BY testEndDate DESC";
+        $stmt = mysqli_prepare($conn, $ddlCompetitionSQL) or die( mysqli_error($conn));
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $testID, $testName);
+        while (mysqli_stmt_fetch($stmt)) {
+          echo "<option value= '" . $testID . "'>" . $testName . "</option>";
+        }
+        mysqli_stmt_close($stmt);
+        ?>
+      </select>
+
+      <canvas id="canvasCompetition"></canvas>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -205,25 +235,189 @@ $(document).ready(function() {
     }
   });
 
-  $.ajax({ //Display no. of members participated in an auction
-    data: "action=auction",
-    success: function(data) {
-      //Declare arrays to store month & count returned
-      var ageGroup = [];
-      var participatedCount = [];
-      var withdrawnCount = [];
+  $('#ddlAuction').on('change', function(e) { //Retrieve data for selected auction
+    $.ajax({ //Display no. of members participated in an auction
+      data: "action=auction&auctionID=" + $("#ddlAuction").val(),
+      success: function(data) {
+        //Declare arrays to store month & count returned
+        var ageGroup = [];
+        var participatedCount = [];
+        var withdrawnCount = [];
 
-      for(var i in data) { //Loop through each row & push into array
-        ageGroup.push(data[i].ageGroup);
-        participatedCount.push(data[i].participatedCount);
-        withdrawnCount.push(data[i].withdrawnCount);
+        for(var i in data) { //Loop through each row & push into array
+          ageGroup.push(data[i].ageGroup);
+          participatedCount.push(data[i].participatedCount);
+          withdrawnCount.push(data[i].withdrawnCount);
+        }
+
+        var data = {
+          labels: ageGroup,
+          datasets : [
+            {
+              label: 'Participated members',
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)'
+              ],
+              borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)'
+              ],
+              borderWidth: 1,
+              hoverBackgroundColor: [
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)'
+              ],
+              hoverBorderColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)'
+              ],
+              data: participatedCount
+            },
+            {
+              label: 'Withdrawn Members',
+              backgroundColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)'
+              ],
+              borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)'
+              ],
+              borderWidth: 1,
+              hoverBackgroundColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)'
+              ],
+              hoverBorderColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)'
+              ],
+              data: withdrawnCount
+            }
+          ]
+        };
+
+        var ctx = $("#canvasAuction");
+
+        var barChart = new Chart(ctx, {
+          type: 'bar',
+          data: data,
+          options: {
+            title: {
+              display: true,
+              text: 'No. of Users Participated in ' + $("#ddlAuction :selected").text()
+            },
+            scales: {
+              xAxes: [{
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Age Group'
+                },
+                stacked: true
+              }],
+              yAxes: [{
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: 'No. of users'
+                },
+                ticks: {
+                  beginAtZero: true,
+                  userCallback: function(label, index, labels) {
+                    //If floored label value is the same as the value, we have a whole number
+                    if (Math.floor(label) === label) {
+                      return label;
+                    }
+                  }
+                }
+              }]
+            }
+          }
+        });
+      },
+      error: function(data) {
+        console.log(data);
       }
+    });
+  }).change(); //Trigger dropdownlsit select on page load
 
-      var data = {
-        labels: ageGroup,
-        datasets : [
-          {
-            label: 'Participated members',
+  $('#ddlCompetition').on('change', function(e) { //Retrieve data for selected competition
+    $.ajax({ //Display no. of members participated in a competition
+      data: "action=competition&testID=" + $("#ddlCompetition").val(),
+      success: function(data) {
+        //Declare arrays to store month & count returned
+        var ageGroup = [];
+        var participatedCount = [];
+
+        for(var i in data) { //Loop through each row & push into array
+          ageGroup.push(data[i].ageGroup);
+          participatedCount.push(data[i].participatedCount);
+        }
+
+        var data = {
+          labels: ageGroup,
+          datasets : [{
+            label: 'Participated Members',
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
               'rgba(255, 99, 132, 0.2)',
@@ -268,107 +462,54 @@ $(document).ready(function() {
               'rgba(255, 99, 132, 0.2)'
             ],
             data: participatedCount
-          },
-          {
-            label: 'Withdrawn Members',
-            backgroundColor: [
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)'
-            ],
-            borderColor: [
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)'
-            ],
-            borderWidth: 1,
-            hoverBackgroundColor: [
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(54, 162, 235, 1)'
-            ],
-            hoverBorderColor: [
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)'
-            ],
-            data: withdrawnCount
-          }
-        ]
-      };
+          }] //End datasets
+        }; //End data
 
-      var ctx = $("#canvasAuction");
+        var ctx = $("#canvasCompetition");
 
-      var barChart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: {
-          title: {
-            display: true,
-            text: 'No. of Users Participated in Selected Auction'
-          },
-          scales: {
-            xAxes: [{
+        var competitionBarChart = new Chart(ctx, {
+          type: 'bar',
+          data: data,
+          options: {
+            title: {
               display: true,
-              scaleLabel: {
+              text: 'No. of Users Participated in ' + $("#ddlCompetition :selected").text()
+            },
+            scales: {
+              xAxes: [{
                 display: true,
-                labelString: 'Age Group'
-              },
-              stacked: true
-            }],
-            yAxes: [{
-              display: true,
-              scaleLabel: {
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Age Group'
+                },
+                stacked: true
+              }],
+              yAxes: [{
                 display: true,
-                labelString: 'No. of users'
-              },
-              ticks: {
-                beginAtZero: true,
-                userCallback: function(label, index, labels) {
-                  //If floored label value is the same as the value, we have a whole number
-                  if (Math.floor(label) === label) {
-                    return label;
+                scaleLabel: {
+                  display: true,
+                  labelString: 'No. of users'
+                },
+                ticks: {
+                  beginAtZero: true,
+                  userCallback: function(label, index, labels) {
+                    //If floored label value is the same as the value, we have a whole number
+                    if (Math.floor(label) === label) {
+                      return label;
+                    }
                   }
-                }
-              }
-            }]
-          }
-        }
-      });
-    },
-    error: function(data) {
-      console.log(data);
-    }
-  });
-});
+                } //End ticks
+              }] //End yAxes
+            } //End scales
+          } //End options
+        }); //End competitionBarChart
+      },
+      error: function(data) {
+        console.log(data);
+      }
+    }); //End ajax
+  }).change(); //End ddlCompetition on change
+}); //End document.ready
 </script>
 
 <?php

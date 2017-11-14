@@ -1,3 +1,4 @@
+<!-- TODO: Users age must be > 10 to register -->
 <!-- TODO: add tooltip error message -->
 
 <?php
