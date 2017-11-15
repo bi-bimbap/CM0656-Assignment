@@ -1,4 +1,3 @@
-<!-- TODO: Users age must be > 10 to register -->
 <!-- TODO: add tooltip error message -->
 
 <?php
@@ -82,6 +81,7 @@ if (isset($_GET['mail']) && isset($_GET['name']) && isset($_GET['exDate'])) { //
   }
 }
 ?>
+
 <script src="scripts/jquery.js"></script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -93,18 +93,20 @@ if (isset($_GET['mail']) && isset($_GET['name']) && isset($_GET['exDate'])) { //
 <link href="../css/bootstrap.css" rel="stylesheet">
 <script src="../scripts/jquery.js"></script>
 <script src='../scripts/jquery-ui.min.js'></script>
+
 <script language="JavaScript" type="text/javascript">
 $(document).ready(function() {
   $("#txtDOB").datepicker({
     dateFormat: 'yy-mm-dd', //'Format: 2017-11-01
     showWeek: true,
-    maxDate: '0d', //Constrain maximum date to today
-    yearRange: '-100:+0', //Allow year range from 100 years ago until current year
+    maxDate: '-10Y', //Members must be at least 10 years old from current year
+    yearRange: '-150:+0', //Allow max age up to 150 years old
     changeMonth: true,
     changeYear: true,
   });
 });
 </script>
+
 <div class="content">
 	<div class="container">
 		<form id="signUpForm" data-parsley-validate method="post">
@@ -114,26 +116,26 @@ $(document).ready(function() {
 		  }
 		  ?>
 
-		  <p>Full Name: <input type="text" id='txtFullName' name='txtFullName' value="<?php if (isset($_POST['txtFullName'])) echo $_POST['txtFullName']; else if (isset($_GET['name'])) echo $fullName; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>*</p>
-		  <p>Email Address: <input type="email" id='txtEmail' name='txtEmail' placeholder="name@email.com" value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; else if (isset($_GET['mail'])) echo $email; ?>" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled/>*</p>
+		  <p>Full Name: <input type="text" id='txtFullName' name='txtFullName' value="<?php if (isset($_POST['txtFullName'])) echo $_POST['txtFullName']; else if (isset($_GET['name'])) echo $fullName; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/></p>
+		  <p>Email Address: <input type="email" id='txtEmail' name='txtEmail' placeholder="name@email.com" value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; else if (isset($_GET['mail'])) echo $email; ?>" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled/></p>
 		  <?php
 		  if (!isset($_GET['mail']) && !isset($_GET['name']) && !isset($_GET['exDate'])) { //Only visible to normal members
-			echo "<p>Username: <input type='text' id='txtUsername' name='txtUsername' value='" . (isset($_POST['txtUsername']) ? $_POST['txtUsername'] : 'sjm') . "' data-parsley-required='true' data-parsley-errors-messages-disabled/>*</p>";
+			echo "<p>Username: <input type='text' id='txtUsername' name='txtUsername' value='" . (isset($_POST['txtUsername']) ? $_POST['txtUsername'] : '') . "' data-parsley-required='true' data-parsley-errors-messages-disabled/></p>";
 		  }
 		  ?>
 		  <div>
-			Password: <input type="password" id='txtPassword' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5"/>*
-			<p>Confirm Password: <input type="password" id='txtConfirmPassword' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5"/>*</p>
+			Password: <input type="password" id='txtPassword' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5"/>
+			<p>Confirm Password: <input type="password" id='txtConfirmPassword' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5"/></p>
 		  </div>
 
 		  <?php
 		  if (!isset($_GET['mail']) && !isset($_GET['name']) && !isset($_GET['exDate'])) { //Only visible to normal members
-			echo "<p>Date of Birth: <input id='txtDOB' name='txtDOB' size='8' placeholder='2017-10-01' value='". (isset($_POST['txtDOB']) ? $_POST['txtDOB'] : '2011-11-01') . "' readonly data-parsley-trigger='change' data-parsley-required='true' data-parsley-errors-messages-disabled/>*</p>";
-			echo "<p><span>Shipping Address:</span> <textarea id='txtAddress' name='txtAddress' data-parsley-required='true' data-parsley-errors-messages-disabled>" . (isset($_POST['txtAddress']) ? $_POST['txtAddress'] : '123') . "</textarea>*</p>";
+			echo "<p>Date of Birth: <input id='txtDOB' name='txtDOB' size='8' placeholder='2017-10-01' value='". (isset($_POST['txtDOB']) ? $_POST['txtDOB'] : '') . "' readonly data-parsley-trigger='change' data-parsley-required='true' data-parsley-errors-messages-disabled/></p>";
+			echo "<p><span>Shipping Address:</span> <textarea id='txtAddress' name='txtAddress' data-parsley-required='true' data-parsley-errors-messages-disabled>" . (isset($_POST['txtAddress']) ? $_POST['txtAddress'] : '') . "</textarea></p>";
 		  }
 		  ?>
-		  <!-- <p>Date of Birth: <input id='txtDOB' name='txtDOB' size='8' placeholder="2017-10-01" value="<?php if (isset($_POST['txtDOB'])) echo $_POST['txtDOB']; else echo '2011-11-01'; ?>" readonly data-parsley-trigger="change" data-parsley-required="true" data-parsley-errors-messages-disabled/>*</p> -->
-		  <!-- <p>Shipping Address: <textarea id='txtAddress' name='txtAddress' data-parsley-required="true" data-parsley-errors-messages-disabled><?php if (isset($_POST['txtAddress'])) echo $_POST['txtAddress']; else echo '123'; ?></textarea>*</p> -->
+		  <!-- <p>Date of Birth: <input id='txtDOB' name='txtDOB' size='8' placeholder="2017-10-01" value="<?php if (isset($_POST['txtDOB'])) echo $_POST['txtDOB']; else echo ''; ?>" readonly data-parsley-trigger="change" data-parsley-required="true" data-parsley-errors-messages-disabled/>*</p> -->
+		  <!-- <p>Shipping Address: <textarea id='txtAddress' name='txtAddress' data-parsley-required="true" data-parsley-errors-messages-disabled><?php if (isset($_POST['txtAddress'])) echo $_POST['txtAddress']; else echo ''; ?></textarea>*</p> -->
 		  <p>Security Question:
 			<select id='ddlSecurityQuestion' name='ddlSecurityQuestion' value="<?php if (isset($_POST['ddlSecurityQuestion'])) echo $_POST['ddlSecurityQuestion']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled>
 			  <option value="" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='') echo 'selected';?>>----SELECT----</option>
@@ -142,16 +144,18 @@ $(document).ready(function() {
 			  <option value="favouriteFood" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='favouriteFood') echo 'selected';?>>What is your favourite food?</option>
 			  <option value="birthPlace" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='birthPlace') echo 'selected';?>>What city were you born in?</option>
 			  <option value="school" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='school') echo 'selected';?>>Where did you go to high school/college?</option>
-			</select>*
+			</select>
 		  </p>
-		  <p>Answer: <input id='txtSecurityAns' name='txtSecurityAns' value="<?php if (isset($_POST['txtSecurityAns'])) echo $_POST['txtSecurityAns']; else echo '123'; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>*</p>
-		  <p class='errorMessage'><small>*All fields are required to complete the registration</small></p>
+		  <p>Answer: <input id='txtSecurityAns' name='txtSecurityAns' value="<?php if (isset($_POST['txtSecurityAns'])) echo $_POST['txtSecurityAns']; else echo ''; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/></p>
+		  <p><small>*All fields are required to complete the registration</small></p>
 		  <input type='submit' value='Submit' name='btnSubmit'/>
 		</form>
 	</div>
 </div>
+
 <script src="../scripts/parsley.min.js"></script>
 <link rel="stylesheet" href="../css/parsley.css" type="text/css" />
+
 <script language="JavaScript" type="text/javascript">
 $(document).ready(function() {
   // instanciate parsley and set the container as the element title without a wrapper
