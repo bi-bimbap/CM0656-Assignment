@@ -19,7 +19,8 @@ $environment = LOCAL; //TODO: Change to server
 <?php //Only show content if user is logged in
 $_SESSION['userID'] = '3'; //TODO: Remove session
 $_SESSION['userType'] = 'admin'; //TODO: Remove
-$_SESSION['logged-in'] = true;
+$_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
+$_SESSION['logged-in'] = true; //TODO: Remove
 
 if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && isset($_SESSION['userID']) && isset($_SESSION['userType'])) {
 ?>
@@ -38,6 +39,11 @@ mysqli_stmt_close($stmt);
 
   <link href="../css/bootstrap.css" rel="stylesheet">
   <script src="../scripts/jquery.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
   <script src="../scripts/bootstrap.min.js"></script>
   <script src="../scripts/parsley.min.js"></script>
   <link rel="stylesheet" href="../css/parsley.css" type="text/css" />
@@ -47,6 +53,11 @@ mysqli_stmt_close($stmt);
     $('.modal').on('hidden.bs.modal', function(e) { //Reset field values when popup modal is closed
       $(".modal-body select").val("");
       $(".modal-body input").val("");
+    });
+
+    $('#btnUpdateDetails').on('click', function(e) { //Confirm to ban a member
+      $("#tab").parsley().validate(); //Trigger parsley js validation
+
     });
   });
   </script>
