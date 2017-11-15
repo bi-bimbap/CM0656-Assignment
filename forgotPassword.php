@@ -4,7 +4,7 @@ session_start();
 include 'db/database_conn.php';
 require_once('controls.php');
 echo makePageStart("Forgot Password");
-echo makeWrapper();
+echo "<div class='wrapper'><div class='container'><div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>";
 echo makeLoginLogoutBtn();
 echo makeProfileButton();
 echo makeNavMenu();

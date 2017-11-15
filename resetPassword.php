@@ -6,7 +6,9 @@ include_once 'config.php';
 require_once('controls.php');
 require_once('functions.php');
 echo makePageStart("Reset Password");
-echo makeHeader("Rerset Password");
+echo "<div class='wrapper'><div class='container'><div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>";
+echo makeNavMenu();
+echo makeHeader("Reset Password");
 $environment = LOCAL;
 ?>
 
@@ -50,7 +52,7 @@ $(document).ready(function() {
     if ($("#formResetPassword").parsley().isValid()) {
       var password = $("#txtPassword").val();
       var email = $("#lblEmail").text();
-      //console.log(email);
+
       $.ajax({
         url : "forgotPassword_serverProcessing.php",
         type: "POST",
