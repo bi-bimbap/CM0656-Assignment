@@ -43,8 +43,8 @@ $environment = LOCAL; //TODO: Change to server
 --------------------------------------------------------------------------------------------------------------------------->
 <?php
       if(isset($_POST['createThread_submit']) && !empty($_POST['txtThreadName'] && !empty($_POST['txtThreadDesc'])) ){
-        //obtain user
 
+        //obtain user input
         $thread_name = filter_has_var(INPUT_POST,'txtThreadName') ? $_POST['txtThreadName']: null;
         $thread_desc = filter_has_var(INPUT_POST,'txtThreadDesc') ? $_POST['txtThreadDesc']: null;
 
@@ -72,6 +72,7 @@ $environment = LOCAL; //TODO: Change to server
           mysqli_stmt_close($stmtNewThread);
           mysqli_close($conn);
 
+          //validation: Prevent Resubmit Users' Previous Input Data
           clearstatcache();
 }
 ?>
