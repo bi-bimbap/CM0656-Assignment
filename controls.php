@@ -1,7 +1,5 @@
 <?php
-function makePageStart($pageTitle)
-{
- //Start page
+function makePageStart($pageTitle) { //Start page
     $pageStartContent = <<<PAGESTART
 <!DOCTYPE html>
 <html lang="en">
@@ -15,24 +13,13 @@ function makePageStart($pageTitle)
 PAGESTART;
     $pageStartContent .="\n";
     return $pageStartContent;
-}
-// <link href="css/$css" rel="stylesheet" type="text/css" />
-// <script src="scripts/jquery.js"></script>
-// <script type='text/javascript' src='scripts/functions.js'></script>
-// <script type='text/javascript' src='scripts/jquery-2.2.0.js'></script>
-// <script type='text/javascript' src='scripts/jquery-ui-1.12.1/jquery-ui.js'></script>
-// <link rel="stylesheet" href="css/jquery-ui.css" type="text/css" />
-// <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+  }
 
-function makePageEnd()
-{
- //End page
+function makePageEnd() { //End page
     return "</body>\n</html>";
 }
 
-function makeHeader($pageHeader)
-{
- //Display header
+function makeHeader($pageHeader) { //Display header
     $headContent = <<<HEAD
 <header>
   <h1>$pageHeader</h1>
@@ -42,20 +29,21 @@ HEAD;
     return $headContent;
 }
 
-function makeWrapper()
-{
-	$wrapper = "<div class='wrapper'><div class='container'><div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>";
+function makeWrapper() {
+	$wrapper = "<div class='wrapper'>
+                <div class='container'>
+                  <div id='logo'>
+                    <img src='../images/logo.png'/>Ima's Official Fanbase
+                  </div>";
 	return $wrapper;
 }
 
-function makeFooter()
-{
- //Display footer
+function makeFooter() { //Display footer
     $footContent = <<< FOOT
 <footer>
 	<div class="container">
 		 <div>
-			<div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>
+			<div id='logo'><img src='../images/logo.png'/>Ima's Official Fanbase</div>
 		 </div>
 		 <div class="middle">
 			<div><i class="fa fa-envelope"></i> info@imamegastar.forum.com</div>
@@ -84,7 +72,7 @@ FOOT;
 function makeNavMenu() {
   $navBar = <<<NAVBAR
 <nav><ul>
-<li><a href="#">Home</a></li>
+<li><a href="index.php">Home</a></li>
 <li><a href="#">Auction</a></li>
 <li><a href="#">Gallery</a></li>
 <li><a href="#">Discussion Board</a></li>
@@ -98,7 +86,7 @@ NAVBAR;
 function makeProfileButton() {
   $profileButton = "<div class='dropdown'>";
   $profileButton .= "<button class='btn btn-secondary dropdown-toggle' type='button' id='btnAccountInfo' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-  $profileButton .= "<i class='fa fa-user'></i>"; //TODO: Substitute as profile image
+  $profileButton .= "<i class='fa fa-user'></i>";
   $profileButton .= "</button>";
 
   $profileButton .= "<div class='dropdown-menu' aria-labelledby='btnAccountInfo'>";
@@ -113,31 +101,30 @@ function makeProfileButton() {
   return $profileButton;
 }
 
-function makeLoginLogoutBtn() {
- //Display login/logout button based on session
-    $output = "<div id='loginLogoutDiv'>";
+function makeLoginLogoutBtn() { //Display login/logout button based on session
+  $output = "<div id='loginLogoutDiv'>";
 
-    if (isset($_SESSION['logged-in']) && ($_SESSION['logged-in'] == true)) {
-        $output .= "<p>Welcome, " . $_SESSION['username'] . "\n";
-        $output .= "<input type='submit' name='btnLogout' value='L&#818;ogout' accessKey='L'></p>";
-    }
-    else {
-        $output .= "<p><input type='submit' name='btnLogin' value='L&#818;ogin' accessKey='L'></p>";
-    }
-    $output .= "</div>";
+  if (isset($_SESSION['logged-in']) && ($_SESSION['logged-in'] == true)) {
+      $output .= "<p>Welcome, " . $_SESSION['username'] . "\n";
+      $output .= "<input type='submit' name='btnLogout' value='L&#818;ogout' accessKey='L'></p>";
+  }
+  else {
+      $output .= "<p><input type='submit' name='btnLogin' value='L&#818;ogin' accessKey='L'></p>";
+  }
+  $output .= "</div>";
 
   //Perform actions if login/logout button is clicked
-    if (isset($_POST['btnLogout'])) {
-        setCookie(session_name(), "", time() - 1000, "/");
-        $_SESSION = array();
-        session_destroy();
-        $redirect = $_SERVER['REQUEST_URI']; //Return users to the originating page after logout
-        header('Location:' . $redirect);
-    }
+  if (isset($_POST['btnLogout'])) {
+      setCookie(session_name(), "", time() - 1000, "/");
+      $_SESSION = array();
+      session_destroy();
+      $redirect = $_SERVER['REQUEST_URI']; //Return users to the originating page after logout
+      header('Location:' . $redirect);
+  }
 
-    if (isset($_POST['btnLogin'])) {
-        $_SESSION['origin'] = $_SERVER['REQUEST_URI']; //Store current page URL
-        header('Location: loginForm.php');
-    }
-    return $output;
+  if (isset($_POST['btnLogin'])) {
+      $_SESSION['origin'] = $_SERVER['REQUEST_URI']; //Store current page URL
+      header('Location: loginForm.php');
+  }
+  return $output;
 }

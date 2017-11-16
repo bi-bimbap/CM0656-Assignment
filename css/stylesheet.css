@@ -1,6 +1,7 @@
 body{
 	letter-spacing:0.5px!important;
 	font-family: 'Lato'!important;
+	
 }
 
 .container{
@@ -18,8 +19,8 @@ body{
 	margin-top: 30px;
 	margin-bottom: 30px;
 	color: white;
-	font-size: 30px;
-	letter-spacing: 3px;
+	font-size: 20px;
+    letter-spacing: 0.3px;
 }
 
 .wrapper #logo + div{
@@ -56,7 +57,9 @@ body{
 	margin-top:40px;
 	letter-spacing: 0.7px;
 }
-
+.content{
+	font-size:24px!
+}
 .wrapper p:hover input, .content p:hover input[type="submit"]{
 	color:#ac967a;
 	background:#fff;
@@ -132,8 +135,67 @@ form #email p, form #password p{
 #email, #password{
 	margin-bottom:15px;
 }
-
-input[type="text"], input[type="password"]{
+#signUpForm p, #signUpForm div{
+    margin-bottom: 25px;
+    line-height: 45px;
+	vertical-align:top;
+	font-size:24px;
+}
+#signUpForm div{
+	margin-bottom:0px;
+}
+#signUpForm textarea, #signUpForm select{
+	border: 1px solid #e6e6e6;
+    padding: 7px 15px;
+	width:500px;
+	margin-left:15px;
+}
+#signUpForm h6{
+	   font-size: 16px;
+	   margin-bottom:20px;
+    font-style: italic;
+}
+#signUpForm input[type="submit"]{
+	color:white;
+	background:#ac967a;
+	border:1px solid #ac967a;
+	color:white;
+	transition:all 0.2s;
+	outline:none;
+	padding:10px 20px;
+	letter-spacing: 0.7px;
+}
+#signUpForm input{
+    margin-left: 200px;
+    left: 270px;
+	line-height: 24px;
+    position: absolute;
+	border: 1px solid #e6e6e6;
+    padding: 7px 15px;
+}
+#signUpForm span{
+	vertical-align: top;
+}
+#signUpForm div > P{
+	   display: inline-block;
+    margin-left: 375px;
+}
+#signUpForm #txtConfirmPassword{
+	    left: 830px;
+}
+#signUpForm input[type="password"]{
+	width:300px;
+}
+#txtDOB{
+    border: 1px solid #e6e6e6;
+    padding: 7px 32px;
+    /* background: white; */
+    font-size: 16px;
+    width: 160px;
+    height: 45px;
+    font-style: italic;
+}
+input[type="text"], input[type="password"], input[type="email"]{
 	border:1px solid #e6e6e6;
 	padding:7px 15px;
 	/* background:white; */
