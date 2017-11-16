@@ -51,12 +51,13 @@ $environment = LOCAL;
 
         //TODO Change "threadDescription" to "userID"
         // select first 5 posts
-        $sqlDiscussion = "SELECT threadName, threadDescription FROM discussion_thread ORDER BY threadName DESC limit 0,$viewmore";
+        $sqlDiscussion = "SELECT threadID, threadName, threadDescription FROM discussion_thread ORDER BY threadName DESC limit 0,$viewmore";
 
         $stmtDiscussion = mysqli_prepare($conn, $sqlDiscussion) or die( mysqli_error($conn));
         $discussion= mysqli_query($conn,$sqlDiscussion);
 
         while ($row = mysqli_fetch_array($discussion)) {
+            $thread_id           = $row['threadID'];
             $thread_name         = $row['threadName'];
             $thread_desc         = $row['threadDescription'];
 
@@ -64,7 +65,7 @@ $environment = LOCAL;
             "<div class='displayDiscussionInfo'
               <tbody>
                 <tr>
-                  <td>$thread_name</td>
+                  <td><a href=\"Member_createMessage.php?threadID=$thread_id\">$thread_name</a></td>
                   <td>$thread_desc</td>
                 </tr>
               </tbody>
