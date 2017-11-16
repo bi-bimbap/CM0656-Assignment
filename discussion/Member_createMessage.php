@@ -25,24 +25,16 @@ $environment = LOCAL; //TODO: Change to server
     if(isset($_GET['threadID'])){
       $thread_id = $_GET['threadID'];
     }
-      $sqlNewMessage = "SELECT discussion_message.threadID, discussion_thread.threadName
-      FROM discussion_message INNER JOIN discussion_thread ON discussion_message.threadID=discussion_thread.threadID WHERE discussion_message.threadID=$thread_id";
 
-      $stmtNewMessage = mysqli_prepare($conn, $sqlNewMessage) or die( mysqli_error($conn));
-      $NewMessage= mysqli_query($conn,$sqlNewMessage);
-
-      while ($row = mysqli_fetch_array($NewMessage)) {
-          $thread_id           = $row['threadID'];
-          $thread_name         = $row['threadName'];
-
-          echo "<div class='paragraph'>
-        					<h2><b>TITLE : 			</b></h2>
-        					<p>". $row['threadName'] . "</p>
-        				</div>";
-      }
-
+      $sqlGetThread = "SELECT threadName, threadDescription
+      FROM discussion_thread WHERE threadID = ?";
+      $stmtGetThread = mysqli_prepare($conn, $sqlGetThread) or die(mysqli_error($conn));
+      mysqli_stmt_bind_param($stmtGetThread, "i", $thread_id);
+      mysqli_stmt_execute($stmtGetThread);
+      mysqli_stmt_bind_result($stmtGetThread, $threadName, $threadDesc);
+      mysqli_stmt_fetch($stmtGetThread);
         //mysqli_stmt_close($stmtDiscussion);
-        mysqli_free_result($NewMessage);
+        mysqli_stmt_close($stmtGetThread);
         mysqli_close($conn);
 ?>
 
@@ -51,7 +43,9 @@ $environment = LOCAL; //TODO: Change to server
 //} //for ajax, close
 //Selected thread as header
 // echo makeMessageHeader();
-echo makeHeader($thread_name);
+echo makeHeader($threadName);
+echo "Title:".$threadName."<br/>";
+echo "Description:".$threadDesc."<br/>";
 echo makeFooter();
 echo makePageEnd();
 ?>
