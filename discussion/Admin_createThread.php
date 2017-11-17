@@ -6,6 +6,9 @@ include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Create Discussion Thread");
+echo makeWrapper();
+echo makeLoginLogoutBtn();
+echo makeProfileButton();
 echo makeNavMenu();
 echo makeHeader("Create Discussion Thread");
 $environment = LOCAL; //TODO: Change to server
@@ -21,26 +24,25 @@ $environment = LOCAL; //TODO: Change to server
 <script src="../scripts/parsley.min.js"></script>
 
 <!-- TODO: Change the form to be POP OUT form -->
-<!--------------------------------------------------------------------------------------------------------------------------
+<!--*******************************************************************************************************************************************************
    Script - Pop Our Form for Create New Thread
---------------------------------------------------------------------------------------------------------------------------->
+*******************************************************************************************************************************************************-->
 
-<!------------------------------------------------------------------------------------------------------------------------
+<!--*******************************************************************************************************************************************************
       DISCUSSION BOARD : Create New Thread Form
-------------------------------------------------------------------------------------------------------------------------->
+*******************************************************************************************************************************************************-->
     <form id="createThreadForm" data-parsley-validate method="post">
-          <p>Thread Name: <input type="text" id="txtThreadName" name="txtThreadName" data-parsley-required="true" placeholder="Thread Name" /></p>
-          <p>Thread Description: <input type="text" id="txtThreadDesc" name="txtThreadDesc" data-parsley-required="true" placeholder="Description" /></p>
-          <!-- <input type="submit" name="createThread_submit" id="createThread_submit" value="Create" /> -->
-          <button type="submit" name="createThread_submit" id="createThread_submit">Create</button>
+          <p>Thread Name: <input type="text" id="txtThreadName" name="txtThreadName" data-parsley-required="true"/></p>
+          <p>Thread Description: <textarea type="text" id="txtThreadDesc" name="txtThreadDesc" data-parsley-required="true"></textarea></p>
+          <input type='submit' value='Create New Thread' name='createThread_submit' />
       </br>
       </br>
       </br>
     </form>
 
-<!--------------------------------------------------------------------------------------------------------------------------
+<!--*******************************************************************************************************************************************************
       DISCUSSION BOARD: "Create" Submit Button Function
---------------------------------------------------------------------------------------------------------------------------->
+*******************************************************************************************************************************************************-->
 <?php
       if(isset($_POST['createThread_submit']) && !empty($_POST['txtThreadName'] && !empty($_POST['txtThreadDesc'])) ){
 
