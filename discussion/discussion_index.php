@@ -44,10 +44,6 @@ $environment = LOCAL;
     <?php
         //TODO Change "threadDescription" to "userID"
 
-        if(isset($_GET['threadID'])){
-          $thread_id = $_GET['threadID'];
-        }
-
         $sqlDiscussion = "SELECT threadID, threadName, threadDescription
         FROM discussion_thread ORDER BY threadName DESC";
 
@@ -56,12 +52,7 @@ $environment = LOCAL;
         mysqli_stmt_bind_result($stmtDiscussion, $thread_id, $thread_name, $thread_desc);
         mysqli_stmt_fetch($stmtDiscussion);
 
-        // while ($row = mysqli_stmt_fetch($stmtDiscussion)) {
-        //     $thread_id           = $row['threadID'];
-        //     $thread_name         = $row['threadName'];
-        //     $thread_desc         = $row['threadDescription'];
-
-        ////$stmtDiscussion= mysqli_query($conn,$sqlDiscussion);
+        while (mysqli_stmt_fetch($stmtDiscussion)) {
             echo
             "<tbody>
                 <tr>
@@ -69,7 +60,7 @@ $environment = LOCAL;
                   <td>$thread_desc</td>
                 </tr>
               </tbody>";
-        //}
+        }
         ////mysqli_free_result($stmtDiscussion);
         mysqli_stmt_close($stmtDiscussion);
         mysqli_close($conn);
