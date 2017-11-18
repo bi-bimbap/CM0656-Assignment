@@ -5,12 +5,12 @@ include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
-echo makePageStart("Discussion Board");
+echo makePageStart("Discussion Index");
 echo makeWrapper();
 echo makeLoginLogoutBtn();
 echo makeProfileButton();
 echo makeNavMenu();
-echo makeHeader("Discussion Board");
+echo makeHeader("Discussion Index");
 $environment = LOCAL;
 ?>
 
@@ -44,22 +44,18 @@ $environment = LOCAL;
     <?php
         //TODO Change "threadDescription" to "userID"
 
-        if(isset($_GET['threadID'])){
-          $thread_id = $_GET['threadID'];
-        }
-
         $sqlDiscussion = "SELECT threadID, threadName, threadDescription
         FROM discussion_thread ORDER BY threadName DESC";
 
         $stmtDiscussion = mysqli_prepare($conn, $sqlDiscussion) or die( mysqli_error($conn));
         mysqli_stmt_execute($stmtDiscussion);
         mysqli_stmt_bind_result($stmtDiscussion, $thread_id, $thread_name, $thread_desc);
-        mysqli_stmt_fetch($stmtDiscussion);
+        //mysqli_stmt_fetch($stmtDiscussion);
 
-        // while ($row = mysqli_stmt_fetch($stmtDiscussion)) {
-        //     $thread_id           = $row['threadID'];
-        //     $thread_name         = $row['threadName'];
-        //     $thread_desc         = $row['threadDescription'];
+        while ($row = mysqli_stmt_fetch($stmtDiscussion)) {
+            $thread_id           = $row['threadID'];
+            $thread_name         = $row['threadName'];
+            $thread_desc         = $row['threadDescription'];
 
         ////$stmtDiscussion= mysqli_query($conn,$sqlDiscussion);
             echo
@@ -69,7 +65,7 @@ $environment = LOCAL;
                   <td>$thread_desc</td>
                 </tr>
               </tbody>";
-        //}
+        }
         ////mysqli_free_result($stmtDiscussion);
         mysqli_stmt_close($stmtDiscussion);
         mysqli_close($conn);
