@@ -28,8 +28,14 @@ $environment = LOCAL;
 <!--******************************************************************************************************************
     Validation - Only Only admin can view "Create New Thread" button
 ******************************************************************************************************************-->
+<?php
+  if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
+  (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
 
-
+    echo
+    "<input type='submit' value='Create New Thread' name='createThread_start' />";
+  }
+?>
 <!--******************************************************************************************************************
     DISCUSSION BOARD : List Created Discussion Message and Information
 *******************************************************************************************************************-->
@@ -38,30 +44,33 @@ $environment = LOCAL;
   <thead>
     <tr>
       <th>Thread Name</th>
-      <th>Thread Description</th>
+      <th>Post By</th>
     </tr>
   </thead>
     <?php
         //TODO Change "threadDescription" to "userID"
 
-        $sqlDiscussion = "SELECT threadID, threadName, threadDescription
-        FROM discussion_thread ORDER BY threadName DESC";
+        $sqlDiscussion = "SELECT discussion_message.threadID, discussion_thread.threadName, user.username
+        FROM discussion_message
+        INNER JOIN discussion_thread
+        ON discussion_message.threadID=discussion_thread.threadID
+        INNER JOIN user
+        ON discussion_message.userID=user.userID
+        ORDER BY discussion_thread.threadName DESC";
 
         $stmtDiscussion = mysqli_prepare($conn, $sqlDiscussion) or die( mysqli_error($conn));
         mysqli_stmt_execute($stmtDiscussion);
-        mysqli_stmt_bind_result($stmtDiscussion, $thread_id, $thread_name, $thread_desc);
-        //mysqli_stmt_fetch($stmtDiscussion);
+        mysqli_stmt_bind_result($stmtDiscussion, $thread_id, $thread_name, $post_username);
 
         while (mysqli_stmt_fetch($stmtDiscussion)) {
             echo
             "<tbody>
                 <tr>
                   <td><a href=\"Member_postMessage.php?threadID=$thread_id\">$thread_name</a></td>
-                  <td>$thread_desc</td>
+                  <td>$post_username</td>
                 </tr>
               </tbody>";
         }
-        ////mysqli_free_result($stmtDiscussion);
         mysqli_stmt_close($stmtDiscussion);
         mysqli_close($conn);
 
