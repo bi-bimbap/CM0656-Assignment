@@ -39,6 +39,7 @@ $environment = LOCAL; //TODO: Change to server
 
       echo makeHeader($threadName);
       echo "<h5>Description: ".$threadDesc."</h5><br/>";
+      mysqli_stmt_close($stmtGetThread);
 ?>
 
 <!--*******************************************************************************************************************************************************
