@@ -1,3 +1,4 @@
+<!-- TODO  MOVE TO "DISCUSSION INDEX" AJAX POP OUT -->
 <?php
 ini_set("session.save_path", "");
 session_start();
@@ -34,12 +35,14 @@ $environment = LOCAL; //TODO: Change to server
 <?php
     if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
     (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
-      echo $_SESSION['userType'];
     /*********************************************************************************************************************************************************
           DISCUSSION BOARD: "Create" Submit Button Function
     *********************************************************************************************************************************************************/
-        if(isset($_POST['createThread_submit']) && !empty($_POST['txtThreadName'] && !empty($_POST['txtThreadDesc'])) ){
+        if(isset($_POST['createThread_submit']) && !empty($_POST['txtThreadName'] && ($_POST['txtThreadDesc'])) ){
 
+          //TODO Retrieve logged in username "userID"
+          //$_SESSION['username'] = 'Seah Jia-min';
+          
           //obtain user input
           $thread_name = filter_has_var(INPUT_POST,'txtThreadName') ? $_POST['txtThreadName']: null;
           $thread_desc = filter_has_var(INPUT_POST,'txtThreadDesc') ? $_POST['txtThreadDesc']: null;
@@ -57,6 +60,7 @@ $environment = LOCAL; //TODO: Change to server
           $stmtNewThread = mysqli_prepare($conn, $sqlNewThread) or die( mysqli_error($conn));
           mysqli_stmt_bind_param($stmtNewThread, 'ss', $thread_name, $thread_desc);
           mysqli_stmt_execute($stmtNewThread);
+          mysqli_stmt_bind_result($stmtNewThread, $thread_name, $thread_desc);
 
           	if (mysqli_stmt_affected_rows($stmtNewThread) > 0) {
           		echo "<script>alert('New Thread has been created successfully!')</script>";
@@ -76,9 +80,9 @@ $environment = LOCAL; //TODO: Change to server
     {
       $url = "../loginForm.php";
       echo "<script type='text/javascript'>";
-      echo "alert('You are not the administrator, please log in as administrator to access this page!');";
+      echo "alert('You are not administrator, please log in as administrator to access this page!');";
       echo 'window.location.href="'.$url.'";';
-      echo '</script>';
+      echo "</script>";
     }
 ?>
 
@@ -89,7 +93,7 @@ $environment = LOCAL; //TODO: Change to server
         <p>Thread Name: <input type="text" id="txtThreadName" name="txtThreadName" data-parsley-required="true" placeholder="Thread Name" /></p>
         <p>Thread Description: <textarea type="text" id="txtThreadDesc" name="txtThreadDesc" data-parsley-required="true" placeholder="Description" ></textarea></p>
         <!-- <input type="submit" name="createThread_submit" id="createThread_submit" value="Create" /> -->
-        <input type='submit' value='Create New Thread' name='createThread_submit' />
+        <input type='submit' value='Create' name='createThread_submit' />
           </br>
           </br>
           </br>

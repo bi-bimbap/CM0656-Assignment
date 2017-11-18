@@ -47,34 +47,28 @@ $environment = LOCAL;
       <th>Post By</th>
     </tr>
   </thead>
-    <?php
-        //TODO Change "threadDescription" to "userID"
 
-        $sqlDiscussion = "SELECT discussion_message.threadID, discussion_thread.threadName, user.username
-        FROM discussion_message
-        INNER JOIN discussion_thread
-        ON discussion_message.threadID=discussion_thread.threadID
-        INNER JOIN user
-        ON discussion_message.userID=user.userID
-        ORDER BY discussion_thread.threadName DESC";
+  <?php
+      $sqlDiscussion = "SELECT discussion_thread.threadID, discussion_thread.threadName, user.username
+      FROM discussion_thread
+      INNER JOIN user
+      ON discussion_thread.userID=user.userID
+      ORDER BY discussion_thread.threadID";
 
-        $stmtDiscussion = mysqli_prepare($conn, $sqlDiscussion) or die( mysqli_error($conn));
-        mysqli_stmt_execute($stmtDiscussion);
-        mysqli_stmt_bind_result($stmtDiscussion, $thread_id, $thread_name, $post_username);
+      $stmtDiscussion = mysqli_prepare($conn, $sqlDiscussion) or die( mysqli_error($conn));
+      mysqli_stmt_execute($stmtDiscussion);
+      mysqli_stmt_bind_result($stmtDiscussion, $thread_id, $thread_name, $admin_username);
 
-        while (mysqli_stmt_fetch($stmtDiscussion)) {
-            echo
-            "<tbody>
-                <tr>
-                  <td><a href=\"Member_postMessage.php?threadID=$thread_id\">$thread_name</a></td>
-                  <td>$post_username</td>
-                </tr>
-              </tbody>";
-        }
-        mysqli_stmt_close($stmtDiscussion);
-        mysqli_close($conn);
-
-?>
+      while (mysqli_stmt_fetch($stmtDiscussion)) {
+          echo
+          "<tbody>
+              <tr>
+                <td><a href=\"Member_postMessage.php?threadID=$thread_id\">$thread_name</a></td>
+                <td>$admin_username</td>
+              </tr>
+            </tbody>";
+      }
+  ?>
 <!--***************************************************************************************************************
     Discussiom: Search Function
 ****************************************************************************************************************-->
@@ -94,7 +88,6 @@ $environment = LOCAL;
     // $allcount_fetch = mysqli_fetch_array($allcount_result);
     // $allcount = $allcount_fetch['allcount'];
     //
-    // //TODO Change "threadDescription" to "userID"
     // // select first 5 posts
     // $sqlDiscussion = "SELECT threadID, threadName, threadDescription
     // FROM discussion_thread ORDER BY threadName DESC limit 0, $viewmore";
@@ -220,6 +213,9 @@ console.log("testing");
 // </script> -->
 
 <?php
+    mysqli_stmt_close($stmtDiscussion);
+    mysqli_close($conn);
+
 //} //for ajax, close
 echo makeFooter();
 echo makePageEnd();
