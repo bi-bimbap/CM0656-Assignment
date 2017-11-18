@@ -34,7 +34,7 @@ $environment = LOCAL; //TODO: Change to server
 ***********************************************************-->
 <?php
     if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
-    (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
+    (isset($_SESSION['userType']) && ($_SESSION['userType'] == "senior" || $_SESSION['userType'] == "junior"))) {
     /*********************************************************************************************************************************************************
           DISCUSSION BOARD: "Create" Submit Button Function
     *********************************************************************************************************************************************************/
@@ -42,7 +42,7 @@ $environment = LOCAL; //TODO: Change to server
 
           //TODO Retrieve logged in username "userID"
           //$_SESSION['username'] = 'Seah Jia-min';
-          
+
           //obtain user input
           $thread_name = filter_has_var(INPUT_POST,'txtThreadName') ? $_POST['txtThreadName']: null;
           $thread_desc = filter_has_var(INPUT_POST,'txtThreadDesc') ? $_POST['txtThreadDesc']: null;
@@ -56,7 +56,7 @@ $environment = LOCAL; //TODO: Change to server
           $thread_desc = filter_var($thread_desc, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
           //Insert user's input into database
-          $sqlNewThread = "INSERT INTO discussion_thread (threadName, threadDescription)	VALUES (?,?)";
+          $sqlNewThread = "INSERT INTO discussion_thread(threadName, threadDescription)	VALUES (?,?)";
           $stmtNewThread = mysqli_prepare($conn, $sqlNewThread) or die( mysqli_error($conn));
           mysqli_stmt_bind_param($stmtNewThread, 'ss', $thread_name, $thread_desc);
           mysqli_stmt_execute($stmtNewThread);
@@ -68,12 +68,11 @@ $environment = LOCAL; //TODO: Change to server
             else {
           		echo "<script>alert('Failed to create! Try Again!')</script>";
           	}
+            //validation: Prevent Resubmit Users' Previous Input Data
+            clearstatcache();
 
           mysqli_stmt_close($stmtNewThread);
           mysqli_close($conn);
-
-          //validation: Prevent Resubmit Users' Previous Input Data
-          clearstatcache();
         }
     }
     else
@@ -92,8 +91,7 @@ $environment = LOCAL; //TODO: Change to server
     <form id="createThreadForm" data-parsley-validate method="post">
         <p>Thread Name: <input type="text" id="txtThreadName" name="txtThreadName" data-parsley-required="true" placeholder="Thread Name" /></p>
         <p>Thread Description: <textarea type="text" id="txtThreadDesc" name="txtThreadDesc" data-parsley-required="true" placeholder="Description" ></textarea></p>
-        <!-- <input type="submit" name="createThread_submit" id="createThread_submit" value="Create" /> -->
-        <input type='submit' value='Create' name='createThread_submit' />
+        <input type='submit' id='createThread_submit' name='createThread_submit' value='Create' />
           </br>
           </br>
           </br>
