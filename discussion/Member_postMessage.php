@@ -36,8 +36,6 @@ $environment = LOCAL; //TODO: Change to server
       mysqli_stmt_execute($stmtGetThread);
       mysqli_stmt_bind_result($stmtGetThread, $threadName, $threadDesc);
       mysqli_stmt_fetch($stmtGetThread);
-      mysqli_stmt_close($stmtGetThread);
-      mysqli_close($conn);
 
       echo makeHeader($threadName);
       echo "<h5>Description: ".$threadDesc."</h5><br/>";
@@ -49,11 +47,15 @@ $environment = LOCAL; //TODO: Change to server
 <?php
     $sqlGetMessage = "SELECT user.username, discussion_message.messageContent, discussion_message.messageDateTime
     FROM discussion_message
+    INNER JOIN discussion_thread
+    ON discussion_message.threadID=discussion_thread.threadID
     INNER JOIN user
     ON discussion_message.userID=user.userID
+    WHERE discussion_thread.threadID = ?
     ORDER BY messageDateTime DESC";
 
     $stmtGetMessage = mysqli_prepare($conn, $sqlGetMessage) or die(mysqli_error($conn));
+    mysqli_stmt_bind_param($stmtGetMessage, "i", $thread_id);
     mysqli_stmt_execute($stmtGetMessage);
     mysqli_stmt_bind_result($stmtGetMessage, $userName, $messageContent, $messageDateTime);
 
@@ -62,12 +64,14 @@ $environment = LOCAL; //TODO: Change to server
         "<div class='content'>
             <div class='container'>
                 <div class='message-group'>
-                    <div>
-                      <p>$messageContent</p>
-                    </div>
-                    <div>
-                      <div>$userName</div>
-                      <div>$messageDateTime</div>
+                    <div class='message-public'>
+                        <div>
+                          <p>$messageContent</p>
+                        </div>
+                        <div>
+                          <div>$userName</div>
+                          <div>$messageDateTime</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -80,18 +84,32 @@ $environment = LOCAL; //TODO: Change to server
 <!--**********************************************************
  ***** Validation: only member can view this page ***********
 ***********************************************************-->
-<!-- <?php
+<?php
 // if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
 // (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
 
-?> -->
-<!--*******************************************************************************************************************************************************
+/*******************************************************************************************************************************************************
       DISCUSSION BOARD: Post New Message
-*******************************************************************************************************************************************************-->
-    <!-- Validation - Only member can post message -->
+*******************************************************************************************************************************************************/
+    //Validation - Only member can post message
 
-
-
+    // echo
+    // "<div class='content'>
+    //     <div class='container'>
+    //         <div class='message-group'>
+    //             <div class='message-public'>
+    //                 <div>
+    //                   <p>$messageContent</p>
+    //                 </div>
+    //                 <div>
+    //                   <div>$userName</div>
+    //                   <div>$messageDateTime</div>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     </div>
+    // </div>";
+?>
 <!--*******************************************************************************************************************************************************
       DISCUSSION BOARD: Reply Message
 *******************************************************************************************************************************************************-->
