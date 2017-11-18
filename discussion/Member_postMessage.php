@@ -24,7 +24,7 @@ $environment = LOCAL; //TODO: Change to server
 <script src="../scripts/jquery.js"></script>
 
 <?php
-//Display Thread Title
+    //Display Thread Title
     if(isset($_GET['threadID'])){
       $thread_id = $_GET['threadID'];
     }
@@ -51,13 +51,18 @@ $environment = LOCAL; //TODO: Change to server
       $messageID = $_GET['messageID'];
     }
 
-    $sqlGetMessage = "SELECT userID, messageContent, messageDateTime
-    FROM discussion_message ORDER BY messageDateTime DESC";
-
+    $sqlGetMessage = "SELECT messageID, userID, messageContent, messageDateTime
+    FROM discussion_message WHERE messageID=$messageID ORDER BY messageDateTime DESC";
     $stmtGetMessage = mysqli_prepare($conn, $sqlGetMessage) or die(mysqli_error($conn));
+    mysqli_stmt_bind_param($stmtGetMessage, "i", $messageID);
     mysqli_stmt_execute($stmtGetMessage);
     mysqli_stmt_bind_result($stmtGetMessage, $userID, $messageContent, $messageDateTime);
-    mysqli_stmt_fetch($stmtGetMessage);
+    //mysqli_stmt_fetch($stmtGetMessage);
+    while($row = mysqli_stmt_fetch($sqlGetMessage)){
+        $messageID        = $row['messageID'];
+        $userID           = $row['userID'];
+        $messageContent   = $row['messageContent'];
+        $messageDateTime  = $row['messageDateTime'];
 
         echo
         "<div class='content'>
@@ -73,15 +78,25 @@ $environment = LOCAL; //TODO: Change to server
                 </div>
             </div>
         </div>";
+    }
+
     mysqli_stmt_close($stmtGetMessage);
     mysqli_close($conn);
-
 ?>
 
+<!--**********************************************************
+ ***** Validation: only member can view this page ***********
+***********************************************************-->
+<?php
+if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
+(isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
+
+?>
 <!--*******************************************************************************************************************************************************
       DISCUSSION BOARD: Post New Message
 *******************************************************************************************************************************************************-->
     <!-- Validation - Only member can post message -->
+
 
 
 <!--*******************************************************************************************************************************************************
@@ -98,6 +113,7 @@ $environment = LOCAL; //TODO: Change to server
 
 <?php
 //} //for ajax, close
+} //for validate member
 echo makeFooter();
 echo makePageEnd();
 ?>

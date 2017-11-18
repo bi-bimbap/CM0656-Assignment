@@ -6,6 +6,9 @@ include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Discussion Board");
+echo makeWrapper();
+echo makeLoginLogoutBtn();
+echo makeProfileButton();
 echo makeNavMenu();
 echo makeHeader("Discussion Board");
 $environment = LOCAL;
@@ -17,19 +20,19 @@ $environment = LOCAL;
 <link rel="stylesheet" href="../css/jquery.dataTables.min.css" />
 <link rel="stylesheet" href="../css/stylesheet.css" />
 
-<script src='../scripts/bootstrap.js'></script>
-<script src='../scripts/jquery.dataTables.min.js'></script>
+<!-- <script src='../scripts/bootstrap.js'></script> -->
+<!-- <script src='../scripts/jquery.dataTables.min.js'></script> -->
 <script src="../scripts/jquery.js"></script>
 
 <!-- TODO: Verification - Only Admin Allowed to Login -->
-<!--------------------------------------------------------------------------------------------------------------------------
-    Verification - Only Admin Can View "Create New Thread" button
---------------------------------------------------------------------------------------------------------------------------->
+<!--******************************************************************************************************************
+    Validation - Only Only admin can view "Create New Thread" button
+******************************************************************************************************************-->
 
 
-<!-----------------------------------------------------------------------------
+<!--******************************************************************************************************************
     DISCUSSION BOARD : List Created Discussion Message and Information
------------------------------------------------------------------------------->
+*******************************************************************************************************************-->
 <div class="displayDiscussionInfo">
 <table id="tblThreadList" class="display" cellspacing="0" width="100%">
   <thead>
@@ -39,43 +42,89 @@ $environment = LOCAL;
     </tr>
   </thead>
     <?php
-        //display 3 rows when "VIEW MORE" button is clicked
-        $row = $_POST['row'];
-        $viewmore = 2;
-
-        //total number of posts
-        $allcount_query = "SELECT count(*) AS allcount FROM discussion_thread";
-        $allcount_result = mysqli_query($conn,$allcount_query);
-        $allcount_fetch = mysqli_fetch_array($allcount_result);
-        $allcount = $allcount_fetch['allcount'];
-
         //TODO Change "threadDescription" to "userID"
-        // select first 5 posts
-        $sqlDiscussion = "SELECT threadID, threadName, threadDescription FROM discussion_thread ORDER BY threadName DESC limit 0,$viewmore";
 
-        $stmtDiscussion = mysqli_prepare($conn, $sqlDiscussion) or die( mysqli_error($conn));
-        $discussion= mysqli_query($conn,$sqlDiscussion);
-
-        while ($row = mysqli_fetch_array($discussion)) {
-            $thread_id           = $row['threadID'];
-            $thread_name         = $row['threadName'];
-            $thread_desc         = $row['threadDescription'];
-
-            echo
-            "<div class='displayDiscussionInfo'
-              <tbody>
-                <tr>
-                  <td><a href=\"Member_createMessage.php?threadID=$thread_id\">$thread_name</a></td>
-                  <td>$thread_desc</td>
-                </tr>
-              </tbody>
-            </div>";
+        if(isset($_GET['threadID'])){
+          $thread_id = $_GET['threadID'];
         }
 
-          //mysqli_stmt_close($stmtDiscussion);
-          mysqli_free_result($discussion);
-          mysqli_close($conn);
-    ?>
+        $sqlDiscussion = "SELECT threadID, threadName, threadDescription
+        FROM discussion_thread ORDER BY threadName DESC";
+
+        $stmtDiscussion = mysqli_prepare($conn, $sqlDiscussion) or die( mysqli_error($conn));
+        mysqli_stmt_execute($stmtDiscussion);
+        mysqli_stmt_bind_result($stmtDiscussion, $thread_id, $thread_name, $thread_desc);
+        mysqli_stmt_fetch($stmtDiscussion);
+
+        // while ($row = mysqli_stmt_fetch($stmtDiscussion)) {
+        //     $thread_id           = $row['threadID'];
+        //     $thread_name         = $row['threadName'];
+        //     $thread_desc         = $row['threadDescription'];
+
+        ////$stmtDiscussion= mysqli_query($conn,$sqlDiscussion);
+            echo
+            "<tbody>
+                <tr>
+                  <td><a href=\"Member_postMessage.php?threadID=$thread_id\">$thread_name</a></td>
+                  <td>$thread_desc</td>
+                </tr>
+              </tbody>";
+        //}
+        ////mysqli_free_result($stmtDiscussion);
+        mysqli_stmt_close($stmtDiscussion);
+        mysqli_close($conn);
+
+?>
+<!--***************************************************************************************************************
+    Discussiom: Search Function
+****************************************************************************************************************-->
+
+
+<!--***************************************************************************************************************
+    Discussiom: View More button function
+****************************************************************************************************************-->
+<!-- <?php
+    // //display 3 rows when "VIEW MORE" button is clicked
+    // $row = $_POST['row'];
+    // $viewmore = 2;
+    //
+    // //total number of posts
+    // $allcount_query = "SELECT count(*) AS allcount FROM discussion_thread";
+    // $allcount_result = mysqli_query($conn,$allcount_query);
+    // $allcount_fetch = mysqli_fetch_array($allcount_result);
+    // $allcount = $allcount_fetch['allcount'];
+    //
+    // //TODO Change "threadDescription" to "userID"
+    // // select first 5 posts
+    // $sqlDiscussion = "SELECT threadID, threadName, threadDescription
+    // FROM discussion_thread ORDER BY threadName DESC limit 0, $viewmore";
+    //
+    // $stmtDiscussion = mysqli_prepare($conn, $sqlDiscussion) or die( mysqli_error($conn));
+    // //$discussion= mysqli_query($conn,$sqlDiscussion);
+    // mysqli_stmt_bind_param($stmtDiscussion, "iss", $thread_id, $thread_name, $thread_desc);
+    // mysqli_stmt_execute($stmtDiscussion);
+    // mysqli_stmt_bind_result($stmtDiscussion, $thread_id, $thread_name, $thread_desc);
+    // mysqli_stmt_fetch($stmtDiscussion);
+
+    // while ($row = mysqli_fetch_array($stmtDiscussion)) {
+    //     $thread_name         = $row['threadName'];
+    //     $thread_desc         = $row['threadDescription'];
+
+//         echo
+//         "<div class='displayDiscussionInfo'
+//           <tbody>
+//             <tr>
+//               <td><a href=\"Member_createMessage.php?threadID=$thread_id\">$thread_name</a></td>
+//               <td>$thread_desc</td>
+//             </tr>
+//           </tbody>
+//         </div>";
+//     // }
+//
+//       //mysqli_stmt_close($stmtDiscussion);
+//       mysqli_stmt_close($stmtDiscussion);
+//       mysqli_close($conn);
+?>
 
 <h3 class="view-more">View More</h3>
     <input type="show" id="row" value="0" />
@@ -143,8 +192,9 @@ console.log("testing");
     }
   });
 });
-</script>
+</script> -->
 </table>
+</div>
 
 <!-- //TODO: Change to Ajax
 //TODO : what should i change this line to??????????
