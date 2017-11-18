@@ -47,23 +47,17 @@ $environment = LOCAL; //TODO: Change to server
       DISCUSSION BOARD: Display Message Content
 *******************************************************************************************************************************************************-->
 <?php
-    if(isset($_GET['messageID'])){
-      $messageID = $_GET['messageID'];
-    }
+    $sqlGetMessage = "SELECT user.username, discussion_message.messageContent, discussion_message.messageDateTime
+    FROM discussion_message
+    INNER JOIN user
+    ON discussion_message.userID=user.userID
+    ORDER BY messageDateTime DESC";
 
-    $sqlGetMessage = "SELECT messageID, userID, messageContent, messageDateTime
-    FROM discussion_message WHERE messageID=$messageID ORDER BY messageDateTime DESC";
     $stmtGetMessage = mysqli_prepare($conn, $sqlGetMessage) or die(mysqli_error($conn));
-    mysqli_stmt_bind_param($stmtGetMessage, "i", $messageID);
     mysqli_stmt_execute($stmtGetMessage);
-    mysqli_stmt_bind_result($stmtGetMessage, $userID, $messageContent, $messageDateTime);
-    //mysqli_stmt_fetch($stmtGetMessage);
-    while($row = mysqli_stmt_fetch($sqlGetMessage)){
-        $messageID        = $row['messageID'];
-        $userID           = $row['userID'];
-        $messageContent   = $row['messageContent'];
-        $messageDateTime  = $row['messageDateTime'];
+    mysqli_stmt_bind_result($stmtGetMessage, $userName, $messageContent, $messageDateTime);
 
+    while(mysqli_stmt_fetch($stmtGetMessage)){
         echo
         "<div class='content'>
             <div class='container'>
@@ -72,14 +66,13 @@ $environment = LOCAL; //TODO: Change to server
                       <p>$messageContent</p>
                     </div>
                     <div>
-                      <div>$userID</div>
+                      <div>$userName</div>
                       <div>$messageDateTime</div>
                     </div>
                 </div>
             </div>
         </div>";
     }
-
     mysqli_stmt_close($stmtGetMessage);
     mysqli_close($conn);
 ?>
@@ -87,11 +80,11 @@ $environment = LOCAL; //TODO: Change to server
 <!--**********************************************************
  ***** Validation: only member can view this page ***********
 ***********************************************************-->
-<?php
-if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
-(isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
+<!-- <?php
+// if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
+// (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
 
-?>
+?> -->
 <!--*******************************************************************************************************************************************************
       DISCUSSION BOARD: Post New Message
 *******************************************************************************************************************************************************-->
@@ -113,7 +106,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
 
 <?php
 //} //for ajax, close
-} //for validate member
+//} //for validate member
 echo makeFooter();
 echo makePageEnd();
 ?>
