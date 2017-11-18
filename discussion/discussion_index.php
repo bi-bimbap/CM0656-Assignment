@@ -52,12 +52,7 @@ $environment = LOCAL;
         mysqli_stmt_bind_result($stmtDiscussion, $thread_id, $thread_name, $thread_desc);
         //mysqli_stmt_fetch($stmtDiscussion);
 
-        while ($row = mysqli_stmt_fetch($stmtDiscussion)) {
-            $thread_id           = $row['threadID'];
-            $thread_name         = $row['threadName'];
-            $thread_desc         = $row['threadDescription'];
-
-        ////$stmtDiscussion= mysqli_query($conn,$sqlDiscussion);
+        while (mysqli_stmt_fetch($stmtDiscussion)) {
             echo
             "<tbody>
                 <tr>
