@@ -32,16 +32,19 @@ $environment = LOCAL; //TODO: Change to server
 <!--**********************************************************
  ***** Validation: only admin can access this page **********
 ***********************************************************-->
-<?php
-    if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
-    (isset($_SESSION['userType']) && ($_SESSION['userType'] == "senior" || $_SESSION['userType'] == "junior"))) {
+<?php //Only show content if user is logged in
+    $_SESSION['userID'] = '3'; //TODO: Remove session
+    $_SESSION['userType'] = 'admin'; //TODO: Remove
+    $_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
+    $_SESSION['logged-in'] = true; //TODO: Remove
+
+    if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
+    (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
+
     /*********************************************************************************************************************************************************
           DISCUSSION BOARD: "Create" Submit Button Function
     *********************************************************************************************************************************************************/
         if(isset($_POST['createThread_submit']) && !empty($_POST['txtThreadName'] && ($_POST['txtThreadDesc'])) ){
-
-          //TODO Retrieve logged in username "userID"
-          //$_SESSION['username'] = 'Seah Jia-min';
 
           //obtain user input
           $thread_name = filter_has_var(INPUT_POST,'txtThreadName') ? $_POST['txtThreadName']: null;
@@ -56,11 +59,10 @@ $environment = LOCAL; //TODO: Change to server
           $thread_desc = filter_var($thread_desc, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
           //Insert user's input into database
-          $sqlNewThread = "INSERT INTO discussion_thread(threadName, threadDescription)	VALUES (?,?)";
+          $sqlNewThread = "INSERT INTO discussion_thread(userID, threadName, threadDescription)	VALUES (?,?,?)";
           $stmtNewThread = mysqli_prepare($conn, $sqlNewThread) or die( mysqli_error($conn));
-          mysqli_stmt_bind_param($stmtNewThread, 'ss', $thread_name, $thread_desc);
+          mysqli_stmt_bind_param($stmtNewThread, 'sss', $_SESSION['userID'], $thread_name, $thread_desc);
           mysqli_stmt_execute($stmtNewThread);
-          mysqli_stmt_bind_result($stmtNewThread, $thread_name, $thread_desc);
 
           	if (mysqli_stmt_affected_rows($stmtNewThread) > 0) {
           		echo "<script>alert('New Thread has been created successfully!')</script>";
@@ -76,9 +78,9 @@ $environment = LOCAL; //TODO: Change to server
         }
     }
     else
-    {
+    { //Did not login; Redirect to login page
       $url = "../loginForm.php";
-      echo "<script type='text/javascript'>";
+      echo "<script>";
       echo "alert('You are not administrator, please log in as administrator to access this page!');";
       echo 'window.location.href="'.$url.'";';
       echo "</script>";
