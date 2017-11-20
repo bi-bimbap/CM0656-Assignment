@@ -101,18 +101,21 @@ include '../db/database_conn.php';
               <th>&nbsp;</th>
             </tr>
             <?php
-                // $myrow = $obj->fetch_record("create_template");
-                // foreach ($myrow as $row) {
+                $templateSQL = "SELECT * FROM competition_template";
+                $templateRs = mysqli_query($conn, $templateSQL) or die(mysqli_error($conn));
+
+                while ($row = mysqli_fetch_assoc($templateRs)){
 
                   ?>
-                  <!-- <tr>
+                  <tr>
                     <td><?php echo $row["templateID"]; ?></td>
                     <td><?php echo $row["templateTitle"]; ?></td>
                     <td><a href="index.php?update=1&templateID=<?php echo $row["templateID"]; ?>">Edit</a></td>
                     <td><a href="action.php?delete=1&templateID=<?php echo $row["templateID"]; ?>">Delete</a></td>
-                  </tr> -->
+                  </tr>
                   <?php
-                // }
+                }
+                mysqli_stmt_close($stmt);
             ?>
           </table>
         </div>
