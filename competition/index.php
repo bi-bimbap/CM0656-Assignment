@@ -1,6 +1,6 @@
 <?php
-include "action.php";
-
+// include "action.php";
+include '../db/database_conn.php';
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +40,8 @@ include "action.php";
             $where = array("templateID"=>$templateID,);
             $row = $obj->select_record("create_template",$where);
             ?>
-            <form method="post" action="action.php">
+            <!-- <form method="post" action="action.php"> -->
+            <form method="post">
               <table class="table table-hover">
                 <tr>
                   <td><input type="hidden" name="templateID" value="<?php echo $templateID; ?>"></td>
@@ -61,7 +62,8 @@ include "action.php";
             <?php
           }else{
             ?>
-            <form method="post" action="action.php">
+            <!-- <form method="post" action="action.php"> -->
+            <form method="post">
               <table class="table table-hover">
                 <tr>
                   <td>Template Title</td>
@@ -99,18 +101,18 @@ include "action.php";
               <th>&nbsp;</th>
             </tr>
             <?php
-                $myrow = $obj->fetch_record("create_template");
-                foreach ($myrow as $row) {
+                // $myrow = $obj->fetch_record("create_template");
+                // foreach ($myrow as $row) {
 
                   ?>
-                  <tr>
+                  <!-- <tr>
                     <td><?php echo $row["templateID"]; ?></td>
                     <td><?php echo $row["templateTitle"]; ?></td>
                     <td><a href="index.php?update=1&templateID=<?php echo $row["templateID"]; ?>">Edit</a></td>
                     <td><a href="action.php?delete=1&templateID=<?php echo $row["templateID"]; ?>">Delete</a></td>
-                  </tr>
+                  </tr> -->
                   <?php
-                }
+                // }
             ?>
           </table>
         </div>
@@ -119,3 +121,27 @@ include "action.php";
     </div>
 </body>
 </html>
+
+<?php
+if (isset($_POST['submit'])) { //Clicked on submit button
+  //Obtain user input
+  $title = filter_has_var(INPUT_POST, 'title') ? $_POST['title']: null;
+  //Trim white space
+  $title = trim($title);
+  //Sanitize user input
+  $title = filter_var($title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+  $titleSQL = "INSERT INTO competition_template (templateTitle) VALUES (?)";
+  $stmt = mysqli_prepare($conn, $titleSQL) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmt, "s", $title);
+  mysqli_stmt_execute($stmt);
+
+  if (mysqli_stmt_affected_rows($stmt) > 0) {
+    echo "<script>alert('Template created!')</script>";
+  }
+  else {
+    echo "<script>alert('Failed to create template!')</script>";
+  }
+  mysqli_stmt_close($stmt);
+}
+?>
