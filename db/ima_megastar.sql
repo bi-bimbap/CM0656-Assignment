@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 13, 2017 at 11:42 AM
+-- Generation Time: Nov 20, 2017 at 04:41 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -139,6 +139,14 @@ CREATE TABLE `competition_result` (
   `competitionDuration` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `competition_result`
+--
+
+INSERT INTO `competition_result` (`resultID`, `userID`, `testID`, `result`, `competitionDuration`) VALUES
+(1, 38, 1, 90, '00:00:32'),
+(2, 39, 1, 70, '00:03:00');
+
 -- --------------------------------------------------------
 
 --
@@ -149,6 +157,13 @@ CREATE TABLE `competition_template` (
   `templateID` int(10) NOT NULL,
   `templateTitle` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `competition_template`
+--
+
+INSERT INTO `competition_template` (`templateID`, `templateTitle`) VALUES
+(1, 'test');
 
 -- --------------------------------------------------------
 
@@ -237,6 +252,7 @@ CREATE TABLE `photo` (
 CREATE TABLE `report` (
   `reportID` int(10) NOT NULL,
   `contentID` int(10) NOT NULL,
+  `contentType` varchar(255) NOT NULL,
   `userID` int(10) NOT NULL,
   `reportReason` varchar(255) NOT NULL,
   `reportDateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -271,14 +287,14 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`userID`, `fullName`, `username`, `emailAddr`, `passwordHash`, `shippingAddr`, `dob`, `userType`, `userStatus`, `memberConfirmationExpiryDate`, `penaltyCount`, `securityQuestion`, `securityAns`, `registeredDate`) VALUES
-(1, 'Seah Min Min', 'seahjm', 'seahjm96040207@gmail.com', '$2y$10$L79dSkQkm7PqcTS3TllQwuORdYYgbt0fe52A4QPxxZzY08DATjKFC', '14, Tanjung Rambutan, Georgetown, Penang', '1996-09-28', 'senior', 'active', '2017-11-05 09:35:10', 0, 'favouriteBook', 'StarWars', '2017-06-06 00:00:00'),
+(1, 'Seah Min Min', 'seahjm', 'seahjm96040207@gmail.com', '$2y$10$6dqsqkE7j1GqeB8yVv8kDuvPbP4MMOOVLbXNdeOFrHVWCuiRG.fEe', '14, Tanjung Rambutan, Georgetown, Penang', '1996-09-28', 'senior', 'active', '2017-11-15 05:10:52', 0, 'favouriteBook', 'StarWars', '2017-06-06 00:00:00'),
 (2, 'sjm', 'sjm', 'sjm@gmail.com', '$2y$10$QhcmnXerCrhpj.jvc3urA.zC5ugD5khXDP6N6db6OFkRK91ndc4EO', NULL, NULL, 'admin', 'active', NULL, 0, 'favouriteBook', '123', '2017-09-18 00:00:00'),
 (3, 'Seah Jia-Min', NULL, 'seahjm@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', NULL, NULL, 'mainAdmin', 'active', NULL, 0, 'favouriteBook', 'StarWars', '2017-10-09 00:00:00'),
 (35, 'Zorina Abreu', 'ZA', 'ZA@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2006-11-18', 'junior', 'banned', '0000-00-00 00:00:00', 3, 'maidenName', '123', '2017-05-12 00:00:00'),
 (36, 'Tobias Blattman', 'TB', 'TB@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2006-04-26', 'junior', 'banned', '0000-00-00 00:00:00', 4, 'birthPlace', '123', '2017-04-04 00:00:00'),
 (37, 'Tanzeer Cao', 'TC', 'TC@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2002-02-17', 'junior', 'banned', '0000-00-00 00:00:00', 3, 'favouriteBook', '123', '2017-11-06 00:00:00'),
 (38, 'Sachie Clark', 'SC', 'SC@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2003-05-19', 'junior', 'active', '0000-00-00 00:00:00', 0, 'birthPlace', '123', '2017-10-02 00:00:00'),
-(39, 'Radu Donahue', 'RD', 'RD@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2013-03-16', 'junior', 'active', '0000-00-00 00:00:00', 0, 'school', '123', '2017-09-04 00:00:00'),
+(39, 'Radu Donahue', 'RD', 'RD@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2002-03-16', 'junior', 'active', '0000-00-00 00:00:00', 0, 'school', '123', '2017-09-04 00:00:00'),
 (40, 'Philip Duncan', 'PD', 'PD@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2014-10-14', 'junior', 'banned', '0000-00-00 00:00:00', 0, 'favouriteBook', '123', '2017-08-07 00:00:00'),
 (41, 'Yoon Akin-Aderibigbe', 'YA', 'YA@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '2005-07-27', 'junior', 'active', '0000-00-00 00:00:00', 0, 'birthPlace', '123', '2017-10-12 00:00:00'),
 (42, 'Pallavi Fox', 'PF', 'PF@gmail.com', '$2y$10$jDkxp2bOXzl2daCyUzxvEe8xvpIXpIghyaD.Mrxk1M3edpiIkuPde', '14, Tanjung Rambutan, Georgetown, Penang', '1992-04-17', 'senior', 'active', '0000-00-00 00:00:00', 5, 'maidenName', '123', '2017-08-14 00:00:00'),
@@ -500,12 +516,12 @@ ALTER TABLE `competition_question`
 -- AUTO_INCREMENT for table `competition_result`
 --
 ALTER TABLE `competition_result`
-  MODIFY `resultID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `resultID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `competition_template`
 --
 ALTER TABLE `competition_template`
-  MODIFY `templateID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `templateID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `competition_test`
 --
