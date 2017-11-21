@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2017 at 04:41 PM
+-- Generation Time: Nov 21, 2017 at 09:05 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -174,6 +174,7 @@ INSERT INTO `competition_template` (`templateID`, `templateTitle`) VALUES
 CREATE TABLE `competition_test` (
   `testID` int(10) NOT NULL,
   `testName` varchar(255) NOT NULL,
+  `ageRange` int(10) NOT NULL,
   `templateID` int(10) NOT NULL,
   `testStartDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `testEndDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -184,9 +185,9 @@ CREATE TABLE `competition_test` (
 -- Dumping data for table `competition_test`
 --
 
-INSERT INTO `competition_test` (`testID`, `testName`, `templateID`, `testStartDate`, `testEndDate`, `prize`) VALUES
-(1, 'Test competition', 1, '2017-10-31 16:00:00', '2017-11-10 16:00:00', 'Prize A'),
-(2, 'Competition B', 1, '2017-08-31 16:00:00', '2017-09-21 16:00:00', 'Prize B');
+INSERT INTO `competition_test` (`testID`, `testName`, `ageRange`, `templateID`, `testStartDate`, `testEndDate`, `prize`) VALUES
+(1, 'Test competition', 0, 1, '2017-10-31 16:00:00', '2017-11-10 16:00:00', 'Prize A'),
+(2, 'Competition B', 0, 1, '2017-08-31 16:00:00', '2017-09-21 16:00:00', 'Prize B');
 
 -- --------------------------------------------------------
 
