@@ -10,42 +10,132 @@ echo makeNavMenu();
 echo makeHeader("Create New Auction");
 $environment = LOCAL; //TODO: Change to server
 ?>
-
-<link rel='stylesheet' href='../css/jquery-ui.min.css' />
 <script src="../scripts/jquery.js"></script>
-<script src='../scripts/jquery-ui.min.js'></script>
-<script src="../scripts/parsley.min.js"></script>
+<link rel='stylesheet' href='../css/jquery-ui.min.css' />
 <link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
 <link rel="stylesheet" href="../css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="../css/bootstrap-datetimepicker.css" type="text/css" />
 <link rel="stylesheet" href="../css/parsley.css" type="text/css" />
-<script>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css" type="text/css" media="all" />
+    <style>
+    #inputBuyItNow { display: none; }
+    </style>
+
+<script type="text/javascript">
 $(document).ready(function() {
   var dateToday = new Date();
   var yrRange = dateToday.getFullYear() + ":" + (dateToday.getFullYear() + 5); //Allow year range from current year until 5 years later
 
-  $("#aucStartDate").datepicker({
-    dateFormat: 'yy-mm-dd', //'Format: 2017-11-01
-    showWeek: true, 
-    yearRange: yrRange,
-    changeMonth: true,
-    changeYear: true,
-  });
+  // $("#aucStartDate").datetimepicker({
+  //   dateFormat: 'yy-mm-dd', //'Format: 2017-11-01
+  //   showWeek: true,
+  //   yearRange: yrRange,
+  //   changeMonth: true,
+  //   changeYear: true,
+  // });
+  //
+  // $("#aucStartDate").datetimepicker({
+  //   dateFormat: 'yy-mm-dd', //'Format: 2017-11-01
+  //   showWeek: true,
+  //   yearRange: yrRange,
+  //   changeMonth: true,
+  //   changeYear: true,
+  // });
+
+  $("#aucBuyItNow").on("change", function() {
+   if ($(this).is(":checked")) {
+     $("#inputBuyItNow").css('display','block'); //to show item price input box
+   } else {
+     $("#inputBuyItNow").css('display','none'); //to hide item price input box
+   }
+ });
+
 });
 </script>
 
 <form id="createAuctionForm" data-parsley-validate method="post">
+  Title:
+  <div class="input-group">
+     <input type="text" class="form-control" id='aucTitle' name='aucTitle' data-parsley-required="true" data-parsley-errors-messages-disabled/>
+  </div>
 
-  <p>Title: <input type="text" id='aucTitle' name='aucTitle' data-parsley-required="true" data-parsley-errors-messages-disabled/></p>
-  <p>Description: <input type="text" id='aucDesc' name='aucDesc' data-parsley-required="true" data-parsley-errors-messages-disabled/></p>
-  <p>Item Name: <input type="text" id='aucItem' name='aucItem' data-parsley-required="true" data-parsley-errors-messages-disabled/></p>
-  <p>Start Price: <input type="text" id='aucStartPrice' name='aucStartPrice' data-parsley-required="true" data-parsley-errors-messages-disabled/></p>
-  <p>Buy it now? <input type="checkbox" id='aucBuyItNow' name='aucBuyItNow'/></p>
-  <p>Start Date: <input id='aucStartDate' name='aucStartDate' size='8' data-parsley-trigger="change" data-parsley-required="true" data-parsley-errors-messages-disabled/></p>
-  <p>End Date: <input id='aucEndDate' name='aucEndDate' size='8' data-parsley-trigger="change" data-parsley-required="true" data-parsley-errors-messages-disabled/></p>
+  Description:
+  <div class="input-group">
+    <input type="text" class="form-control" id='aucDesc' name='aucDesc' data-parsley-required="true" data-parsley-errors-messages-disabled/>
+  </div>
 
-  <p class='errorMessage'><small>*All fields are required to complete the registration</small></p>
+  Item Name:
+  <div class="input-group">
+    <input type="text" class="form-control" id='aucItem' name='aucItem' data-parsley-required="true" data-parsley-errors-messages-disabled/>
+  </div>
+
+  Start Price:
+  <div class="input-group">
+    <span class="input-group-addon">$</span>
+    <input type="text" class="form-control" id='aucStartPrice' name='aucStartPrice' aria-label="Amount (to the nearest dollar)" data-parsley-required="true" data-parsley-errors-messages-disabled>
+    <span class="input-group-addon">.00</span>
+  </div>
+
+  <div class="input-group">
+    <input type="checkbox" id='aucBuyItNow' name='aucBuyItNow'/> Buy it now?
+  </div>
+
+  <div id="inputBuyItNow">
+    Item Price:
+    <div class="input-group">
+      <input type="text" class="form-control" id='aucStartPrice' name='aucStartPrice' aria-label="Amount (to the nearest dollar)" data-parsley-required="true" data-parsley-errors-messages-disabled>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class='input-group date' id='datetimepicker6'>
+      <input type='text' class="form-control" />
+      <span class="input-group-addon">
+        <span class="glyphicon glyphicon-calendar"></span>
+      </span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class='input-group date' id='datetimepicker7'>
+      <input type='text' class="form-control" />
+      <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+      </span>
+    </div>
+   </div>
+
+  <div class="input-group">
+    Start Date: <input id='aucStartDate' name='aucStartDate' size='8' data-parsley-trigger="change" data-parsley-required="true" data-parsley-errors-messages-disabled/>
+  </div>
+
+  <div class="input-group">
+    End Date: <input id='aucEndDate' name='aucEndDate' size='8' data-parsley-trigger="change" data-parsley-required="true" data-parsley-errors-messages-disabled/>
+  </div>
+
+
   <input type='submit' value='Submit' name='btnSubmit'/>
 </form>
+
+<script src="../scripts/moment.js"></script>
+<script src='../scripts/jquery-ui.min.js'></script>
+<script src="../scripts/parsley.min.js"></script>
+<script src="../scripts/bootstrap-datepicker.js"></script>
+
+<script type="text/javaScript">
+$(function () {
+    $('#datetimepicker6').data("DateTimePicker".FUNCTION());
+    $('#datetimepicker7').datetimepicker({
+        useCurrent: false //Important! See issue #1075
+    });
+    $("#datetimepicker6").on("dp.change", function (e) {
+        $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+    });
+    $("#datetimepicker7").on("dp.change", function (e) {
+        $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+    });
+});
+</script>
 
 <?php
 if (isset($_POST['btnSubmit'])) { //Clicked on submit button
