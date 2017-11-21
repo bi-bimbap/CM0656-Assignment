@@ -12,6 +12,17 @@ echo makeProfileButton();
 echo makeNavMenu();
 
 $environment = LOCAL; //TODO: Change to server
+
+//Validation - Only Only member can view "Reply" button
+//Only show content if user is logged in
+$_SESSION['userID'] = '1'; //TODO: Remove session
+$_SESSION['userType'] = 'senior'; //TODO: Remove
+$_SESSION['username'] = 'seahjm'; //TODO: Remove
+$_SESSION['logged-in'] = true; //TODO: Remove
+// $_SESSION['userID'] = '3'; //TODO: Remove session
+// $_SESSION['userType'] = 'admin'; //TODO: Remove
+// $_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
+// $_SESSION['logged-in'] = true; //TODO: Remove
 ?>
 <!-- CSS style -->
 <link rel='stylesheet' href='../css/bootstrap.css' />
@@ -23,6 +34,125 @@ $environment = LOCAL; //TODO: Change to server
 <script src='../scripts/bootstrap.js'></script>
 <script src='../scripts/jquery.dataTables.min.js'></script>
 <script src="../scripts/jquery.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- Report Inappropriate -->
+<style>
+                /**{margin: 0;padding:0px}*/
+
+                .showLeft{
+                    border:1px solid #BEC4C7 !important;
+                    text-shadow: none !important;
+                    color:#fff !important;
+                    padding:10px;
+                }
+
+                .icons li {
+                    background: none repeat scroll 0 0 #fff;
+                    height: 7px;
+                    width: 7px;
+                    line-height: 0;
+                    list-style: none outside none;
+                    margin-right: 15px;
+                    margin-top: 3px;
+                    vertical-align: top;
+                    border-radius:50%;
+                    pointer-events: none;
+                }
+
+                .button-left {
+                    left: 0.4em;
+                }
+
+                .button-right {
+                    right: 0.4em;
+                }
+
+                .button-left, .button-right {
+                    top: 0.24em;
+                }
+
+                .dropbtn {
+                    background-color: #BEC4C7;
+                    /*position: fixed;*/
+                    color: white;
+                    font-size: 16px;
+                    border: none;
+                    cursor: pointer;
+                }
+
+                /*.dropbtn:hover, .dropbtn:focus {
+                    background-color: #3e8e41;
+                }*/
+
+                .dropdown {
+                    position: absolute;
+                    display: inline-block;
+                    right: 0.4em;
+                }
+
+                .report-content {
+                    display: none;
+                    /*position: relative;*/
+                    margin-top: 60px;
+                    background-color: #f9f9f9;
+                    min-width: 160px;
+                    overflow: auto;
+                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                    z-index: 1;
+                }
+
+                .report-content a {
+                    color: black;
+                    padding: 12px 16px;
+                    text-decoration: none;
+                    display: block;
+                }
+
+                /*.dropdown a:hover {background-color: #f1f1f1}*/
+
+                .show {display:block;}
+
+            </style>
+            <script>
+                function changeLanguage(language) {
+                    var element = document.getElementById("url");
+                    element.value = language;
+                    element.innerHTML = language;
+                }
+
+                function showDropdown() {
+                    document.getElementById("reportContent").classList.toggle("show");
+                }
+
+                // Close the dropdown if the user clicks outside of it
+                window.onclick = function(event) {
+                    if (!event.target.matches('.dropbtn')) {
+                        var dropdowns = document.getElementsByClassName("dropdown-content");
+                        var i;
+                        for (i = 0; i < dropdowns.length; i++) {
+                            var openDropdown = dropdowns[i];
+                            if (openDropdown.classList.contains('show')) {
+                                openDropdown.classList.remove('show');
+                            }
+                        }
+                    }
+                }
+            </script>
+<!-- reply Message  -->
+<script>
+    function reply_show(){
+    document.getElementsById("txtReplyMessage").style.visibility = 'visible';
+    }
+    //Function to Hide Popup
+    function reply_hide(){
+    document.getElementsById("txtReplyMessage").style.visibility= 'hidden';
+    }
+</script>
+
+<style>
+
+</style>
 
 <?php
     //Display Thread Title
@@ -47,25 +177,25 @@ $environment = LOCAL; //TODO: Change to server
       DISCUSSION BOARD: Messages
 *******************************************************************************************************************************************************-->
 <div class='content'>
-    <div class='container'>
-        <div class='message-group'>
+<div class='container'>
+<div class='message-group'>
 <!--*******************************************************************************************************************************************************
       DISCUSSION BOARD: (1) Display Message Content
 *******************************************************************************************************************************************************-->
         <?php
-            $sqlGetMessage = "SELECT user.username, discussion_message.messageContent, discussion_message.messageDateTime
+            $sqlGetMessage = "SELECT user.username, discussion_message.messageContent, discussion_message.messageID, discussion_message.messageDateTime
             FROM discussion_message
             INNER JOIN discussion_thread
             ON discussion_message.threadID=discussion_thread.threadID
             INNER JOIN user
             ON discussion_message.userID=user.userID
             WHERE discussion_thread.threadID = ?
-            ORDER BY discussion_message.messageDateTime DESC";
+            ORDER BY discussion_message.messageID DESC";
 
             $stmtGetMessage = mysqli_prepare($conn, $sqlGetMessage) or die(mysqli_error($conn));
             mysqli_stmt_bind_param($stmtGetMessage, "i", $threadID);
             mysqli_stmt_execute($stmtGetMessage);
-            mysqli_stmt_bind_result($stmtGetMessage, $userName, $messageContent, $messageDateTime);
+            mysqli_stmt_bind_result($stmtGetMessage, $userName, $messageContent, $messageID, $messageDateTime);
 
               //if(mysqli_stmt_num_rows($stmtGetMessage) == 0){
 
@@ -74,54 +204,66 @@ $environment = LOCAL; //TODO: Change to server
                 //calculate total messages in a thread
                 $messageNum = 0;
                 while(mysqli_stmt_fetch($stmtGetMessage)){
-                  echo"
-                    <div class='message-created'>
-                        <p><h6>$userName</h6></p>
-                        <p><h6>$messageDateTime</h6></p>
-                        <p><h4>$messageContent</h4></p>";
 
-                        /*************************************************************************************************************************************************
-                              DISCUSSION BOARD: (2) Reply Message (Member)
-                        *************************************************************************************************************************************************/
-                        //Validation - Only Only member can view "Reply" button
-                        if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
-                        (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
-                            //echo "<p><a>Reply</a></p>";
-                            echo "<p><h6><button type='submit' id='replyMessage_submit' name='replyMessage_submit' />Reply</h6></p>
-                            </div>
-                            </br>";
-                        }
-                    $messageNum++;
-                  }
+
+echo"
+<div class='message-created'>
+<div><h6><b>$userName said: </b></h6></div>
+<div><h6><i>$messageDateTime</i></h6></div>
+<div><h4>$messageContent</h4></div>";
+
+                    /*************************************************************************************************************************************************
+                          DISCUSSION BOARD: (2) Show Reply Message Textbox (Member)
+                    *************************************************************************************************************************************************/
+                    //Validation - Only Only member can view "Reply" button
+                    if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
+                    (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
+
+                      if(isset($_POST['replyMessage_submit'])) {
+
+                      } //(2) Reply Message
+//THREE DOTS MENU: reportInappropriate = dropdown
+//THREE DOTS:      = dropbtn icons btn-right showLeft
+//MENU (5):        = -d'myDropdown' class'dropdown-content'
+
+echo "<div><button type='submit' id='replyMessage_submit' name='replyMessage_submit' onclick='reply_show()'>Reply</button></div>";
+echo "<form method='post' action='Member_postMessage_process.php'>
+        <input type='hidden' name='replyTo_threadID' value='$threadID'/>
+        <input type='hidden' name='replyTo_messageID' value='$messageID'/>
+        <input type='text' id='txtReplyMessage' name='txtReplyMessage' placeholder='Write a comment..'/>
+      </form>";
+echo "</div></br>";
+                    }
+                    else
+                    {
+echo "";
+echo "";
+echo "</div></br>";
+                    }
+
+                $messageNum++;
+              } //End: calculate total messages
 
                   if($messageNum == 0){
-                    echo"
-                      <div class='message-created'>
-                          <p><h4>No Message Content</h4></p>
-                      </div>
-                      </br>";
+echo"
+<div class='message-created'>
+<div><h4>No Message Content</h4></div>
+</div>
+</br>";
                   }
-              }
+              } //END: (1) Post Message
             //}
-
             mysqli_stmt_close($stmtGetMessage);
         ?>
 
         <?php
-            //Only show content if user is logged in
-            $_SESSION['userID'] = '1'; //TODO: Remove session
-            $_SESSION['userType'] = 'senior'; //TODO: Remove
-            $_SESSION['username'] = 'seahjm'; //TODO: Remove
-            $_SESSION['logged-in'] = true; //TODO: Remove
-
-            //Validation - Only Only member can view "Post" textfield
+            //Validation - Only member can view "Post" textfield
             if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
             (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
 
               /*******************************************************************************************************************************************************
                     DISCUSSION BOARD: (3) Post New Message (Member)
               *******************************************************************************************************************************************************/
-
               if(isset($_POST['postMessage_submit']) && !empty($_POST['txtPostMessage'])){
                 //obtain user input
                 $post_message = filter_has_var(INPUT_POST,'txtPostMessage') ? $_POST['txtPostMessage']: null;
@@ -132,10 +274,13 @@ $environment = LOCAL; //TODO: Change to server
                 //Sanitize user input
                 $post_message = filter_var($post_message, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
+                //new posted message status is active
+                $messageStatus = "active";
+
                 //Insert user's input into database
-                $sqlPostMessage = "INSERT INTO discussion_message (userID, messageContent)	VALUES (?,?)";
+                $sqlPostMessage = "INSERT INTO discussion_message (userID, threadID, messageContent, messageStatus)	VALUES (?,?,?,?)";
                 $stmtPostMessage = mysqli_prepare($conn, $sqlPostMessage) or die( mysqli_error($conn));
-                mysqli_stmt_bind_param($stmtPostMessage, 'ss', $_SESSION['userID'], $post_message);
+                mysqli_stmt_bind_param($stmtPostMessage, 'ssss', $_SESSION['userID'], $threadID, $post_message, $messageStatus);
                 mysqli_stmt_execute($stmtPostMessage);
                 //mysqli_stmt_bind_result($stmtPostMessage, $_SESSION['userID'], $post_message);
 
@@ -148,32 +293,29 @@ $environment = LOCAL; //TODO: Change to server
                 //validation: Prevent Resubmit Users' Previous Input Data
                 clearstatcache();
                 mysqli_stmt_close($stmtPostMessage);
-              }
-              echo"
-                  <div class='message-new'>
-                    <form id='postMessage_field' method='post'>
-                      <input type='text' id='txtPostMessage' name='txtPostMessage' data-parsley-required='true' placeholder='Post a message..' />
-                      <input type='submit' id='postMessage_submit' name='postMessage_submit' value='Post'/>
-                    </form>
-                  </div>";
+              } //END: (3) Post New Message
+
+echo "
+<div class='message-new'>
+<form id='postMessage_field' method='post'>
+<input type='text' id='txtPostMessage' name='txtPostMessage' placeholder='Post a message..' />
+<input type='submit' id='postMessage_submit' name='postMessage_submit' value='Post'/>
+</form>
+</div>";
             }
             else {
-              echo"
-                  <div class='message-new'>
-                    <form id='postMessage_field' method='post'>
-                    </form>
-                  </div>";
+echo "
+<div class='message-new'>
+<form id='postMessage_field' method='post'>
+</form>
+</div>";
             }
         ?>
-        <!-- onKeyPress='postMessage(event)' -->
-      </div>
-  </div>
+</div>
+</div>
 </div>
 
 <!-- TODO: Change the form to be POP OUT form -->
-<!--*******************************************************************************************************************************************************
-      DISCUSSION BOARD: Report Inappropriate Message (Member)
-*******************************************************************************************************************************************************-->
 <?php
                   // echo"
                   //     <div class='message-new'>

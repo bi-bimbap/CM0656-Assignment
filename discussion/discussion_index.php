@@ -31,9 +31,9 @@ $environment = LOCAL;
 <?php
   if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
   (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
-
     echo
-    "<input type='submit' value='Create New Thread' name='createThread_start' />";
+    "<input type='submit' id='createThread_start' name='createThread_start'  value='Create New Thread'/>";
+
   }
 ?>
 <!--******************************************************************************************************************
@@ -54,11 +54,9 @@ $environment = LOCAL;
       INNER JOIN user
       ON discussion_thread.userID=user.userID
       ORDER BY discussion_thread.threadID";
-
       $stmtDiscussion = mysqli_prepare($conn, $sqlDiscussion) or die( mysqli_error($conn));
       mysqli_stmt_execute($stmtDiscussion);
       mysqli_stmt_bind_result($stmtDiscussion, $thread_id, $thread_name, $admin_username);
-
       while (mysqli_stmt_fetch($stmtDiscussion)) {
           echo
           "<tbody>
@@ -98,11 +96,9 @@ $environment = LOCAL;
     // mysqli_stmt_execute($stmtDiscussion);
     // mysqli_stmt_bind_result($stmtDiscussion, $thread_id, $thread_name, $thread_desc);
     // mysqli_stmt_fetch($stmtDiscussion);
-
     // while ($row = mysqli_fetch_array($stmtDiscussion)) {
     //     $thread_name         = $row['threadName'];
     //     $thread_desc         = $row['threadDescription'];
-
 //         echo
 //         "<div class='displayDiscussionInfo'
 //           <tbody>
@@ -118,12 +114,10 @@ $environment = LOCAL;
 //       mysqli_stmt_close($stmtDiscussion);
 //       mysqli_close($conn);
 ?>
-
 <h3 class="view-more">View More</h3>
     <input type="show" id="row" value="0" />
     <input type="show" id="all" value="<?php echo $allcount; ?>" />
 </div>
-
 <script>
 $(document).ready(function(){
   $('.view-more').click(function(){
@@ -131,57 +125,43 @@ $(document).ready(function(){
     var allcount = Number($('#all').val());
     var viewmore = 2;
     row = row + viewmore;
-
     if(row <= allcount){
       ("#row").val(row);
-
       $.ajax({
           url: 'discussion_getData.php',
           data: {row:row},
           type: "POST",
-
           success:function(response){
 console.log("testing");
                 // Setting little delay while displaying more discussion threads
                 setTimeout(function() {
                     // appending posts after last post with class="post"
                     $(".displayDiscussionInfo:last").after(response).show().fadeIn("slow");
-
                     var rownum = row + viewmore;
-
                     // checking row value is greater than allcount or not
                     if(rownum > allcount){
-
                         // Change the text and background
                         $('.view-more').text("Hide");
                     }else{
                         $(".view-more").text("View More");
                     }
                 }, 2000);
-
           }
       })
     }
     else
     {
         $('.view-more').text("Loading...");
-
         // Setting little delay while removing contents
         setTimeout(function() {
-
             // When row is greater than allcount then remove all class='post' element after 3 element
             $('.displayDiscussionInfo:nth-child(2)').nextAll('.displayDiscussionInfo').remove().fadeIn("slow");
-
             // Reset the value of row
             $("#row").val(0);
-
             // Change the text and background
             $('.view-more').text("View More");
             $('.view-more').css("background","#15a9ce");
-
         }, 2000);
-
-
     }
   });
 });
@@ -215,7 +195,6 @@ console.log("testing");
 <?php
     mysqli_stmt_close($stmtDiscussion);
     mysqli_close($conn);
-
 //} //for ajax, close
 echo makeFooter();
 echo makePageEnd();
