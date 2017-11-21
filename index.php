@@ -1,9 +1,6 @@
 <?php
 ini_set("session.save_path", "");
 session_start();
-// setCookie(session_name(), "", time() - 1000, "/");
-// $_SESSION = array();
-// session_destroy();
 include 'db/database_conn.php';
 require_once('controls.php');
 echo makePageStart("Home Page");
