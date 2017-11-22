@@ -6,10 +6,11 @@ include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
 echo makePageStart("Statistical Reports");
+echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
 echo makeProfileButton();
 echo makeNavMenu();
 echo makeHeader("Statistical Reports");
-$environment = LOCAL;
+$environment = LOCAL; //TODO: change to server
 ?>
 
 <link href="../css/bootstrap.css" rel="stylesheet">

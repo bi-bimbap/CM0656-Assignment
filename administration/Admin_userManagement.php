@@ -8,10 +8,11 @@ include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("User Management");
+echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
 echo makeProfileButton();
 echo makeNavMenu();
 echo makeHeader("User Management");
-$environment = LOCAL;
+$environment = LOCAL; //TODO: change to server
 ?>
 
 <link href="../css/jquery.dataTables.min.css" rel="stylesheet">
@@ -51,6 +52,8 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
       $("#modalReasonConfirmation").find('.modal-body #lblReason').text('Reason for banning ' + data["username"] + ":");
       $("#modalReasonConfirmation").find('.modal-body #lblActiveUsername').text(data["username"]); //Hidden label; For ajax use when btnBanMember onclick
       $("#modalReasonConfirmation").modal("show");
+      $("#txtReason").focus();
+      console.log("test");
     });
 
     $('#btnBanMember').on('click', function(e) { //Confirm to ban a member
@@ -515,7 +518,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
 }
 else { //Redirect user to home page
   echo "<script>alert('You are not allowed here!')</script>";
-  header("Refresh:1;url=index.php"); //TODO: change url
+  header("Refresh:1;url=index.php");
 }
 ?>
 
