@@ -9,7 +9,7 @@ require_once('../functions.php');
 require_once('../controls.php');
 echo makePageStart("Manage My Details");
 echo makeWrapper();
-echo makeLoginLogoutBtn();
+echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
 echo makeProfileButton();
 echo makeNavMenu();
 echo makeHeader("Manage My Details");
@@ -59,6 +59,8 @@ mysqli_stmt_close($stmt);
       $("#tab").parsley().validate(); //Trigger parsley js validation
 
     });
+
+    $('[data-toggle="tooltip"]').tooltip(); //Trigger tooltips
   });
   </script>
 
@@ -154,14 +156,12 @@ mysqli_stmt_close($stmt);
         <form id="tab2" data-parsley-validate method="post">
           <div class="form-group">
             <label for="txtPassword">New Password *</label>
-            <!-- <input type="password" class="form-control" id='txtPassword' name='txtPassword' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword"/> -->
-            <input type="password" class="form-control" id='txtPassword' name='txtPassword' value='<?php if (isset($_POST['txtPassword'])) echo $_POST['txtPassword']; ?>' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5"/>
+            <input type="password" class="form-control" id='txtPassword' name='txtPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-minlength="5" data-parsley-equalto="#txtConfirmPassword" value="<?php if (isset($_POST['txtPassword'])) echo $_POST['txtPassword']; ?>" maxlength="60" />
           </div>
 
           <div class="form-group">
             <label for="txtConfirmPassword">Confirm New Password *</label>
-            <!-- <input type="password" class="form-control" id='txtConfirmPassword' name='txtConfirmPassword' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword"/> -->
-            <input type="password" class="form-control" id='txtConfirmPassword' name='txtConfirmPassword' value='<?php if (isset($_POST['txtConfirmPassword'])) echo $_POST['txtConfirmPassword']; ?>' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5"/>
+            <input type="password" class="form-control" id='txtConfirmPassword' name='txtConfirmPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" value='<?php if (isset($_POST['txtConfirmPassword'])) echo $_POST['txtConfirmPassword']; ?>' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5" maxlength="60" />
           </div>
 
           <div>
@@ -587,7 +587,7 @@ mysqli_stmt_close($stmt);
 }
 else { //Did not login; Redirect to home page
   echo "<script>alert('You are not allowed here!')</script>";
-  header("Refresh:1;url=index.php"); //TODO: change url
+  header("Refresh:1;url=index.php");
 }
 ?>
 
