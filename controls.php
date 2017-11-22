@@ -118,8 +118,9 @@ function makeLoginLogoutBtn() { //Display login/logout button based on session
       setCookie(session_name(), "", time() - 1000, "/");
       $_SESSION = array();
       session_destroy();
-      $redirect = $_SERVER['REQUEST_URI']; //Return users to the originating page after logout
-      header('Location:' . $redirect);
+      //$redirect = $_SERVER['REQUEST_URI']; //Return users to the originating page after logout
+      // header('Location:' . $redirect);
+      header('Location:index.php');
   }
 
   if (isset($_POST['btnLogin'])) {
