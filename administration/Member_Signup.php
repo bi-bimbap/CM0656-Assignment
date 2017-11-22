@@ -124,8 +124,8 @@ $(document).ready(function() {
       ?>
 
       <div>
-        Password: <input type="password" id='txtPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5"/>
-        <p>Confirm Password: <input type="password" id='txtConfirmPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5"/></p>
+        Password: <input type="password" id='txtPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5" maxlength="60" />
+        <p>Confirm Password: <input type="password" id='txtConfirmPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5" maxlength="60" /></p>
       </div>
 
       <?php
