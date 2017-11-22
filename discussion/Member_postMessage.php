@@ -180,7 +180,7 @@ $_SESSION['logged-in'] = true; //TODO: Remove
 <div class='container'>
 <div class='message-group'>
 <!--*******************************************************************************************************************************************************
-      DISCUSSION BOARD: (1) Display Message Content
+      DISCUSSION BOARD: (1.1) Display Posted Message Content
 *******************************************************************************************************************************************************-->
         <?php
             $sqlGetMessage = "SELECT user.username, discussion_message.messageContent, discussion_message.messageID, discussion_message.messageDateTime
@@ -207,13 +207,13 @@ $_SESSION['logged-in'] = true; //TODO: Remove
 
 
 echo"
-<div class='message-created'>
-<div><h6><b>$userName said: </b></h6></div>
-<div><h6><i>$messageDateTime</i></h6></div>
-<div><h4>$messageContent</h4></div>";
+    <div class='message-post'>
+    <div><h6><b>$userName said: </b></h6></div>
+    <div><h6><i>$messageDateTime</i></h6></div>
+    <div><h4>$messageContent</h4></div>";
 
                     /*************************************************************************************************************************************************
-                          DISCUSSION BOARD: (2) Show Reply Message Textbox (Member)
+                          DISCUSSION BOARD: (2.1) Show Reply Message Textbox (Member)
                     *************************************************************************************************************************************************/
                     //Validation - Only Only member can view "Reply" button
                     if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
@@ -221,12 +221,11 @@ echo"
 
                       if(isset($_POST['replyMessage_submit'])) {
 
-                      } //(2) Reply Message
-//THREE DOTS MENU: reportInappropriate = dropdown
-//THREE DOTS:      = dropbtn icons btn-right showLeft
-//MENU (5):        = -d'myDropdown' class'dropdown-content'
+                      }
 
-echo "<div><button type='submit' id='replyMessage_submit' name='replyMessage_submit' onclick='reply_show()'>Reply</button></div>";
+echo "<div><button type='submit' id='replyMessage_submit' name='replyMessage_submit'>Reply</button></div>";
+
+
 echo "<form method='post' action='Member_postMessage_process.php'>
         <input type='hidden' name='replyTo_threadID' value='$threadID'/>
         <input type='hidden' name='replyTo_messageID' value='$messageID'/>
@@ -240,13 +239,44 @@ echo "";
 echo "";
 echo "</div></br>";
                     }
+//.................................................................................................................
+$sqlGetReply = "SELECT discussion_message.messageID, user.username, discussion_message.messageContent, discussion_message.messageDateTime, discussion_message.replyTo
+FROM discussion_message
+INNER JOIN discussion_thread
+ON discussion_message.threadID=discussion_thread.threadID
+INNER JOIN user
+ON discussion_message.userID=user.userID
+WHERE discussion_thread.threadID = ? AND discussion_message.replyTo=discussion_message.messageID
+ORDER BY discussion_message.messageID DESC";
 
+$stmtGetReply = mysqli_prepare($conn, $sqlGetReply) or die(mysqli_error($conn));
+mysqli_stmt_bind_param($stmtGetReply, "i", $threadID);
+mysqli_stmt_execute($stmtGetReply);
+mysqli_stmt_bind_result($stmtGetReply, $messageID, $userName, $messageContent, $messageDateTime, $replyTo);
+
+  if(mysqli_stmt_affected_rows($stmtGetReply) < 0 ){
+
+    //calculate total replies in a message
+    $replyNum = 0;
+    while(mysqli_stmt_fetch($stmtGetReply)){
+
+echo"
+<div class='message-reply'>
+<input type='hidden' name='replyTo_display' value='$replyTo'/>
+<div><h6><b>$userName said: </b></h6></div>
+<div><h6><i>$messageDateTime</i></h6></div>
+<div><h4>$messageContent</h4></div>
+</div>";
+    $replyNum++;
+  } //End: calculate total messages
+}
+//.................................................................................................................
                 $messageNum++;
               } //End: calculate total messages
 
                   if($messageNum == 0){
 echo"
-<div class='message-created'>
+<div class='message-post'>
 <div><h4>No Message Content</h4></div>
 </div>
 </br>";
@@ -256,13 +286,52 @@ echo"
             mysqli_stmt_close($stmtGetMessage);
         ?>
 
+<!--*******************************************************************************************************************************************************
+              DISCUSSION BOARD: (1.2) Display Replied Message Content
+*******************************************************************************************************************************************************-->
+        <?php
+//             $sqlGetReply = "SELECT discussion_message.messageID, user.username, discussion_message.messageContent, discussion_message.messageDateTime, discussion_message.replyTo
+//             FROM discussion_message
+//             INNER JOIN discussion_thread
+//             ON discussion_message.threadID=discussion_thread.threadID
+//             INNER JOIN user
+//             ON discussion_message.userID=user.userID
+//             WHERE discussion_thread.threadID = ? AND discussion_message.replyTo=discussion_message.messageID
+//             ORDER BY discussion_message.messageID DESC";
+//
+//             $stmtGetReply = mysqli_prepare($conn, $sqlGetReply) or die(mysqli_error($conn));
+//             mysqli_stmt_bind_param($stmtGetReply, "i", $threadID);
+//             mysqli_stmt_execute($stmtGetReply);
+//             mysqli_stmt_bind_result($stmtGetReply, $messageID, $userName, $messageContent, $messageDateTime, $replyTo);
+//
+//               if(mysqli_stmt_affected_rows($stmtGetReply) < 0 ){
+//
+//                 //calculate total replies in a message
+//                 $replyNum = 0;
+//                 while(mysqli_stmt_fetch($stmtGetReply)){
+//
+// echo"
+// <div class='message-reply'>
+// <input type='hidden' name='replyTo_display' value='$replyTo'/>
+// <div><h6><b>$userName said: </b></h6></div>
+// <div><h6><i>$messageDateTime</i></h6></div>
+// <div><h4>$messageContent</h4></div>
+// </div>";
+//                 $replyNum++;
+//               } //End: calculate total messages
+//             }
+                //calculate total messages in a thread
+                // $messageNum = 0;
+                // while(mysqli_stmt_fetch($stmtGetMessage)){
+        ?>
+
         <?php
             //Validation - Only member can view "Post" textfield
             if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
             (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
 
               /*******************************************************************************************************************************************************
-                    DISCUSSION BOARD: (3) Post New Message (Member)
+                    DISCUSSION BOARD: (2.2) Post New Message (Member)
               *******************************************************************************************************************************************************/
               if(isset($_POST['postMessage_submit']) && !empty($_POST['txtPostMessage'])){
                 //obtain user input
@@ -322,6 +391,12 @@ echo "
                   //       <form id='postMessage_field' method='post'>
                   //       </form>
                   //     </div>";
+
+                  //(2) Reply Message
+//THREE DOTS MENU: reportInappropriate = dropdown
+//THREE DOTS:      = dropbtn icons btn-right showLeft
+//MENU (5):        = -d'myDropdown' class'dropdown-content'
+
 ?>
 
 <?php
