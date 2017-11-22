@@ -7,7 +7,7 @@ require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Discussion Index");
 echo makeWrapper();
-echo makeLoginLogoutBtn();
+echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
 echo makeProfileButton();
 echo makeNavMenu();
 echo makeHeader("Discussion Index");
@@ -29,10 +29,15 @@ $environment = LOCAL;
     Validation - Only Only admin can view "Create New Thread" button
 ******************************************************************************************************************-->
 <?php
+  $_SESSION['userID'] = '3'; //TODO: Remove session
+  $_SESSION['userType'] = 'admin'; //TODO: Remove
+  $_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
+  $_SESSION['logged-in'] = true; //TODO: Remove
+
   if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
   (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
     echo
-    "<form method='post'  action='Admin_createThread.php'>
+    "<form method='post' action='Admin_createThread.php'>
       <input type='submit' value='Create New Thread' name='createThread_submit' />
     </form>";
   }

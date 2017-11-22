@@ -8,7 +8,7 @@ require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Create Discussion Thread");
 echo makeWrapper();
-echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>"
+echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
 echo makeProfileButton();
 echo makeNavMenu();
 echo makeHeader("Create Discussion Thread");
