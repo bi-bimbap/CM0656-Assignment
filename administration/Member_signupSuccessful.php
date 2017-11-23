@@ -1,6 +1,5 @@
 <!-- Note: NO LOGIN/LOGOUT BUTTON HERE -->
 
-
 <?php
 require_once('../controls.php');
 echo makeWrapper();

@@ -9,7 +9,7 @@ echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
 echo makeProfileButton();
 echo makeNavMenu();
 echo makeHeader("Sign Up");
-$environment = LOCAL; //TODO: Change to server
+$environment = WEB; //TODO: Change to server
 ?>
 
 <?php //Complete admin registration
@@ -124,7 +124,7 @@ $(document).ready(function() {
       ?>
 
       <div>
-        Password: <input type="password" id='txtPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5" maxlength="60" />
+        <p>Password: <input type="password" id='txtPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5" maxlength="60" /></p>
         <p>Confirm Password: <input type="password" id='txtConfirmPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5" maxlength="60" /></p>
       </div>
 
