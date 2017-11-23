@@ -1,7 +1,7 @@
 body{
 	letter-spacing:0.5px!important;
 	font-family: 'Lato'!important;
-	
+
 }
 
 .container{
@@ -198,7 +198,6 @@ form #email p, form #password p{
 input[type="text"], input[type="password"], input[type="email"]{
 	border:1px solid #e6e6e6;
 	padding:7px 15px;
-	/* background:white; */
 	width:500px;
 }
 
