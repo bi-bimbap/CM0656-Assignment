@@ -1,46 +1,203 @@
 body{
 	letter-spacing:0.5px!important;
-	font-family: 'Lato'!important;
-
+    font-family: 'Lato'!important;
 }
-
+a{
+	text-decoration:none;
+}
+a:hover{
+	text-decoration:none;
+}
 .container{
 	padding-right:0!important;
 	padding-left:0 !important;
 }
-
 .wrapper{
 	background: rgb(17, 17, 17);
 	border-bottom: 5px solid rgb(172, 150, 122);
 }
-
+.album img, .photo img{
+	border:1px solid #8c8c8c;
+}
+.various.outer{
+	    outline: none;
+    text-decoration: none!important;
+    text-align: center;
+    padding-top: 115px!important;
+    font-size: 20px;
+	position: relative;
+	transition:all 0.3s;
+	
+	border:1px dotted black!important;
+}
+.various.outer:hover{
+	background:#8c8c8c;
+	transition:all 0.3s;
+	color:#ffc6c6;
+}
+.album:hover > div, .photo:hover > div{
+	position: absolute;
+    z-index: 100;
+    height: 45px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    opacity: 1;
+    transition: all 0.3s;
+}
+.album > div, .photo > div{
+	opacity:0;
+	padding:10px 20px;
+	width: 100%;
+	position: absolute;
+    bottom: -1px;
+	left:0;
+	transition: all 0.3s;
+	height: 45px;
+}
+.album > div > span:last-child, .photo > div > span:last-child{
+	float:right;
+	
+}
+.album a, .photo a{
+	color:white;
+}
+.album a:hover, .photo a:hover{
+	color:white;
+	text-decoration:none;
+}
+.album, .various.outer, .photo{
+	height:280px;
+    width: 240px;
+	padding:5px;
+	background:white;
+	position:relative;
+	border:1px solid black;
+    display: inline-block;
+    margin: 25px 30px 40px 15px;
+	overflow:hidden;
+	vertical-align:top;
+}
+#preview{
+	display:none;
+}
+.filebtn{
+    font-size: 15px;
+    letter-spacing: 0.4px;
+    padding: 7px 15px;
+    background: white;
+    border: 1px dotted #3c3c3c;
+    cursor: pointer;
+    text-align: center;
+    margin-bottom: 15px;
+}
+#createAlbum, #uploadPhoto{
+	min-height:450px;
+	position:relative;
+	width:850px;
+}
+#createAlbum input, #uploadPhoto input{
+	margin-bottom:30px;	
+}
+#createAlbum > h2+div, #uploadPhoto > h2+div{
+	padding-left:30px;
+}
 #logo{
-	display: inline-block;
-	margin-top: 30px;
-	margin-bottom: 30px;
-	color: white;
+    display: inline-block;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    color: white;
 	font-size: 20px;
     letter-spacing: 0.3px;
 }
-
+#commentBox{
+	position: relative;
+    background: #f3f3f3;
+    padding: 10px;
+}
+#commentBox .various{
+	float: right;
+    margin-right: 10px;
+    color: #ff4848;
+    text-decoration: none;
+}
+#commentBox .various:hover{
+	text-decoration:none;
+}
+#commentBox .fa{
+	margin-right:5px;
+}
+#commentBox #time{
+	float:right;
+	margin-right:10px;
+}
+#commentBox div{
+	margin-bottom:10px;
+}
+#commentBox input[type="text"]{
+	width:100%;
+}
+#comment{
+	color:#a23030;
+}
+#reported{
+	text-align: center;
+    background: #c7c7c7;
+    padding: 10px 20px;
+    font-size: 22px;
+    color: #b54747;
+}
+#reportedUser{
+	    margin-right: 10px;
+    font-size: 17px;
+    color: black;
+}
+.left{
+	display:inline-block;
+	width:45%;
+	float:left;
+	padding:22px 15px;
+	vertical-align:top;
+}
+.left img{
+	width:100%;
+	height:auto;
+}
+.right{
+	display:inline-block;
+	width:50%;
+	padding:22px 10px;
+}
+#description{
+	margin-top:20px;
+	font-size:17px;
+}
+#postedby{
+	padding-top:25px;
+	font-size:19px;
+	color:black;
+}
+#postedby span{
+	float:right;
+	margin-right:50px;
+	font-size:15px;
+	color:#333;
+}
 .wrapper #logo + div{
 	display:inline-block;
 	float:right;
 	margin-top: 20px;
 }
-
 .wrapper .dropdown{
 	display:inline-block;
 	float:right;
 	margin-top: 20px;
 }
-
 .wrapper .dropdown button{
 	background:none;
 	padding:0;
 }
 
-.wrapper input, .content input[type="submit"]{
+.wrapper input, .content input[type="submit"], #button{
 	color:white;
 	background:#ac967a;
 	border:1px solid #ac967a;
@@ -51,16 +208,12 @@ body{
 	letter-spacing: 0.7px;
 
 }
-
-.content input[type="submit"]{
+.content input[type="submit"], #button{
 	padding:10px 20px;
 	margin-top:40px;
 	letter-spacing: 0.7px;
 }
-.content{
-	font-size:24px!
-}
-.wrapper p:hover input, .content p:hover input[type="submit"]{
+.wrapper p:hover input, .content p:hover input[type="submit"], #button:hover{
 	color:#ac967a;
 	background:#fff;
 	border:1px solid #ac967a;
@@ -68,14 +221,12 @@ body{
 	transition:all 0.2s;
 
 }
-
 p{
 	margin-bottom:0;
 }
-
 .wrapper nav{
 	width: 1070px;
-	text-align: right;
+    text-align: right;
 	float:right;
 	margin-top:-70px;
 }
@@ -89,11 +240,11 @@ ul{
 }
 .wrapper nav ul li a{
 	text-decoration: none;
-	margin-top: -1px;
-	line-height: 1.2;
-	text-align: center;
-	font-size: 16px;
-	color: #fff;
+    margin-top: -1px;
+    line-height: 1.2;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
 	transition: all 0.2s;
 	text-transform:uppercase;
 }
@@ -101,138 +252,77 @@ ul{
 	color:#ac967a;
 	transition: all 0.2s;
 }
-
 .wrapper nav ul li:hover{
-	background: url('../images/hover-menu.jpg') no-repeat bottom center;
+		background: url('../images/hover-menu.jpg') no-repeat bottom center;
 }
-
 .fa{
 	font-size: 25px;
 	color: #ac967a;
 }
-
 h1{
 	font-family: 'Lora'!important;
-	font-size: 75px!important;
+    font-size: 75px!important;
 	width:1170px;
 	margin-right:auto!important;
 	margin-left:auto!important;
-	color: #333333!important;
+    color: #333333!important;
 	margin-bottom:30px!important;
 	margin-top:110px!important;
 }
-
+h2{
+	font-family: 'Lora'!important;
+    font-size: 40px!important;
+	width:100%;
+	margin-right:auto!important;
+	margin-left:auto!important;
+    color: #333333!important;
+	margin-bottom:30px!important;
+	margin-top:40px!important;
+}
 .content{
 	background:rgb(248, 248, 248);
 	padding-top:80px;
 	padding-bottom:130px;
 }
-
 form #email p, form #password p{
 	font-size:23px;
 }
-
 #email, #password{
 	margin-bottom:15px;
 }
-#signUpForm p, #signUpForm div{
-    margin-bottom: 25px;
-    line-height: 45px;
-	vertical-align:top;
-	font-size:24px;
-}
-#signUpForm div{
-	margin-bottom:0px;
-}
-#signUpForm textarea, #signUpForm select{
-	border: 1px solid #e6e6e6;
-    padding: 7px 15px;
-	width:500px;
-	margin-left:15px;
-}
-#signUpForm h6{
-	   font-size: 16px;
-	   margin-bottom:20px;
-    font-style: italic;
-}
-#signUpForm input[type="submit"]{
-	color:white;
-	background:#ac967a;
-	border:1px solid #ac967a;
-	color:white;
-	transition:all 0.2s;
-	outline:none;
-	padding:10px 20px;
-	letter-spacing: 0.7px;
-}
-#signUpForm input{
-    margin-left: 200px;
-    left: 270px;
-	line-height: 24px;
-    position: absolute;
-	border: 1px solid #e6e6e6;
-    padding: 7px 15px;
-}
-#signUpForm span{
-	vertical-align: top;
-}
-#signUpForm div > P{
-	   display: inline-block;
-    margin-left: 375px;
-}
-#signUpForm #txtConfirmPassword{
-	    left: 830px;
-}
-#signUpForm input[type="password"]{
-	width:300px;
-}
-#txtDOB{
-    border: 1px solid #e6e6e6;
-    padding: 7px 32px;
-    /* background: white; */
-    font-size: 16px;
-    width: 160px;
-    height: 45px;
-    font-style: italic;
-}
-input[type="text"], input[type="password"], input[type="email"]{
+input[type="text"], input[type="password"]{
 	border:1px solid #e6e6e6;
 	padding:7px 15px;
+	background:white;
 	width:500px;
 }
-
 footer{
 	background: rgb(17, 17, 17);
-	padding-top: 70px;
+    padding-top: 70px;
 	padding-bottom:50px;
 }
-
 footer > div > div{
 	display:inline-block;
 }
-
 .middle{
 	margin-left: 75px;
-	padding-left: 75px;
-	margin-right: 75px;
-	padding-right: 75px;
-	border-right: 1px solid #ac967a;
-	border-left: 1px solid #ac967a;
+    padding-left: 75px;
+    margin-right: 75px;
+    padding-right: 75px;
+    border-right: 1px solid #ac967a;
+    border-left: 1px solid #ac967a;
 	color:white;
 	margin-top:30px;
 	vertical-align:top;
 }
-
 .middle div{
 	margin-bottom:15px;
 }
-
 .middle .fa{
 	margin-right:10px;
 	width:25.5px;
 	height:auto;
 }
-
 footer > div > div:last-child .fa{
 	width:50px;
 	height:50px;
@@ -242,35 +332,30 @@ footer > div > div:last-child .fa{
 	font-size:17px;
 	margin-right:20px;
 	padding-top: 15px;
-	text-align: center;
+    text-align: center;
 	vertical-align:top;
 	transition:all 0.3s;
 }
-
 footer > div > div:last-child .fa:hover{
 	color:#ac967a;
 	border:1px solid #ac967a;
 	transition:all 0.3s;
 }
-
 footer > div > div:last-child{
 	vertical-align:top;
 	margin-top:30px;
 }
-
 .powered{
 	background:rgb(8, 8, 8);
 	padding-top:20px;
 	padding-bottom:20px;
 }
-
 .powered span{
 	text-transform:uppercase;
 	color:white;
 	font-size:12px;
 	margin-right:70px;
 }
-
 .powered a{
 	color:#ac967a;
 	text-transform:uppercase;
@@ -278,7 +363,6 @@ footer > div > div:last-child{
 	font-size:13px;
 	transition:all 0.3s;
 }
-
 .powered a:hover{
 	color:white;
 	transition:all 0.3s;
