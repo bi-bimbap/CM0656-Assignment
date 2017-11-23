@@ -2,7 +2,7 @@
 include '../db/database_conn.php';
 require_once('../functions.php');
 include_once '../config.php';
-$environment = LOCAL;
+$environment = WEB; //TODO: Change to WEB
 header('content-type: application/json');
 
 $function = filter_has_var(INPUT_POST, 'action') ? $_POST['action']: null;
@@ -14,7 +14,7 @@ $a_json_row = array();
 
 if ($function == "loadAll") { //Load active members
   $memberListSQL = "SELECT username, emailAddr FROM user WHERE (userType = 'junior' OR userType = 'senior')
-  AND userStatus = 'active'";
+  AND userStatus = 'active' AND penaltyCount < 3";
   $stmt = mysqli_prepare($conn, $memberListSQL) or die( mysqli_error($conn));
   mysqli_stmt_execute($stmt);
   mysqli_stmt_bind_result($stmt, $username, $emailAddr);
