@@ -4,10 +4,10 @@ session_start();
 include 'db/database_conn.php';
 require_once('controls.php');
 echo makePageStart("Home Page");
-echo "<div class='wrapper'><div class='container'><div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>";
-echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
-echo makeProfileButton();
-echo makeNavMenu();
+echo makeWrapper("");
+echo "<form method='post'>" . makeLoginLogoutBtn("") . "</form>";
+echo makeProfileButton("");
+echo makeNavMenu("");
 echo makeHeader("Home Page");
 ?>
 
@@ -20,33 +20,7 @@ echo makeHeader("Home Page");
 <link href="css/bootstrap.css" rel="stylesheet">
 <script src="scripts/bootstrap.min.js"></script>
 
-<!-- Start footer  -->
-<footer>
-  <div class="container">
-    <div>
-      <div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>
-    </div>
-    <div class="middle">
-      <div><i class="fa fa-envelope"></i> info@imamegastar.forum.com</div>
-      <div><i class="fa fa-phone"></i> +6012-2151725</div>
-    </div>
-    <div>
-      <i class="fa fa-facebook"></i>
-      <i class="fa fa-instagram"></i>
-      <i class="fa fa-google-plus"></i>
-      <i class="fa fa-twitter"></i>
-    </div>
-  </div>
-</footer>
-<div class="powered">
-  <div class="container">
-    <span>2017&copy; Ima's Official Fanbase All rights reserved.</span>
-    <a href="#">Private Policy</a>
-    <a href="#">Terms of Use</a>
-  </div>
-</div>
-<!-- End footer -->
-
 <?php
+echo makeFooter("");
 echo makePageEnd();
 ?>

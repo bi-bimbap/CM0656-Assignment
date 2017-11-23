@@ -1,12 +1,12 @@
-<!-- Note: NO LOGIN/LOGOUT BUTTON HERE -->
+<!-- NOTE: NO LOGIN/LOGOUT BUTTON HERE -->
 
 <?php
 require_once('../controls.php');
-	echo makePageStart("Signup Successfully");
-	echo makeWrapper();
-	echo makeProfileButton();
-	echo makeNavMenu();
-	echo makeHeader("Signup Successfully");
+echo makePageStart("Signup Successfully");
+echo makeWrapper("../");
+echo makeProfileButton("../");
+echo makeNavMenu("../");
+echo makeHeader("Signup Successfully");
 ?>
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -18,12 +18,12 @@ require_once('../controls.php');
 <link href="../css/bootstrap.css" rel="stylesheet">
 
 <div class="content">
-  <div class="container">
-    <p>Account created! Please follow the link in the email sent to you to complete the registration process.</p>
-  </div>
+	<div class="container">
+		<p>Account created! Please follow the link in the email sent to you to complete the registration process.</p>
+	</div>
 </div>
 
 <?php
-echo makeFooter();
+echo makeFooter("../");
 echo makePageEnd();
 ?>

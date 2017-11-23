@@ -8,10 +8,10 @@ include_once '../config.php';
 require_once('../functions.php');
 require_once('../controls.php');
 echo makePageStart("Manage My Details");
-echo makeWrapper();
-echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
-echo makeProfileButton();
-echo makeNavMenu();
+echo makeWrapper("../");
+echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
+echo makeProfileButton("../");
+echo makeNavMenu("../");
 echo makeHeader("Manage My Details");
 $environment = WEB; //TODO: Change to server
 ?>
@@ -21,21 +21,20 @@ $environment = WEB; //TODO: Change to server
 // $_SESSION['userType'] = 'admin'; //TODO: Remove
 // $_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
 // $_SESSION['logged-in'] = true; //TODO: Remove
-
 if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && isset($_SESSION['userID']) && isset($_SESSION['userType'])) {
-?>
+  ?>
 
-<?php
-//Retrieve user's details
-$detailsSQL = "SELECT fullName, emailAddr, username, passwordHash, shippingAddr, securityQuestion, securityAns
-FROM user WHERE userID = ?";
-$stmt = mysqli_prepare($conn, $detailsSQL) or die( mysqli_error($conn));
-mysqli_stmt_bind_param($stmt, "s", $_SESSION['userID']);
-mysqli_stmt_execute($stmt);
-mysqli_stmt_bind_result($stmt, $fName, $eAddr, $uName, $pHash, $shipAddr, $sQuestion, $sAnswer);
-mysqli_stmt_fetch($stmt);
-mysqli_stmt_close($stmt);
-?>
+  <?php
+  //Retrieve user's details
+  $detailsSQL = "SELECT fullName, emailAddr, username, passwordHash, shippingAddr, securityQuestion, securityAns
+  FROM user WHERE userID = ?";
+  $stmt = mysqli_prepare($conn, $detailsSQL) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmt, "s", $_SESSION['userID']);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_bind_result($stmt, $fName, $eAddr, $uName, $pHash, $shipAddr, $sQuestion, $sAnswer);
+  mysqli_stmt_fetch($stmt);
+  mysqli_stmt_close($stmt);
+  ?>
 
   <link href="../css/bootstrap.css" rel="stylesheet">
   <script src="../scripts/jquery.js"></script>
@@ -588,11 +587,11 @@ mysqli_stmt_close($stmt);
 }
 else { //Did not login; Redirect to home page
   echo "<script>alert('You are not allowed here!')</script>";
-  header("Refresh:1;url=index.php");
+  header("Refresh:1;url=../index.php");
 }
 ?>
 
 <?php
-echo makeFooter();
+echo makeFooter("../");
 echo makePageEnd();
 ?>

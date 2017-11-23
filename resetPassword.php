@@ -1,4 +1,4 @@
-<!-- Note: NO NAV BAR HERE -->
+<!-- NOTE: NO NAV BAR, LOGIN/LOGOUT & PROFILE BUTTONS HERE -->
 
 <?php
 // ini_set("session.save_path", ""); //TODO: Comment out
@@ -8,7 +8,7 @@ include_once 'config.php';
 require_once('controls.php');
 require_once('functions.php');
 echo makePageStart("Reset Password");
-echo "<div class='wrapper'><div class='container'><div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>";
+echo makeWrapper("");
 echo makeHeader("Reset Password");
 $environment = WEB; //TODO: Change to WEB
 ?>
@@ -94,65 +94,39 @@ if (isset($_GET['mail']) && isset($_GET['exDate'])) { //Get email address & rese
           }
         });
       });
-    </script>
+      </script>
 
-    <div class="content">
-      <div class="container">
-        <form id='formResetPassword' method='POST' data-parsley-validate>
-          <div>
-            <p>Enter Your New Password: </p>
-            <input type="password" id="txtPassword" name="txtPassword" data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5" maxlength="60">
-          </div>
+      <div class="content">
+        <div class="container">
+          <form id='formResetPassword' method='POST' data-parsley-validate>
+            <div>
+              <p>Enter Your New Password: </p>
+              <input type="password" id="txtPassword" name="txtPassword" data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5" maxlength="60">
+            </div>
 
-          <div>
-            <p>Enter Your New Password Again: </p>
-            <input type="password" id="txtConfirmPassword" name="txtConfirmPassword" data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5" maxlength="60">
-          </div>
+            <div>
+              <p>Enter Your New Password Again: </p>
+              <input type="password" id="txtConfirmPassword" name="txtConfirmPassword" data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5" maxlength="60">
+            </div>
 
-          <div id="button"><button type="button" id='btnSave' name="btnSave">Save</button></div>
-        </form>
+            <div id="button"><button type="button" id='btnSave' name="btnSave">Save</button></div>
+          </form>
+        </div>
       </div>
-    </div>
 
-<!-- Start footer  -->
-<footer>
-  <div class="container">
-    <div>
-      <div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>
-    </div>
-    <div class="middle">
-      <div><i class="fa fa-envelope"></i> info@imamegastar.forum.com</div>
-      <div><i class="fa fa-phone"></i> +6012-2151725</div>
-    </div>
-    <div>
-      <i class="fa fa-facebook"></i>
-      <i class="fa fa-instagram"></i>
-      <i class="fa fa-google-plus"></i>
-      <i class="fa fa-twitter"></i>
-    </div>
-  </div>
-</footer>
-<div class="powered">
-  <div class="container">
-    <span>2017&copy; Ima's Official Fanbase All rights reserved.</span>
-    <a href="#">Private Policy</a>
-    <a href="#">Terms of Use</a>
-  </div>
-</div>
-<!-- End footer -->
+      <?php
+      echo makeFooter("");
+      echo makePageEnd();
+      ?>
 
-<?php
-echo makePageEnd();
-?>
-
-<?php
-} //End else { //Link is still valid; Reset password
-} //End if ($memberConfirmationExpiryDate != "" || $memberConfirmationExpiryDate != NULL) {
-else { //Member did not request to reset password/URL expired
-header("Location:error404.php");
-}
-}
-else { //Parameters not complete; Redirect to error page
-header("Location:error404.php");
-}
-?>
+      <?php
+    } //End else { //Link is still valid; Reset password
+    } //End if ($memberConfirmationExpiryDate != "" || $memberConfirmationExpiryDate != NULL) {
+      else { //Member did not request to reset password/URL expired
+        header("Location:error404.php");
+      }
+    }
+    else { //Parameters not complete; Redirect to error page
+      header("Location:error404.php");
+    }
+    ?>

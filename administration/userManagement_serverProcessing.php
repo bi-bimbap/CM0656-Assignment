@@ -77,13 +77,13 @@ else if ($function == "loadAdmin") { //Load admin user
   mysqli_close($conn);
 }
 else if ($function == "updateAdminEmail") { //Update email address for admin (with status "pending")
-  //Note: json_encode echo results if have header('content-type: application/json');
+  //NOTE: json_encode echo results if have header('content-type: application/json');
 
   //Obtain passed value, trim whitespace & sanitize value
   $userID = filter_has_var(INPUT_POST, 'userID') ? $_POST['userID']: null;
   $userID = trim($userID);
   $userID = filter_var($userID, FILTER_SANITIZE_STRING);
-
+  
   $email = filter_has_var(INPUT_POST, 'email') ? $_POST['email']: null;
   $email = trim($email);
   $email = filter_var($email, FILTER_SANITIZE_STRING);
@@ -259,8 +259,8 @@ else if ($function == "banMember") { //Ban selected member
 
   if (mysqli_stmt_affected_rows($stmt) > 0) { //Insert into user_banned table
     if ($tab == "Active Members") { //Active members; Assign ban reason given by admin
-        $blacklistReason = $reason;
-        $hasBeenBlacklisted = false;
+      $blacklistReason = $reason;
+      $hasBeenBlacklisted = false;
     }
     else { //Blacklisted members
       //Get blacklist reason if available

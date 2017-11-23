@@ -1,16 +1,16 @@
 <!-- TODO: Add autocomplete search box for auction & competition -->
 <?php
-ini_set("session.save_path", "");
+// ini_set("session.save_path", ""); //TODO: Comment out
 session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
 echo makePageStart("Statistical Reports");
-echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
-echo makeProfileButton();
-echo makeNavMenu();
+echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
+echo makeProfileButton("../");
+echo makeNavMenu("../");
 echo makeHeader("Statistical Reports");
-$environment = LOCAL; //TODO: change to server
+$environment = WEB; //TODO: change to server
 ?>
 
 <link href="../css/bootstrap.css" rel="stylesheet">
@@ -514,6 +514,6 @@ $(document).ready(function() {
 </script>
 
 <?php
-echo makeFooter();
+echo makeFooter("../");
 echo makePageEnd();
 ?>

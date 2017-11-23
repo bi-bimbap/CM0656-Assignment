@@ -1,7 +1,7 @@
 <?php
 include '../db/database_conn.php';
 include_once '../config.php';
-$environment = LOCAL;
+$environment = WEB; //TODO: Change to WEB
 header('content-type: application/json');
 
 $function = filter_has_var(INPUT_POST, 'action') ? $_POST['action']: null;

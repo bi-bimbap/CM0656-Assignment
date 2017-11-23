@@ -4,10 +4,10 @@ include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Sign Up");
-echo makeWrapper();
-echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
-echo makeProfileButton();
-echo makeNavMenu();
+echo makeWrapper("../");
+echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
+echo makeProfileButton("../");
+echo makeNavMenu("../");
 echo makeHeader("Sign Up");
 $environment = WEB; //TODO: Change to server
 ?>
@@ -286,7 +286,8 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
 
         if (mysqli_stmt_affected_rows($stmt) > 0) {
           echo "<script>alert('Signup complete!')</script>";
-          header("Location:../loginForm.php");
+          echo "<script type='text/javascript'>window.top.location='../loginForm.php';</script>"; exit;
+          // header("Location:../loginForm.php");
         }
         else {
           echo "<script>alert('Signup failed!')</script>";
@@ -303,6 +304,6 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
   ?>
 
   <?php
-  echo makeFooter();
+  echo makeFooter("../");
   echo makePageEnd();
   ?>

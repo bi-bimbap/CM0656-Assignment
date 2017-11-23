@@ -1,3 +1,5 @@
+<!-- NOTE: NO PROFILE BUTTON HERE -->
+
 <?php
 // ini_set("session.save_path", ""); //TODO: Comment out
 session_start();
@@ -73,10 +75,9 @@ if (isset($_POST['btnConfirmLogin'])) { //Clicked on login button
 <?php
 if(!isset($_SESSION['logged-in'])) { //Prevent users from entering login page if logged in
 	echo makePageStart("Login");
-	echo "<div class='wrapper'><div class='container'><div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>";
-	echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
-	echo makeProfileButton();
-	echo makeNavMenu();
+	echo makeWrapper("");
+	echo "<form method='post'>" . makeLoginLogoutBtn("") . "</form>";
+	echo makeNavMenu("");
 	echo makeHeader("Login");
 	?>
 
@@ -105,34 +106,8 @@ if(!isset($_SESSION['logged-in'])) { //Prevent users from entering login page if
 		</div>
 	</div>
 
-	<!-- Start footer  -->
-	<footer>
-		<div class="container">
-			<div>
-				<div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>
-			</div>
-			<div class="middle">
-				<div><i class="fa fa-envelope"></i> info@imamegastar.forum.com</div>
-				<div><i class="fa fa-phone"></i> +6012-2151725</div>
-			</div>
-			<div>
-				<i class="fa fa-facebook"></i>
-				<i class="fa fa-instagram"></i>
-				<i class="fa fa-google-plus"></i>
-				<i class="fa fa-twitter"></i>
-			</div>
-		</div>
-	</footer>
-	<div class="powered">
-		<div class="container">
-			<span>2017&copy; Ima's Official Fanbase All rights reserved.</span>
-			<a href="#">Private Policy</a>
-			<a href="#">Terms of Use</a>
-		</div>
-	</div>
-	<!-- End footer -->
-
 <?php
+	echo makeFooter("");
 	echo makePageEnd();
 }
 else { //User is already logged in;Redirect user to home page

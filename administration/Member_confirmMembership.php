@@ -1,11 +1,11 @@
-<!-- Note: NO LOGIN/LOGOUT BUTTON HERE -->
+<!-- NOTE: NO LOGIN/LOGOUT, PROFILE BUTTON, NAV BAR HERE -->
 
 <?php
 include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
-echo makeWrapper();
+echo makeWrapper("../");
 echo makePageStart("Membership Confirmation");
 echo makeHeader("Membership Confirmation");
 $environment = WEB; //TODO: Change to server
@@ -57,7 +57,7 @@ if (isset($_GET['mail']) && isset($_GET['exDate'])) { //Get email address & memb
         }
       }
       else { //Update failed
-          echo "<script>alert('Update failed!')</script>";
+        echo "<script>alert('Update failed!')</script>";
       }
       mysqli_stmt_close($stmt);
     }
@@ -91,6 +91,6 @@ else { //Parameters not complete; Redirect to error page
 ?>
 
 <?php
-echo makeFooter();
+echo makeFooter("../");
 echo makePageEnd();
 ?>

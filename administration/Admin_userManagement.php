@@ -8,9 +8,9 @@ include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("User Management");
-echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
-echo makeProfileButton();
-echo makeNavMenu();
+echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
+echo makeProfileButton("../");
+echo makeNavMenu("../");
 echo makeHeader("User Management");
 $environment = WEB; //TODO: change to server
 ?>
@@ -25,7 +25,6 @@ $environment = WEB; //TODO: change to server
 // $_SESSION['userID'] = '3'; //TODO: Remove
 // $_SESSION['userType'] = 'mainAdmin'; //TODO: Remove
 // $_SESSION['logged-in'] = true; //TODO: Remove
-
 if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
 (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
   ?>
@@ -53,7 +52,6 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
       $("#modalReasonConfirmation").find('.modal-body #lblActiveUsername').text(data["username"]); //Hidden label; For ajax use when btnBanMember onclick
       $("#modalReasonConfirmation").modal("show");
       $("#txtReason").focus();
-      // console.log("test");
     });
 
     $('#btnBanActiveMember').on('click', function(e) { //Confirm to ban a member
@@ -157,16 +155,6 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
           }
         },
         { data: null, defaultContent: '<button id="btnDeleteAdmin">Delete</button>' }
-        // {
-        //   mRender: function ( data, type, row ) {
-        //     if (row.userStatus == "pending") {
-        //       return '<button id="btnDeleteAdmin">Delete</button>';
-        //     }
-        //     else {
-        //       return '';
-        //     }
-        //   }
-        // }
       ],
       columnDefs: [
         {
@@ -192,7 +180,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
           var firstChar  = dataString.charAt(0);
           var message    = dataString.slice(1);
 
-         if (firstChar == "1") { //Email in use; Unable to add admin
+          if (firstChar == "1") { //Email in use; Unable to add admin
             alert(message);
           }
           else if (firstChar == "2") { //Admin successfully added
@@ -234,7 +222,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
           var firstChar  = dataString.charAt(0);
           var message    = dataString.slice(1);
 
-         if (firstChar == "1") { //Successfully updated email & send email
+          if (firstChar == "1") { //Successfully updated email & send email
             $("#modalRequestEmail").modal("hide");
             alert(message);
             tblAdminList.ajax.reload(); //Reload data table
@@ -271,7 +259,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
           var firstChar  = dataString.charAt(0);
           var message    = dataString.slice(1);
 
-         if (firstChar == "1") { //Successfully removed admin
+          if (firstChar == "1") { //Successfully removed admin
             alert(message);
             tblAdminList.ajax.reload(); //Reload data table
           }
@@ -399,8 +387,8 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
         </thead>
       </table>
     </div>
-<!-- End admin list tab -->
-</div>
+    <!-- End admin list tab -->
+  </div>
 </div>
 
 <!-- Popup modal to request confirmation -->
@@ -520,7 +508,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
 }
 else { //Redirect user to home page
   echo "<script>alert('You are not allowed here!')</script>";
-  header("Refresh:1;url=index.php");
+  header("Refresh:1;url=../index.php");
 }
 ?>
 
@@ -528,76 +516,6 @@ else { //Redirect user to home page
 <link rel="stylesheet" href="../css/parsley.css" type="text/css" />
 
 <?php
-// if (isset($_POST['btnAddAdmin'])) { //Clicked on add button
-//   //Obtain user input
-//   $fullName = filter_has_var(INPUT_POST, 'txtFullName') ? $_POST['txtFullName']: null;
-//   $email = filter_has_var(INPUT_POST, 'txtEmail') ? $_POST['txtEmail']: null;
-//   $userType = "admin";
-//   $userStatus = "pending";
-//   $memberConfirmationExpiryDate = time(); //Get current date
-//   $memberConfirmationExpiryDate = date('Y-m-d H:i:s', strtotime('+1 day', $memberConfirmationExpiryDate)); //Calculate url expiration date
-//
-//   //Trim white space
-//   $fullName = trim($fullName);
-//   $email = trim($email);
-//
-//   //Sanitize user input
-//   $fullName = filter_var($fullName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-//   $email = filter_var($email, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-//
-//   try { //Check if there is an account associated with that email
-//     $emailSQL = "SELECT userID FROM user WHERE emailAddr = ?";
-//     $stmt = mysqli_prepare($conn, $emailSQL) or die( mysqli_error($conn));
-//     mysqli_stmt_bind_param($stmt, "s", $email);
-//     mysqli_stmt_execute($stmt);
-//     mysqli_stmt_store_result($stmt);
-//     $count = mysqli_stmt_num_rows($stmt);
-//     mysqli_stmt_close($stmt);
-//
-//     if ($count > 0) { //Email in use; Unable to add admin
-//       echo "<script>alert('An account has already been registered under this email address!')</script>";
-//     }
-//     else { //Email available to use; Add new addmin
-//       try {
-//         $signupSQL = "INSERT INTO user (fullName, emailAddr, userType, userStatus, memberConfirmationExpiryDate)
-//         VALUES (?, ?, ?, ?, ?)";
-//         $stmt = mysqli_prepare($conn, $signupSQL) or die( mysqli_error($conn));
-//         mysqli_stmt_bind_param($stmt, "sssss", $fullName, $email, $userType, $userStatus, $memberConfirmationExpiryDate);
-//         mysqli_stmt_execute($stmt);
-//
-//         if (mysqli_stmt_affected_rows($stmt) > 0) { //Send email to new admin
-//           $emailEncoded = urlencode(base64_encode($email));
-//           $fullNameEncoded = urlencode(base64_encode($fullName));
-//           $memberConfirmationExpiryDateEncoded = urlencode($memberConfirmationExpiryDate);
-//           $url = $environment . "/CM0656-Assignment/administration/Member_signup.php?mail=" . $emailEncoded . "&name=" . $fullNameEncoded
-//           . "&exDate=" . $memberConfirmationExpiryDateEncoded;
-//           if (sendEmail($email, $fullName, 'Please Complete Your Registration', '../email/notifier_completeRegistration.html', $url)) { //Email sent
-//             echo "<script>alert('New admin added!')</script>";
-//           }
-//           else { //Email failed to send
-//             echo "<script>alert('Failed to send email!')</script>";
-//           }
-//         }
-//         else { //SQL statement failed; Failed to add admin
-//           echo "<script>alert('Failed to add admin!')</script>";
-//         }
-//       }
-//       catch (Exception $e) {
-//         echo "<script>alert('Registration failed!')</script>";
-//         //echo $e->getErrorsMessages();
-//       }
-//     }
-//   }
-//   catch (Exception $e) {
-//     echo "<script>alert('Unable to add new admin!')</script>";
-//     //echo $e->getErrorsMessages();
-//   }
-//   mysqli_stmt_close($stmt);
-//   mysqli_close($conn);
-// }
-?>
-
-<?php
-echo makeFooter();
+echo makeFooter("../");
 echo makePageEnd();
 ?>

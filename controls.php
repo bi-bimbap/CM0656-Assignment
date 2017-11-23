@@ -29,71 +29,72 @@ HEAD;
     return $headContent;
 }
 
-function makeWrapper() {
+function makeWrapper($prefix) {
 	$wrapper = "<div class='wrapper'>
                 <div class='container'>
                   <div id='logo'>
-                    <img src='../images/logo.png'/>Ima's Official Fanbase
+                    <img src='" . $prefix ."images/logo.png'/>Ima's Official Fanbase
                   </div>";
 	return $wrapper;
 }
 
-function makeFooter() { //Display footer
-    $footContent = <<< FOOT
-<footer>
-	<div class="container">
-		 <div>
-			<div id='logo'><img src='../images/logo.png'/>Ima's Official Fanbase</div>
-		 </div>
-		 <div class="middle">
-			<div><i class="fa fa-envelope"></i> info@imamegastar.forum.com</div>
-			<div><i class="fa fa-phone"></i> +6012-2151725</div>
-		 </div>
-		 <div>
-			<i class="fa fa-facebook"></i>
-			<i class="fa fa-instagram"></i>
-			<i class="fa fa-google-plus"></i>
-			<i class="fa fa-twitter"></i>
-		 </div>
-	</div>
-</footer>
-<div class="powered">
-	<div class="container">
-		<span>2017&copy; Ima's Official Fanbase All rights reserved.</span>
-		<a href="#">Private Policy</a>
-		<a href="#">Terms of Use</a>
-	</div>
-</div>
-FOOT;
-    $footContent .="\n";
-    return $footContent;
+function makeFooter($prefix) { //Display footer
+  $footContent = '
+  <footer>
+  <div class="container">
+  <div>
+  <div id="logo"><img src="' . $prefix . 'images/logo.png"/>Ima\'s Official Fanbase</div>
+  </div>
+  <div class="middle">
+  <div><i class="fa fa-envelope"></i> info@imamegastar.forum.com</div>
+  <div><i class="fa fa-phone"></i> +6012-2151725</div>
+  </div>
+  <div>
+  <i class="fa fa-facebook"></i>
+  <i class="fa fa-instagram"></i>
+  <i class="fa fa-google-plus"></i>
+  <i class="fa fa-twitter"></i>
+  </div>
+  </div>
+  </footer>
+  <div class="powered">
+  <div class="container">
+  <span>2017&copy; Ima\'s Official Fanbase All rights reserved.</span>
+  <a href="#">Private Policy</a>
+  <a href="#">Terms of Use</a>
+  </div>
+  </div>';
+
+  $footContent .="\n";
+  return $footContent;
 }
 
-function makeNavMenu() {
-  $navBar = <<<NAVBAR
-<nav><ul>
-<li><a href="index.php">Home</a></li>
-<li><a href="#">Auction</a></li>
-<li><a href="#">Gallery</a></li>
-<li><a href="#">Discussion Board</a></li>
-<li><a href="#">Competitions</a></li>
-</ul></nav></div></div>
-NAVBAR;
+function makeNavMenu($prefix) {
+  $navBar = '
+  <nav><ul>
+  <li><a href="' . $prefix . 'index.php">Home</a></li>
+  <li><a href="' . $prefix . 'index.php">Auction</a></li>
+  <li><a href="' . $prefix . 'index.php">Gallery</a></li>
+  <li><a href="' . $prefix . 'index.php">Discussion Board</a></li>
+  <li><a href="' . $prefix . 'index.php">Competitions</a></li>
+  </ul></nav></div></div>';
 
   return $navBar;
 }
 
-function makeProfileButton() {
+function makeProfileButton($prefix) {
   $profileButton = "<div class='dropdown'>";
   $profileButton .= "<button class='btn btn-secondary dropdown-toggle' type='button' id='btnAccountInfo' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
   $profileButton .= "<i class='fa fa-user'></i>";
   $profileButton .= "</button>";
 
   $profileButton .= "<div class='dropdown-menu' aria-labelledby='btnAccountInfo'>";
-  $profileButton .= "<a class='dropdown-item' href='#'>Profile</a>";
+  $profileButton .= "<a class='dropdown-item' href='" . $prefix . "administration/manageDetails.php'>Manage My Details</a>";
+
+  //Show user management features to admin/main admin only
   if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
   (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
-  $profileButton .= "<a class='dropdown-item' href='#'>User Management</a>";
+  $profileButton .= "<a class='dropdown-item' href='" . $prefix . "administration/Admin_userManagement.php'>User Management</a>";
   }
   $profileButton .= "</div>";
   $profileButton .= "</div>";
@@ -101,7 +102,7 @@ function makeProfileButton() {
   return $profileButton;
 }
 
-function makeLoginLogoutBtn() { //Display login/logout button based on session
+function makeLoginLogoutBtn($prefix) { //Display login/logout button based on session
   $output = "<div id='loginLogoutDiv'>";
 
   if (isset($_SESSION['logged-in']) && ($_SESSION['logged-in'] == true)) {
@@ -120,12 +121,12 @@ function makeLoginLogoutBtn() { //Display login/logout button based on session
       session_destroy();
       //$redirect = $_SERVER['REQUEST_URI']; //Return users to the originating page after logout
       // header('Location:' . $redirect);
-      header('Location:index.php');
+      header('Location:' . $prefix . 'index.php');
   }
 
   if (isset($_POST['btnLogin'])) {
       $_SESSION['origin'] = $_SERVER['REQUEST_URI']; //Store current page URL
-      header('Location: loginForm.php');
+      header('Location:' . $prefix . 'loginForm.php');
   }
   return $output;
 }
