@@ -1,7 +1,7 @@
 <!-- TODO: Unable to add parsley js validation in popup modal -->
 
 <?php
-ini_set("session.save_path", "");
+// ini_set("session.save_path", ""); //TODO: comment out
 session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
@@ -13,14 +13,14 @@ echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
 echo makeProfileButton();
 echo makeNavMenu();
 echo makeHeader("Manage My Details");
-$environment = LOCAL; //TODO: Change to server
+$environment = WEB; //TODO: Change to server
 ?>
 
 <?php //Only show content if user is logged in
-$_SESSION['userID'] = '3'; //TODO: Remove session
-$_SESSION['userType'] = 'admin'; //TODO: Remove
-$_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
-$_SESSION['logged-in'] = true; //TODO: Remove
+// $_SESSION['userID'] = '3'; //TODO: Remove session
+// $_SESSION['userType'] = 'admin'; //TODO: Remove
+// $_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
+// $_SESSION['logged-in'] = true; //TODO: Remove
 
 if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && isset($_SESSION['userID']) && isset($_SESSION['userType'])) {
 ?>
@@ -469,6 +469,7 @@ mysqli_stmt_close($stmt);
 
     if (password_verify($password, $pHash)) { //Check if new & old password are the same; If yes, do not allow
       echo '<script>alert("New password cannot be the same as your current password!")</script>';
+      echo '<script>$("#tabDetails li:eq(1) a").tab("show")</script>';
     }
     else { //New & old password are different
       echo '<script type="text/javascript"> $("#modalSecurity2").modal("show")</script>';
