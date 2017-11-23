@@ -3,9 +3,11 @@
 
 <?php
 require_once('../controls.php');
-echo makeWrapper();
-echo makePageStart("Sign Up Succesful");
-echo makeHeader("Sign Up Successful");
+	echo makePageStart("Signup Successfully");
+	echo makeWrapper();
+	echo makeProfileButton();
+	echo makeNavMenu();
+	echo makeHeader("Signup Successfully");
 ?>
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
