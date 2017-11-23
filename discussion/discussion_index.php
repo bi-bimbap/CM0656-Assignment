@@ -51,28 +51,26 @@ $environment = LOCAL;
     <tr>
       <th>Thread Name</th>
       <th>Created By</th>
-      <!-- <th>Total Message</th> -->
+      <th>Total Message</th>
     </tr>
   </thead>
+  <!-- SELECT discussion_thread.threadID, discussion_thread.threadName, user.username, count(discussion_thread.threadID) AS Total
+  FROM discussion_thread
+  INNER JOIN user
+  ON discussion_thread.userID=user.userID
+  GROUP BY discussion_thread.threadID
 
+SELECT discussion_message.threadID, discussion_thread.threadName, user.username, count(discussion_message.messageID) AS TOTAL
+FROM discussion_message
+INNER JOIN discussion_thread
+ON discussion_message.threadID=discussion_thread.threadID
+INNER JOIN user
+ON discussion_message.userID=user.userID
+GROUP BY discussion_thread.threadID
+$total_message
+COUNT(discussion_thread.threadID) AS Total
+GROUP BY discussion_message.threadID -->
   <?php
-        // SELECT discussion_thread.threadID, discussion_thread.threadName, user.username, count(discussion_thread.threadID) AS Total
-        // FROM discussion_thread
-        // INNER JOIN user
-        // ON discussion_thread.userID=user.userID
-        // GROUP BY discussion_thread.threadID
-
-  // SELECT discussion_message.threadID, discussion_thread.threadName, user.username, count(discussion_message.messageID) AS TOTAL
-  // FROM discussion_message
-  // INNER JOIN discussion_thread
-  // ON discussion_message.threadID=discussion_thread.threadID
-  // INNER JOIN user
-  // ON discussion_message.userID=user.userID
-  // GROUP BY discussion_thread.threadID
-      // $total_message
-      // COUNT(discussion_thread.threadID) AS Total
-      // GROUP BY discussion_message.threadID
-
       $sqlDiscussion = "SELECT discussion_thread.threadID, discussion_thread.threadName, user.username
       FROM discussion_thread
       INNER JOIN user
@@ -89,13 +87,21 @@ $environment = LOCAL;
                 <td>$admin_username</td>
               </tr>
             </tbody>";
+            //total message
       }
   ?>
 <!--***************************************************************************************************************
     Discussiom: Search Function
 ****************************************************************************************************************-->
 
-
+<!--***************************************************************************************************************
+    Discussiom: Update Function
+****************************************************************************************************************-->
+<!--***************************************************************************************************************
+    Discussiom: Delete Function
+****************************************************************************************************************-->
+</table>
+</div>
 <?php
     mysqli_stmt_close($stmtDiscussion);
     mysqli_close($conn);
