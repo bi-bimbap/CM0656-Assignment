@@ -1,5 +1,5 @@
 <?php
-ini_set("session.save_path", "");
+// ini_set("session.save_path", ""); //TODO: Comment out
 session_start();
 include 'db/database_conn.php';
 require_once('controls.php');
@@ -44,8 +44,8 @@ $(document).ready(function() {
 </script>
 
 <div class="content">
-	<div class="container">
-		<form id='formForgotPassword' data-parsley-validate>
+  <div class="container">
+    <form id='formForgotPassword' data-parsley-validate>
       <div>
         <p>Find Your Account: </p>
         <input type="text" placeholder="name@email.com" id="txtEmail" name="txtEmail" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled>
@@ -56,7 +56,33 @@ $(document).ready(function() {
   </div>
 </div>
 
+<!-- Start footer  -->
+<footer>
+  <div class="container">
+    <div>
+      <div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>
+    </div>
+    <div class="middle">
+      <div><i class="fa fa-envelope"></i> info@imamegastar.forum.com</div>
+      <div><i class="fa fa-phone"></i> +6012-2151725</div>
+    </div>
+    <div>
+      <i class="fa fa-facebook"></i>
+      <i class="fa fa-instagram"></i>
+      <i class="fa fa-google-plus"></i>
+      <i class="fa fa-twitter"></i>
+    </div>
+  </div>
+</footer>
+<div class="powered">
+  <div class="container">
+    <span>2017&copy; Ima's Official Fanbase All rights reserved.</span>
+    <a href="#">Private Policy</a>
+    <a href="#">Terms of Use</a>
+  </div>
+</div>
+<!-- End footer -->
+
 <?php
-echo makeFooter();
 echo makePageEnd();
 ?>

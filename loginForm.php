@@ -1,5 +1,5 @@
 <?php
-ini_set("session.save_path", "");
+// ini_set("session.save_path", ""); //TODO: Comment out
 session_start();
 include 'db/database_conn.php';
 require_once('controls.php');
@@ -109,7 +109,7 @@ if(!isset($_SESSION['logged-in'])) { //Prevent users from entering login page if
 	<footer>
 		<div class="container">
 			<div>
-				<div id='logo'><img src='../images/logo.png'/>Ima's Official Fanbase</div>
+				<div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>
 			</div>
 			<div class="middle">
 				<div><i class="fa fa-envelope"></i> info@imamegastar.forum.com</div>

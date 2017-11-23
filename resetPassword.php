@@ -1,5 +1,5 @@
 <?php
-ini_set("session.save_path", "");
+// ini_set("session.save_path", ""); //TODO: Comment out
 session_start();
 include 'db/database_conn.php';
 include_once 'config.php';
@@ -9,7 +9,7 @@ echo makePageStart("Reset Password");
 echo "<div class='wrapper'><div class='container'><div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>";
 echo makeNavMenu();
 echo makeHeader("Reset Password");
-$environment = LOCAL;
+$environment = WEB; //TODO: Change to WEB
 ?>
 
 <?php
@@ -30,53 +30,53 @@ if (isset($_GET['mail']) && isset($_GET['exDate'])) { //Get email address & rese
 
   // $emailAddr = "test";
   echo "<label id='lblEmail' hidden>$emailAddr</label>"; //For jQuery to obtain value for Ajax
-?>
+  ?>
 
-<script src="scripts/jquery.js"></script>
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
-<script src="scripts/parsley.min.js"></script>
-<link rel="stylesheet" href="css/parsley.css" type="text/css" />
-<link rel="stylesheet" href="css/stylesheet.css" type="text/css" />
-<link href="css/bootstrap.css" rel="stylesheet">
-<script src="scripts/bootstrap.min.js"></script>
+  <script src="scripts/jquery.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
+  <script src="scripts/parsley.min.js"></script>
+  <link rel="stylesheet" href="css/parsley.css" type="text/css" />
+  <link rel="stylesheet" href="css/stylesheet.css" type="text/css" />
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <script src="scripts/bootstrap.min.js"></script>
 
-<script>
-$(document).ready(function() {
-  $('#btnSave').on('click', function(e) { //Send password reset url to member
+  <script>
+  $(document).ready(function() {
+    $('#btnSave').on('click', function(e) { //Send password reset url to member
 
-    $("#formResetPassword").parsley().validate(); //Trigger parsley js validation
+      $("#formResetPassword").parsley().validate(); //Trigger parsley js validation
 
-    if ($("#formResetPassword").parsley().isValid()) {
-      var password = $("#txtPassword").val();
-      var email = $("#lblEmail").text();
+      if ($("#formResetPassword").parsley().isValid()) {
+        var password = $("#txtPassword").val();
+        var email = $("#lblEmail").text();
 
-      $.ajax({
-        url : "forgotPassword_serverProcessing.php",
-        type: "POST",
-        data: "action=resetPassword&email=" + email + "&password=" + password,
-        success: function(data) {
-          var dataString = data;
-          var firstChar  = dataString.charAt(0);
-          var message    = dataString.slice(1);
+        $.ajax({
+          url : "forgotPassword_serverProcessing.php",
+          type: "POST",
+          data: "action=resetPassword&email=" + email + "&password=" + password,
+          success: function(data) {
+            var dataString = data;
+            var firstChar  = dataString.charAt(0);
+            var message    = dataString.slice(1);
 
-          alert(message);
+            alert(message);
 
-          if (firstChar == "1") { //Password updated; Redirect to login page
-            header("Refresh:1;url=loginForm.php");
+            if (firstChar == "1") { //Password updated; Redirect to login page
+              header("Refresh:1;url=loginForm.php");
+            }
           }
-        }
-      });
-    }
+        });
+      }
+    });
   });
-});
 </script>
 
 <div class="content">
-	<div class="container">
-		<form id='formResetPassword' method='POST' data-parsley-validate>
+  <div class="container">
+    <form id='formResetPassword' method='POST' data-parsley-validate>
       <div>
         <p>Enter Your New Password: </p>
         <input type="password" id="txtPassword" name="txtPassword" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5">
@@ -99,7 +99,33 @@ else { //Parameters not complete; Redirect to error page
 }
 ?>
 
+<!-- Start footer  -->
+<footer>
+  <div class="container">
+    <div>
+      <div id='logo'><img src='images/logo.png'/>Ima's Official Fanbase</div>
+    </div>
+    <div class="middle">
+      <div><i class="fa fa-envelope"></i> info@imamegastar.forum.com</div>
+      <div><i class="fa fa-phone"></i> +6012-2151725</div>
+    </div>
+    <div>
+      <i class="fa fa-facebook"></i>
+      <i class="fa fa-instagram"></i>
+      <i class="fa fa-google-plus"></i>
+      <i class="fa fa-twitter"></i>
+    </div>
+  </div>
+</footer>
+<div class="powered">
+  <div class="container">
+    <span>2017&copy; Ima's Official Fanbase All rights reserved.</span>
+    <a href="#">Private Policy</a>
+    <a href="#">Terms of Use</a>
+  </div>
+</div>
+<!-- End footer -->
+
 <?php
-echo makeFooter();
 echo makePageEnd();
 ?>
