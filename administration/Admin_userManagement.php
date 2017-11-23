@@ -1,7 +1,7 @@
 <!-- TODO: Focus on input in popup modal when open -->
 <!-- TODO: Feature to allow mainAdmin to bring back removed admin (Consider scenario where he/she remove pending admin, if bring back how to do?) -->
 <?php
-ini_set("session.save_path", "");
+// ini_set("session.save_path", ""); //TODO: comment out
 session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
@@ -12,7 +12,7 @@ echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
 echo makeProfileButton();
 echo makeNavMenu();
 echo makeHeader("User Management");
-$environment = LOCAL; //TODO: change to server
+$environment = WEB; //TODO: change to server
 ?>
 
 <link href="../css/jquery.dataTables.min.css" rel="stylesheet">
@@ -53,22 +53,24 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
       $("#modalReasonConfirmation").find('.modal-body #lblActiveUsername').text(data["username"]); //Hidden label; For ajax use when btnBanMember onclick
       $("#modalReasonConfirmation").modal("show");
       $("#txtReason").focus();
-      console.log("test");
+      // console.log("test");
     });
 
-    $('#btnBanMember').on('click', function(e) { //Confirm to ban a member
-      var username = $("#modalConfirmation").find('.modal-body #lblUsername').text(); //Obtain username from hidden label
+    $('#btnBanActiveMember').on('click', function(e) { //Confirm to ban a member
+      var reason = $("#modalReasonConfirmation").find('.modal-body #txtReason').val();
+      var username = $("#modalReasonConfirmation").find('.modal-body #lblActiveUsername').text(); //Obtain username from hidden label
       var userID = <?php echo $_SESSION['userID'] ?>;
       var tab = $('.nav-tabs .active').text(); //Get currently selected tab
 
       $.ajax({
         url :"userManagement_serverProcessing.php",
         type: "POST",
-        data: "action=banMember&username=" + username + "&banBy=" + userID + "&tab=" + tab,
+        data: "action=banMember&username=" + username + "&banBy=" + userID + "&reason=" + reason + "&tab=" + tab,
         success: function(data) {
-          $("#modalConfirmation").modal("hide");
+          $("#modalReasonConfirmation").modal("hide");
           alert(username + " has been banned!");
-          tblBlacklistMembers.ajax.reload(); //Reload data table
+          table.ajax.reload(); //Reload data table
+          tblBannedMembers.ajax.reload();
         }
       });
     });
@@ -97,20 +99,20 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
       $("#modalConfirmation").modal("show");
     });
 
-    $('#btnBanActiveMember').on('click', function(e) { //Confirm to ban a member
-      var reason = $("#modalReasonConfirmation").find('.modal-body #txtReason').val();
-      var username = $("#modalReasonConfirmation").find('.modal-body #lblActiveUsername').text(); //Obtain username from hidden label
+    $('#btnBanMember').on('click', function(e) { //Confirm to ban a member
+      var username = $("#modalConfirmation").find('.modal-body #lblUsername').text(); //Obtain username from hidden label
       var userID = <?php echo $_SESSION['userID'] ?>;
       var tab = $('.nav-tabs .active').text(); //Get currently selected tab
 
       $.ajax({
         url :"userManagement_serverProcessing.php",
         type: "POST",
-        data: "action=banMember&username=" + username + "&banBy=" + userID + "&reason=" + reason + "&tab=" + tab,
+        data: "action=banMember&username=" + username + "&banBy=" + userID + "&tab=" + tab,
         success: function(data) {
-          $("#modalReasonConfirmation").modal("hide");
+          $("#modalConfirmation").modal("hide");
           alert(username + " has been banned!");
-          table.ajax.reload(); //Reload data table
+          tblBlacklistMembers.ajax.reload();
+          tblBannedMembers.ajax.reload(); //Reload data table
         }
       });
     });
