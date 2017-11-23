@@ -33,10 +33,7 @@ $environment = LOCAL; //TODO: Change to server
  ***** Validation: only admin can access this page **********
 ***********************************************************-->
 <?php //Only show content if user is logged in
-    $_SESSION['userID'] = '3'; //TODO: Remove session
-    $_SESSION['userType'] = 'admin'; //TODO: Remove
-    $_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
-    $_SESSION['logged-in'] = true; //TODO: Remove
+
 
     if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
     (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
