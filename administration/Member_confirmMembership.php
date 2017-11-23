@@ -8,7 +8,7 @@ require_once('../functions.php');
 echo makeWrapper();
 echo makePageStart("Membership Confirmation");
 echo makeHeader("Membership Confirmation");
-$environment = LOCAL; //TODO: Change to server
+$environment = WEB; //TODO: Change to server
 ?>
 
 <?php
@@ -72,7 +72,7 @@ if (isset($_GET['mail']) && isset($_GET['exDate'])) { //Get email address & memb
       if (mysqli_stmt_affected_rows($stmt) > 0) { //Membership confirmed
         echo "<p>Membership confirmed!</p>";
         echo "<p>You will be redirected in a short while!</p>";
-        header("Refresh:2;url=index.php");
+        header("Refresh:2;url=../loginForm.php");
       }
       else { //Membership confirmation failed
         echo "<p>Membership confimation failed!</p><br />";

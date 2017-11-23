@@ -54,17 +54,17 @@ if (isset($_GET['mail']) && isset($_GET['name']) && isset($_GET['exDate'])) { //
         //Encode variables to be used in url
         $emailEncoded = urlencode(base64_encode($email));
         $fullNameEncoded = urlencode(base64_encode($fullName));
-        $memberConfirmationExpiryDateEncoded = urlencode(base64_encode($memberConfirmationExpiryDate));
+        $memberConfirmationExpiryDateEncoded = urlencode($memberConfirmationExpiryDate);
         $url = $environment . "/CM0656-Assignment/administration/Member_signup.php?mail=" . $emailEncoded . "&name=" . $fullNameEncoded
         . "&exDate=" . $memberConfirmationExpiryDateEncoded;
 
         if (sendEmail($email, $fullName, 'Please Complete Your Registration', '../email/notifier_completeRegistration.html', $url)) { //Email sent
           echo "<script>alert('The link you clicked on has expired. Another email has been sent to your email address. Follow the instructions to complete the registration process.')</script>";
-          header("Refresh:1;url=../index.php"); //TODO: Change url
+          header("Refresh:1;url=../index.php");
         }
         else { //Email failed to send
           echo "<script>alert('Failed to send email!')</script>";
-          header("Refresh:1;url=../index.php"); //TODO: Change url
+          header("Refresh:1;url=../index.php");
         }
       }
       else {
@@ -238,9 +238,9 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
         try {
           //echo "<script>alert('Registration successful!')</script>";
           $signupSQL = "INSERT INTO user (fullName, username, emailAddr, passwordHash, shippingAddr, dob, userType,
-            userStatus, memberConfirmationExpiryDate, securityQuestion, securityAns) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            userStatus, memberConfirmationExpiryDate, securityQuestion, securityAns) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($conn, $signupSQL) or die( mysqli_error($conn));
-            mysqli_stmt_bind_param($stmt, "ssssssssss", $fullName, $username, $email, $password, $shippingAddr, $dob, $userType,
+            mysqli_stmt_bind_param($stmt, "sssssssssss", $fullName, $username, $email, $password, $shippingAddr, $dob, $userType,
             $userStatus, $memberConfirmationExpiryDate, $securityQuestion, $securityAns);
             mysqli_stmt_execute($stmt);
 
@@ -249,12 +249,12 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
 
               //Encode variables to be used in url
               $emailEncoded = urlencode(base64_encode($email));
-              $memberConfirmationExpiryDateEncoded = urlencode(base64_encode($memberConfirmationExpiryDate));
+              $memberConfirmationExpiryDateEncoded = urlencode($memberConfirmationExpiryDate);
 
               $url = $environment . "/CM0656-Assignment/administration/Member_confirmMembership.php?mail=" . $emailEncoded .
               "&exDate=" . $memberConfirmationExpiryDateEncoded;
               if (sendEmail($email, $fullName, 'Please Verify Your Email Address', '../email/notifier_verifyEmail.html', $url)) {
-                header('Location:' . "Member_signupSuccessful.php");
+                echo "<script type='text/javascript'>window.top.location='Member_signupSuccessful.php';</script>"; exit;
               }
               else {
                 echo "<script>alert('Failed to send email!')</script>";
@@ -263,7 +263,7 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
           }
           catch(Exception $e) {
             echo "<script>alert('Signup failed!')</script>";
-            //echo $e->getErrorsMessages();
+            // echo $e->getErrorsMessages();
           }
         }
         else {
