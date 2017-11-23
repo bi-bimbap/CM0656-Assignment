@@ -38,120 +38,86 @@ $_SESSION['logged-in'] = true; //TODO: Remove
 
 <!-- Report Inappropriate -->
 <style>
-                /**{margin: 0;padding:0px}*/
+/************ Reply/Cancel Button **************/
+#txtReplyMessage {
+display:none;
+}
+#replyMessage_cancel{
+  display:none;
+}
+/*********** Report Inappropriate *************/
 
-                .showLeft{
-                    border:1px solid #BEC4C7 !important;
-                    text-shadow: none !important;
-                    color:#fff !important;
-                    padding:10px;
-                }
+/**{margin: 0;padding:0px}*/
+.showLeft{
+    border:1px solid #BEC4C7 !important;
+    text-shadow: none !important;
+    color:#fff !important;
+    padding:10px;
+}
 
-                .icons li {
-                    background: none repeat scroll 0 0 #fff;
-                    height: 7px;
-                    width: 7px;
-                    line-height: 0;
-                    list-style: none outside none;
-                    margin-right: 15px;
-                    margin-top: 3px;
-                    vertical-align: top;
-                    border-radius:50%;
-                    pointer-events: none;
-                }
+.icons li {
+    background: none repeat scroll 0 0 #fff;
+    height: 7px;
+    width: 7px;
+    line-height: 0;
+    list-style: none outside none;
+    margin-right: 15px;
+    margin-top: 3px;
+    vertical-align: top;
+    border-radius:50%;
+    pointer-events: none;
+}
 
-                .button-left {
-                    left: 0.4em;
-                }
+.button-left {
+    left: 0.4em;
+}
 
-                .button-right {
-                    right: 0.4em;
-                }
+.button-right {
+    right: 0.4em;
+}
 
-                .button-left, .button-right {
-                    top: 0.24em;
-                }
+.button-left, .button-right {
+    top: 0.24em;
+}
 
-                .dropbtn {
-                    background-color: #BEC4C7;
-                    /*position: fixed;*/
-                    color: white;
-                    font-size: 16px;
-                    border: none;
-                    cursor: pointer;
-                }
+.dropbtn {
+    background-color: #BEC4C7;
+    /*position: fixed;*/
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
 
-                /*.dropbtn:hover, .dropbtn:focus {
-                    background-color: #3e8e41;
-                }*/
+/*.dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+}*/
 
-                .dropdown {
-                    position: absolute;
-                    display: inline-block;
-                    right: 0.4em;
-                }
+.dropdown {
+    position: absolute;
+    display: inline-block;
+    right: 0.4em;
+}
 
-                .report-content {
-                    display: none;
-                    /*position: relative;*/
-                    margin-top: 60px;
-                    background-color: #f9f9f9;
-                    min-width: 160px;
-                    overflow: auto;
-                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                    z-index: 1;
-                }
+.report-content {
+    display: none;
+    /*position: relative;*/
+    margin-top: 60px;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
 
-                .report-content a {
-                    color: black;
-                    padding: 12px 16px;
-                    text-decoration: none;
-                    display: block;
-                }
-
-                /*.dropdown a:hover {background-color: #f1f1f1}*/
-
-                .show {display:block;}
-
-            </style>
-            <script>
-                function changeLanguage(language) {
-                    var element = document.getElementById("url");
-                    element.value = language;
-                    element.innerHTML = language;
-                }
-
-                function showDropdown() {
-                    document.getElementById("reportContent").classList.toggle("show");
-                }
-
-                // Close the dropdown if the user clicks outside of it
-                window.onclick = function(event) {
-                    if (!event.target.matches('.dropbtn')) {
-                        var dropdowns = document.getElementsByClassName("dropdown-content");
-                        var i;
-                        for (i = 0; i < dropdowns.length; i++) {
-                            var openDropdown = dropdowns[i];
-                            if (openDropdown.classList.contains('show')) {
-                                openDropdown.classList.remove('show');
-                            }
-                        }
-                    }
-                }
-            </script>
-<!-- reply Message  -->
-<script>
-    function reply_show(){
-    document.getElementsById("txtReplyMessage").style.visibility = 'visible';
-    }
-    //Function to Hide Popup
-    function reply_hide(){
-    document.getElementsById("txtReplyMessage").style.visibility= 'hidden';
-    }
-</script>
-
-<style>
-
+.report-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+/*.dropdown a:hover {background-color: #f1f1f1}*/
+.show {display:block;}
 </style>
 
 <?php
@@ -218,12 +184,8 @@ echo"
                     //Validation - Only Only member can view "Reply" button
                     if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
                     (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
-
-                      if(isset($_POST['replyMessage_submit'])) {
-
-                      }
-
-echo "<div><button type='submit' id='replyMessage_submit' name='replyMessage_submit'>Reply</button></div>";
+echo "<div><button type='submit' id='replyMessage_start' name='replyMessage_start'>Reply</button></div>";
+echo "<div><button type='submit' id='replyMessage_cancel' name='replyMessage_cancel'>Cancel</button></div>";
 
 
 echo "<form method='post' action='Member_postMessage_process.php'>
@@ -231,6 +193,11 @@ echo "<form method='post' action='Member_postMessage_process.php'>
         <input type='hidden' name='replyTo_messageID' value='$messageID'/>
         <input type='text' id='txtReplyMessage' name='txtReplyMessage' placeholder='Write a comment..'/>
       </form>";
+
+
+
+echo  "</div>";
+
 echo "</div></br>";
                     }
                     else
@@ -243,7 +210,7 @@ echo "</div></br>";
 
 //.................................................................................................................
                 $messageNum++;
-              } //End: calculate total messages
+               } //End: calculate total messages
 
                   if($messageNum == 0){
 echo"
@@ -287,6 +254,25 @@ echo"
       <div><h6><b>$userName said: </b></h6></div>
       <div><h4>$messageContent</h4></div>
       <div><h6><i>$messageDateTime</i></h6></div>
+    </div>";
+    /**********************************************************************************************************************************************************
+          DISCUSSION BOARD: Report inappropriate Message Content
+    ***********************************************************************************************************************************************************/
+echo"
+    <div class='message-report'>
+      <form method='post' action='Member_reportMessage_process.php'>
+      Report:
+      <select name='reportSelection'>
+        <option value='sexual'>Sexual content</option>
+        <option value='spam'>Spam</option>
+        <option value='offensive'>Offensive</option>
+        <option value='scam'>Scam or misleading</option>
+        <option value='falsenews'>False news story</option>
+        <option value='violent'>Violent or repulsive content</option>
+        <option value='others'>Others</option>
+      </select>
+      <input type='submit' id='reportSelection_submit' name='reportSelection_submit' value='Post'/>
+      </form>
     </div>";
                 $replyNum++;
               } //End: calculate total messages
@@ -342,7 +328,6 @@ echo "
 <input type='submit' id='postMessage_submit' name='postMessage_submit' value='Post'/>
 </form>
 </div>";
-
             }
             else {
 echo "
@@ -352,27 +337,72 @@ echo "
 </div>";
             }
         ?>
+
 </div>
 </div>
 </div>
 
-<!-- TODO: Change the form to be POP OUT form -->
+<script>
+window.onload = function() {
+  var replyButton = div.replyMessage_start;
+
+  replyTextbox.onchange = function()
+  {
+			if (this.click()) {
+          document.getElementById("replyMessage_cancel").style.visibility='visible';
+          document.getElementById("replyButton").style.visibility='hidden';
+          document.getElementById("txtReplyMessage").style.visibility='visible';
+			}
+			else {
+          document.getElementById("replyMessage_cancel").style.visibility='hidden';
+          document.getElementById("replyButton").style.visibility='visible';
+          document.getElementById("txtReplyMessage").style.visibility='hidden';
+			}
+		};
+
+
+    $('#replyMessage_start').click(function() {
+      $('#replyMessage_cancel').show();
+      $(this).hide();
+      $('#txtReplyMessage').show();
+    });
+
+    $('#replyMessage_cancel').click(function () {
+        $('#replyMessage_start').show();
+        $(this).hide();
+        $('#txtReplyMessage').hide();
+    });
+}
+</script>
+
+<script>
+    function changeLanguage(language) {
+        var element = document.getElementById("url");
+        element.value = language;
+        element.innerHTML = language;
+    }
+
+    function showDropdown() {
+        document.getElementById("reportContent").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
+
 <?php
-                  // echo"
-                  //     <div class='message-new'>
-                  //       <form id='postMessage_field' method='post'>
-                  //       </form>
-                  //     </div>";
-
-                  //(2) Reply Message
-//THREE DOTS MENU: reportInappropriate = dropdown
-//THREE DOTS:      = dropbtn icons btn-right showLeft
-//MENU (5):        = -d'myDropdown' class'dropdown-content'
-
-?>
-
-<?php
-            mysqli_close($conn);
+mysqli_close($conn);
 //} //for ajax, close
 echo makeFooter();
 echo makePageEnd();

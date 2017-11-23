@@ -36,8 +36,6 @@
 
     }
     //validation: Prevent Resubmit Users' Previous Input Data
-    clearstatcache();
-    mysqli_stmt_close($stmtReplyMessage);
 
     $url="Member_postMessage.php?threadID=".$replyThread;
     header('Location: '.$url);
@@ -49,19 +47,17 @@
 *******************************************************************************************************************************************************-->
 <?php
 //check inappropriate language
-
-	$str_message = $replyInput;
-
-	$array_message = explode(" ", $str_message);
+  $array_message = explode(" ", $replyInput);
+  print_r ($array_message);
 
 	$sqlCheckInappropriate = "SELECT inappropriatePhrase FROM discussion_inappropriate";
 	$stmtCheckInappropriate = mysqli_prepare($con, $sqlCheckInappropriate) or die( mysqli_error($conn));
   mysqli_stmt_execute($stmtCheckInappropriate);
   mysqli_stmt_bind_result($stmtCheckInappropriate, $inappropriate_phrase);
 
-  if(mysqli_stmt_affected_rows($stmtReplyMessage) > 0){
+  if(mysqli_stmt_affected_rows($stmtCheckInappropriate) > 0){
 
-      while(mysqli_stmt_fetch($stmtGetReply)){
+      while(mysqli_stmt_fetch($stmtCheckInappropriate)){
 
 	    	for($i = 0; $i < count($array_message); $i++){
 	    		if(strtolower($array_message[$i]) == $inappropriate_phrase){
@@ -69,26 +65,15 @@
 	    		}
 	    	}
     }
+    echo "<script>alert('Found Inappropriate Phrase')</script>";
   }
-  else {
-
-		echo "No result";
-
+  else
+  {
+		echo "<script>alert('No result')</script>";
 	    //No Result
-
 	}
-/*************************************/
-  $sqlReplyMessage = "INSERT INTO discussion_message (userID, threadID, messageContent, messageStatus, replyTo)	VALUES (?,?,?,?,?)";
-  $stmtReplyMessage = mysqli_prepare($conn, $sqlReplyMessage) or die( mysqli_error($conn));
-  mysqli_stmt_bind_param($stmtReplyMessage, 'iissi', $_SESSION['userID'], $replyThread, $replyInput, $messageStatus, $replyMessage);
-  mysqli_stmt_execute($stmtReplyMessage);
-
-  if(mysqli_stmt_affected_rows($stmtReplyMessage) > 0){
-    echo "<script>alert('The message has been posted')</script>";
-  }
-  else {
-    echo "<script>alert('Try again!')</script>";
-
-  }
-/*************************************/
+  
+clearstatcache();
+mysqli_stmt_close($stmtReplyMessage);
+mysqli_stmt_close($stmtCheckInappropriate);
   ?>
