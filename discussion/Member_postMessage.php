@@ -7,7 +7,7 @@ require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Discussion Forum");
 echo makeWrapper();
-echo makeLoginLogoutBtn();
+echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
 echo makeProfileButton();
 echo makeNavMenu();
 
@@ -169,7 +169,7 @@ $_SESSION['logged-in'] = true; //TODO: Remove
       mysqli_stmt_fetch($stmtGetThread);
 
       echo makeHeader($threadName);
-      echo "<h5>Description: ".$threadDesc."</h5><br/>";
+      echo "<h3>".$threadDesc."</h3><br/>";
       mysqli_stmt_close($stmtGetThread);
 ?>
 
@@ -209,8 +209,8 @@ $_SESSION['logged-in'] = true; //TODO: Remove
 echo"
     <div class='message-post'>
     <div><h6><b>$userName said: </b></h6></div>
-    <div><h6><i>$messageDateTime</i></h6></div>
-    <div><h4>$messageContent</h4></div>";
+    <div><h4>$messageContent</h4></div>
+    <div><h6><i>$messageDateTime</i></h6></div>";
 
                     /*************************************************************************************************************************************************
                           DISCUSSION BOARD: (2.1) Show Reply Message Textbox (Member)
@@ -240,36 +240,7 @@ echo "";
 echo "</div></br>";
                     }
 //.................................................................................................................
-$sqlGetReply = "SELECT discussion_message.messageID, user.username, discussion_message.messageContent, discussion_message.messageDateTime, discussion_message.replyTo
-FROM discussion_message
-INNER JOIN discussion_thread
-ON discussion_message.threadID=discussion_thread.threadID
-INNER JOIN user
-ON discussion_message.userID=user.userID
-WHERE discussion_thread.threadID = ? AND discussion_message.replyTo=discussion_message.messageID
-ORDER BY discussion_message.messageID DESC";
 
-$stmtGetReply = mysqli_prepare($conn, $sqlGetReply) or die(mysqli_error($conn));
-mysqli_stmt_bind_param($stmtGetReply, "i", $threadID);
-mysqli_stmt_execute($stmtGetReply);
-mysqli_stmt_bind_result($stmtGetReply, $messageID, $userName, $messageContent, $messageDateTime, $replyTo);
-
-  if(mysqli_stmt_affected_rows($stmtGetReply) < 0 ){
-
-    //calculate total replies in a message
-    $replyNum = 0;
-    while(mysqli_stmt_fetch($stmtGetReply)){
-
-echo"
-<div class='message-reply'>
-<input type='hidden' name='replyTo_display' value='$replyTo'/>
-<div><h6><b>$userName said: </b></h6></div>
-<div><h6><i>$messageDateTime</i></h6></div>
-<div><h4>$messageContent</h4></div>
-</div>";
-    $replyNum++;
-  } //End: calculate total messages
-}
 //.................................................................................................................
                 $messageNum++;
               } //End: calculate total messages
@@ -290,36 +261,36 @@ echo"
               DISCUSSION BOARD: (1.2) Display Replied Message Content
 *******************************************************************************************************************************************************-->
         <?php
-//             $sqlGetReply = "SELECT discussion_message.messageID, user.username, discussion_message.messageContent, discussion_message.messageDateTime, discussion_message.replyTo
-//             FROM discussion_message
-//             INNER JOIN discussion_thread
-//             ON discussion_message.threadID=discussion_thread.threadID
-//             INNER JOIN user
-//             ON discussion_message.userID=user.userID
-//             WHERE discussion_thread.threadID = ? AND discussion_message.replyTo=discussion_message.messageID
-//             ORDER BY discussion_message.messageID DESC";
-//
-//             $stmtGetReply = mysqli_prepare($conn, $sqlGetReply) or die(mysqli_error($conn));
-//             mysqli_stmt_bind_param($stmtGetReply, "i", $threadID);
-//             mysqli_stmt_execute($stmtGetReply);
-//             mysqli_stmt_bind_result($stmtGetReply, $messageID, $userName, $messageContent, $messageDateTime, $replyTo);
-//
-//               if(mysqli_stmt_affected_rows($stmtGetReply) < 0 ){
-//
-//                 //calculate total replies in a message
-//                 $replyNum = 0;
-//                 while(mysqli_stmt_fetch($stmtGetReply)){
-//
-// echo"
-// <div class='message-reply'>
-// <input type='hidden' name='replyTo_display' value='$replyTo'/>
-// <div><h6><b>$userName said: </b></h6></div>
-// <div><h6><i>$messageDateTime</i></h6></div>
-// <div><h4>$messageContent</h4></div>
-// </div>";
-//                 $replyNum++;
-//               } //End: calculate total messages
-//             }
+            $sqlGetReply = "SELECT discussion_message.messageID, user.username, discussion_message.messageContent, discussion_message.messageDateTime, discussion_message.replyTo
+            FROM discussion_message
+            INNER JOIN discussion_thread
+            ON discussion_message.threadID=discussion_thread.threadID
+            INNER JOIN user
+            ON discussion_message.userID=user.userID
+            WHERE discussion_thread.threadID = ? AND discussion_message.replyTo=discussion_message.messageID
+            ORDER BY discussion_message.messageID DESC";
+
+            $stmtGetReply = mysqli_prepare($conn, $sqlGetReply) or die(mysqli_error($conn));
+            mysqli_stmt_bind_param($stmtGetReply, "i", $threadID);
+            mysqli_stmt_execute($stmtGetReply);
+            mysqli_stmt_bind_result($stmtGetReply, $messageID, $userName, $messageContent, $messageDateTime, $replyTo);
+
+              if(mysqli_stmt_affected_rows($stmtGetReply) < 0 ){
+
+                //calculate total replies in a message
+                $replyNum = 0;
+                while(mysqli_stmt_fetch($stmtGetReply)){
+
+echo"
+    <div class='message-reply'>
+      <input type='hidden' name='replyTo_display' value='$replyTo'/>
+      <div><h6><b>$userName said: </b></h6></div>
+      <div><h4>$messageContent</h4></div>
+      <div><h6><i>$messageDateTime</i></h6></div>
+    </div>";
+                $replyNum++;
+              } //End: calculate total messages
+            }
                 //calculate total messages in a thread
                 // $messageNum = 0;
                 // while(mysqli_stmt_fetch($stmtGetMessage)){
@@ -366,11 +337,12 @@ echo"
 
 echo "
 <div class='message-new'>
-<form id='postMessage_field' method='post'>
+<form method='post' action='Member_postMessage_process.php'>
 <input type='text' id='txtPostMessage' name='txtPostMessage' placeholder='Post a message..' />
 <input type='submit' id='postMessage_submit' name='postMessage_submit' value='Post'/>
 </form>
 </div>";
+
             }
             else {
 echo "
