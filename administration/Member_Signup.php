@@ -88,17 +88,17 @@ if (isset($_GET['mail']) && isset($_GET['name']) && isset($_GET['exDate'])) { //
 <link href="../css/bootstrap.css" rel="stylesheet">
 <script src="../scripts/jquery.js"></script>
 <script src='../scripts/jquery-ui.min.js'></script>
-<script src="../scripts/bootstrap.min.js"></script> <!-- Note: bootstrap js must be after jquery ui for tooltip data-placement to work -->
+<script src="../scripts/bootstrap.min.js"></script> <!-- NOTE: bootstrap js must be after jquery ui for tooltip data-placement to work -->
 
 <script language="JavaScript" type="text/javascript">
 $(document).ready(function() {
   $("#txtDOB").datepicker({
     dateFormat: 'yy-mm-dd', //'Format: 2017-11-01
-    showWeek: true,
-    maxDate: '-10Y', //Members must be at least 10 years old from current year
-    yearRange: '-150:+0', //Allow max age up to 150 years old
-    changeMonth: true,
-    changeYear: true,
+    showWeek: true, //Show week no.
+    yearRange: '-150:-10', //Max age: 150, Min age: 10
+    changeMonth: true, //Render months option as dropdownlist
+    changeYear: true, //Render year option as dropdownlist
+    defaultDate: '-10Y' //Set default year as latest year option in dropdownlist
   });
 
   $('[data-toggle="tooltip"]').tooltip(); //Trigger tooltips
@@ -130,7 +130,7 @@ $(document).ready(function() {
 
       <?php
       if (!isset($_GET['mail']) && !isset($_GET['name']) && !isset($_GET['exDate'])) { //Only visible to normal members
-        echo "<p><h4 id='label'>Date of Birth:</h4> <input id='txtDOB' name='txtDOB' size='8' placeholder='2017-10-01' value='". (isset($_POST['txtDOB']) ? $_POST['txtDOB'] : '') . "' readonly data-parsley-trigger='change' data-parsley-required='true' data-parsley-errors-messages-disabled/></p>";
+        echo "<p><h4 id='label'>Date of Birth:</h4> <input id='txtDOB' name='txtDOB' size='8' placeholder='2000-10-01' value='". (isset($_POST['txtDOB']) ? $_POST['txtDOB'] : '') . "' readonly data-parsley-trigger='change' data-parsley-required='true' data-parsley-errors-messages-disabled/></p>";
         echo "<p><h4 id='label'>Shipping Address:</h4> <textarea id='txtAddress' name='txtAddress' data-parsley-required='true' data-parsley-errors-messages-disabled>" . (isset($_POST['txtAddress']) ? $_POST['txtAddress'] : '') . "</textarea></p>";
       }
       ?>
