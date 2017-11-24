@@ -83,23 +83,25 @@ function makeNavMenu($prefix) {
 }
 
 function makeProfileButton($prefix) {
-  $profileButton = "<div class='dropdown'>";
-  $profileButton .= "<button class='btn btn-secondary dropdown-toggle' type='button' id='btnAccountInfo' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-  $profileButton .= "<i class='fa fa-user'></i>";
-  $profileButton .= "</button>";
+  if(isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) {
+    $profileButton = "<div class='dropdown'>";
+    $profileButton .= "<button class='btn btn-secondary dropdown-toggle' type='button' id='btnAccountInfo' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
+    $profileButton .= "<i class='fa fa-user'></i>";
+    $profileButton .= "</button>";
 
-  $profileButton .= "<div class='dropdown-menu' aria-labelledby='btnAccountInfo'>";
-  $profileButton .= "<a class='dropdown-item' href='" . $prefix . "administration/manageDetails.php'>Manage My Details</a>";
+    $profileButton .= "<div class='dropdown-menu' aria-labelledby='btnAccountInfo'>";
+    $profileButton .= "<p><a class='dropdown-item' href='" . $prefix . "administration/manageDetails.php'>Manage My Details</a></p>";
 
-  //Show user management features to admin/main admin only
-  if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
-  (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
-  $profileButton .= "<a class='dropdown-item' href='" . $prefix . "administration/Admin_userManagement.php'>User Management</a>";
+    //Show user management features to admin/main admin only
+    if((isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
+    $profileButton .= "<p><a class='dropdown-item' href='" . $prefix . "administration/Admin_userManagement.php'>User Management</a></p>";
+    $profileButton .= "<p><a class='dropdown-item' href='" . $prefix . "administration/Admin_statisticalReport.php'>View Reports</a></p>";
+    }
+    $profileButton .= "</div>";
+    $profileButton .= "</div>";
+
+    return $profileButton;
   }
-  $profileButton .= "</div>";
-  $profileButton .= "</div>";
-
-  return $profileButton;
 }
 
 function makeLoginLogoutBtn($prefix) { //Display login/logout button based on session
