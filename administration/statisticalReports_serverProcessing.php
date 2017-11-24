@@ -8,7 +8,7 @@ $function = filter_has_var(INPUT_POST, 'action') ? $_POST['action']: null;
 $function = trim($function);
 $function = filter_var($function, FILTER_SANITIZE_STRING);
 
-// $function = "competition";
+// $function = "auction";
 
 $a_json = array();
 $a_json_row = array();
@@ -95,24 +95,25 @@ if ($function == "ageGroup") {
   array_push($a_json, $a_json_row);
 
   //Age group 90 - 99
-  $age90SQL = "SELECT fullName FROM user WHERE YEAR(CURDATE()) - YEAR(dob) >= 90 AND YEAR(CURDATE()) - YEAR(dob) < 100";
+  // $age90SQL = "SELECT fullName FROM user WHERE YEAR(CURDATE()) - YEAR(dob) >= 90 AND YEAR(CURDATE()) - YEAR(dob) < 100";
+  $age90SQL = "SELECT fullName FROM user WHERE YEAR(CURDATE()) - YEAR(dob) >= 90";
   $stmt = mysqli_prepare($conn, $age90SQL) or die( mysqli_error($conn));
   mysqli_stmt_execute($stmt);
   mysqli_stmt_store_result($stmt);
   $age90Count = mysqli_stmt_num_rows($stmt);
   mysqli_stmt_close($stmt);
-  $a_json_row = array("ageGroup" => "90 - 99", "count" => $age90Count);
+  $a_json_row = array("ageGroup" => ">90", "count" => $age90Count);
   array_push($a_json, $a_json_row);
 
-  //Age group >100
-  $ageOthersSQL = "SELECT fullName FROM user WHERE YEAR(CURDATE()) - YEAR(dob) >= 100";
-  $stmt = mysqli_prepare($conn, $ageOthersSQL) or die( mysqli_error($conn));
-  mysqli_stmt_execute($stmt);
-  mysqli_stmt_store_result($stmt);
-  $ageOthersCount = mysqli_stmt_num_rows($stmt);
-  mysqli_stmt_close($stmt);
-  $a_json_row = array("ageGroup" => ">100", "count" => $ageOthersCount);
-  array_push($a_json, $a_json_row);
+  // //Age group >100
+  // $ageOthersSQL = "SELECT fullName FROM user WHERE YEAR(CURDATE()) - YEAR(dob) >= 100";
+  // $stmt = mysqli_prepare($conn, $ageOthersSQL) or die( mysqli_error($conn));
+  // mysqli_stmt_execute($stmt);
+  // mysqli_stmt_store_result($stmt);
+  // $ageOthersCount = mysqli_stmt_num_rows($stmt);
+  // mysqli_stmt_close($stmt);
+  // $a_json_row = array("ageGroup" => ">100", "count" => $ageOthersCount);
+  // array_push($a_json, $a_json_row);
 
   echo json_encode($a_json, JSON_PRETTY_PRINT);
 }
@@ -141,9 +142,10 @@ else if ($function == "auction") { //Get no. of users that participated in an au
   $auctionID = filter_has_var(INPUT_POST, 'auctionID') ? $_POST['auctionID']: null;
   $auctionID = trim($auctionID);
   $auctionID = filter_var($auctionID, FILTER_SANITIZE_STRING);
+  // $auctionID = 1;
 
-  for ($i = 10; $i <= 100; $i = $i + 10) {
-    if ($i == 100) {
+  for ($i = 10; $i <= 90; $i = $i + 10) {
+    if ($i == 90) {
       //Get no. of participated members based on age group
       $participatedSQL = "SELECT fullName FROM user u JOIN bid b ON u.userID = b.userID JOIN auction a
       ON b.auctionID = a.auctionID WHERE b.auctionID = ? AND bidStatus = 'active'
