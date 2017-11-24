@@ -114,7 +114,11 @@ a:hover{
     background: #f3f3f3;
     padding: 10px;
 }
-#commentBox .various{
+#commentBox > div:hover{
+	background:#dfdfdf;
+	transition:all 0.3s;
+}
+#report{
 	float: right;
     margin-right: 10px;
     color: #ff4848;
@@ -131,7 +135,8 @@ a:hover{
 	margin-right:10px;
 }
 #commentBox div{
-	margin-bottom:10px;
+	padding:10px;
+	transition:all 0.3s;
 }
 #commentBox input[type="text"]{
 	width:100%;
@@ -146,21 +151,43 @@ a:hover{
     font-size: 22px;
     color: #b54747;
 }
+#reported img{
+	display: block;
+    margin: 10px auto;
+}
 #reportedUser{
 	    margin-right: 10px;
     font-size: 17px;
     color: black;
 }
+span#report{
+	line-height: 25px;
+	vertical-align: top;
+}
+
 .left{
 	display:inline-block;
 	width:45%;
 	float:left;
 	padding:22px 15px;
 	vertical-align:top;
+	position:relative;
+}
+.left .fa, .right .fa{
+	color:#f66565
+}
+.left .fa{
+	margin-right:5px
 }
 .left img{
 	width:100%;
 	height:auto;
+}
+.left > .various{
+	position: absolute;
+    z-index: 1000;
+    top: 25px;
+    left: 20px;
 }
 .right{
 	display:inline-block;
@@ -367,4 +394,99 @@ footer > div > div:last-child{
 	color:white;
 	transition:all 0.3s;
 	text-decoration:none;
+}
+
+#signUpForm p, #signUpForm div{
+    margin-bottom: 25px;
+    line-height: 45px;
+	vertical-align:top;
+	font-size:24px;
+}
+#signUpForm div{
+	margin-bottom:0px;
+}
+#signUpForm textarea, #signUpForm select{
+	border: 1px solid #e6e6e6;
+    padding: 7px 15px;
+	width:500px;
+	margin-left:15px;
+}
+#signUpForm h6{
+	   font-size: 16px;
+	   margin-bottom:20px;
+    font-style: italic;
+}
+#signUpForm input[type="submit"]{
+	color:white;
+	background:#ac967a;
+	border:1px solid #ac967a;
+	color:white;
+	transition:all 0.2s;
+	outline:none;
+	padding:10px 20px;
+	letter-spacing: 0.7px;
+}
+
+#password{
+	   display: inline-block;
+}
+#signUpForm h4{
+    vertical-align: top;
+    width: 160px;
+    display: inline-block;
+}
+
+#signUpForm input{
+    margin-left: 10px;
+    left: 270px;
+	line-height: 24px;
+	border: 1px solid #e6e6e6;
+    padding: 7px 15px;
+}
+
+
+
+#signUpForm #txtConfirmPassword{
+	    left: 830px;
+}
+#signUpForm input[type="password"]{
+	width:300px;
+}
+#txtDOB{
+    border: 1px solid #e6e6e6;
+    padding: 7px 32px;
+    /* background: white; */
+    font-size: 16px;
+    width: 160px;
+    height: 45px;
+    font-style: italic;
+}
+.well .form-control{
+	width:380px!important;
+}
+.well small{
+	font-style: italic;
+    line-height: 50px;
+}
+.well label{
+	    font-size: 21px;
+    margin-bottom: 20px;
+    margin-top: 25px;
+}
+.well .nav-tabs > li > a{
+	    font-size: 17px;
+    text-transform: capitalize;
+}
+.well .dataTables_length label{
+	font-size:15px;
+}
+.tab-pane.active{
+	background:white;
+	padding:20px;
+	 border: 1px solid #ddd;
+	border-top: 1px solid transparent;
+}
+.dataTables_wrapper .dataTables_filter input{
+    border: 1px solid #ac967a;
+    padding: 5px 10px;
 }
