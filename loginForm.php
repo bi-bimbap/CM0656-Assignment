@@ -101,7 +101,7 @@ if(!isset($_SESSION['logged-in'])) { //Prevent users from entering login page if
 					<a href='forgotPassword.php'>Forgot password?</a>
 					<a href='administration/Member_signup.php' accesskey="S">S&#818;ign Up</a>
 				</p>
-				<div id="button"><input type="submit" value="L&#818;ogin" accesskey="L" name="btnConfirmLogin" /></div>
+				<input type="submit" value="L&#818;ogin" accesskey="L" name="btnConfirmLogin" />
 			</form>
 		</div>
 	</div>

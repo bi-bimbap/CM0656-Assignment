@@ -1,3 +1,5 @@
+<!-- NOTE: NO PROFILE BUTTON HERE -->
+
 <?php
 include '../db/database_conn.php';
 include_once '../config.php';
@@ -6,7 +8,6 @@ require_once('../functions.php');
 echo makePageStart("Sign Up");
 echo makeWrapper("../");
 echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
-echo makeProfileButton("../");
 echo makeNavMenu("../");
 echo makeHeader("Sign Up");
 $environment = WEB; //TODO: Change to server
@@ -110,7 +111,7 @@ $(document).ready(function() {
     <form id="signUpForm" class="form-inline" data-parsley-validate method="post">
       <?php
       if (!isset($_GET['mail']) && !isset($_GET['name']) && !isset($_GET['exDate'])) { //Only visible to normal members
-        echo "<h6>New to Ima's Official Fanbase? Sign Up</h6>";
+        echo "<center><u><h3>New to Ima's Official Fanbase? Sign Up!</h3></u></center>";
       }
       ?>
 

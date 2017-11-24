@@ -62,226 +62,226 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && isset($_
     $('[data-toggle="tooltip"]').tooltip(); //Trigger tooltips
   });
   </script>
-	<div class="content">
-			<div class="container">
-	  <div class="well">
-		<!-- Tab options -->
-		<ul class="nav nav-tabs" id="tabDetails">
-		  <li class="active"><a href="#tabProfile" data-toggle="tab">Profile</a></li>
-		  <li><a href="#tabLogin" data-toggle="tab">Login</a></li>
-		  <li><a href="#tabSecurity" data-toggle="tab">Security</a></li>
-		</ul>
-		<!-- End tab options -->
+  <div class="content">
+    <div class="container">
+      <div class="well">
+        <!-- Tab options -->
+        <ul class="nav nav-tabs" id="tabDetails">
+          <li class="active"><a href="#tabProfile" data-toggle="tab">Profile</a></li>
+          <li><a href="#tabLogin" data-toggle="tab">Login</a></li>
+          <li><a href="#tabSecurity" data-toggle="tab">Security</a></li>
+        </ul>
+        <!-- End tab options -->
 
-		<div id="myTabContent" class="tab-content">
-		  <!-- Profile tab -->
-		  <div class="tab-pane active in" id="tabProfile">
-			<form id="tab" data-parsley-validate method="post">
-			  <div class="form-group">
-				<label for="txtFullName">Full Name *</label>
-				<input type="text" class="form-control" id='txtFullName' name='txtFullName' value="<?php if (isset($_POST['txtFullName'])) echo $_POST['txtFullName']; else echo $fName; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>
-			  </div>
+        <div id="myTabContent" class="tab-content">
+          <!-- Profile tab -->
+          <div class="tab-pane active in" id="tabProfile">
+            <form id="tab" data-parsley-validate method="post">
+              <div class="form-group">
+                <label for="txtFullName">Full Name *</label>
+                <input type="text" class="form-control" id='txtFullName' name='txtFullName' value="<?php if (isset($_POST['txtFullName'])) echo $_POST['txtFullName']; else echo $fName; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>
+              </div>
 
-			  <div class="form-group">
-				<label for="txtEmail">Email Address *</label>
-				<input type="email" class="form-control" id="txtEmail" name="txtEmail" aria-describedby="emailHelp" placeholder="name@email.com" value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; else echo $eAddr;  ?>" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled/>
-				<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-			  </div>
+              <div class="form-group">
+                <label for="txtEmail">Email Address *</label>
+                <input type="email" class="form-control" id="txtEmail" name="txtEmail" aria-describedby="emailHelp" placeholder="name@email.com" value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; else echo $eAddr;  ?>" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled/>
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+              </div>
 
-			  <?php //Display username & address field if user is not an admin
-			  if($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior") {
-				?>
+              <?php //Display username & address field if user is not an admin
+              if($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior") {
+                ?>
 
-				<div class="form-group">
-				  <label for="txtUsername">Username *</label>
-				  <input type='text' class="form-control" id='txtUsername' name='txtUsername' value='<?php if (isset($_POST['txtUsername'])) echo $_POST['txtUsername']; else echo $uName; ?>' data-parsley-required='true' data-parsley-errors-messages-disabled/>
-				</div>
+                <div class="form-group">
+                  <label for="txtUsername">Username *</label>
+                  <input type='text' class="form-control" id='txtUsername' name='txtUsername' value='<?php if (isset($_POST['txtUsername'])) echo $_POST['txtUsername']; else echo $uName; ?>' data-parsley-required='true' data-parsley-errors-messages-disabled/>
+                </div>
 
-				<div class="form-group">
-				  <label for="txtAddress">Shipping Address *</label>
-				  <textarea id='txtAddress' class="form-control" rows="3" name='txtAddress' data-parsley-required='true' data-parsley-errors-messages-disabled><?php if (isset($_POST['txtAddress'])) echo $_POST['txtAddress']; else echo $shipAddr; ?></textarea>
-				</div>
+                <div class="form-group">
+                  <label for="txtAddress">Shipping Address *</label>
+                  <textarea id='txtAddress' class="form-control" rows="3" name='txtAddress' data-parsley-required='true' data-parsley-errors-messages-disabled><?php if (isset($_POST['txtAddress'])) echo $_POST['txtAddress']; else echo $shipAddr; ?></textarea>
+                </div>
 
-				<?php
-			  } //End if($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior")
-			  ?>
+                <?php
+              } //End if($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior")
+              ?>
 
-			  <input type="submit" class="btn btn-primary" id="btnSave" name='btnSave' value='Save'/>
+              <input type="submit" class="btn btn-primary" id="btnSave" name='btnSave' value='Save'/>
 
-			  <!-- Popup modal -->
-			  <div class="modal fade" id="modalSecurity" role="dialog">
-				<div class="modal-dialog">
-				  <!-- Modal content-->
-				  <div class="modal-content">
-					<div class="modal-header">
-					  <button type="button" class="close" data-dismiss="modal">&times;</button>
-					  <h4 class="modal-title">Provide Your Security Question & Answer</h4>
-					</div>
+              <!-- Popup modal -->
+              <div class="modal fade" id="modalSecurity" role="dialog">
+                <div class="modal-dialog">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Provide Your Security Question & Answer</h4>
+                    </div>
 
-					<!-- TODO: Unable to add parsley js validation in modal -->
-					<!-- data-parsley-required="true" data-parsley-errors-messages-disabled -->
-					<div class="modal-body">
-					  <div class="form-group">
-						<label for="ddlSecurityQuestion">Security Question *</label>
-						<select class="form-control" id='ddlSecurityQuestion' name='ddlSecurityQuestion'>
-						  <option value="" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='') echo 'selected';?>>----SELECT----</option>
-						  <option value="favouriteBook" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='favouriteBook') echo 'selected';?>>What is your favourite book?</option>
-						  <option value="maidenName" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='maidenName') echo 'selected';?>>What is your mother's maiden name?</option>
-						  <option value="favouriteFood" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='favouriteFood') echo 'selected';?>>What is your favourite food?</option>
-						  <option value="birthPlace" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='birthPlace') echo 'selected';?>>What city were you born in?</option>
-						  <option value="school" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='school') echo 'selected';?>>Where did you go to high school/college?</option>
-						</select>
-					  </div>
+                    <!-- TODO: Unable to add parsley js validation in modal -->
+                    <!-- data-parsley-required="true" data-parsley-errors-messages-disabled -->
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="ddlSecurityQuestion">Security Question *</label>
+                        <select class="form-control" id='ddlSecurityQuestion' name='ddlSecurityQuestion'>
+                          <option value="" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='') echo 'selected';?>>----SELECT----</option>
+                          <option value="favouriteBook" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='favouriteBook') echo 'selected';?>>What is your favourite book?</option>
+                          <option value="maidenName" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='maidenName') echo 'selected';?>>What is your mother's maiden name?</option>
+                          <option value="favouriteFood" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='favouriteFood') echo 'selected';?>>What is your favourite food?</option>
+                          <option value="birthPlace" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='birthPlace') echo 'selected';?>>What city were you born in?</option>
+                          <option value="school" <?php if (isset($_POST['ddlSecurityQuestion']) && $_POST['ddlSecurityQuestion']=='school') echo 'selected';?>>Where did you go to high school/college?</option>
+                        </select>
+                      </div>
 
-					  <div class="form-group">
-						<label for="txtSecurityAns">Answer *</label>
-						<input class="form-control" id='txtSecurityAns' name='txtSecurityAns' value="<?php if (isset($_POST['txtSecurityAns'])) echo $_POST['txtSecurityAns']; ?>"/>
-					  </div>
-					</div>
+                      <div class="form-group">
+                        <label for="txtSecurityAns">Answer *</label>
+                        <input class="form-control" id='txtSecurityAns' name='txtSecurityAns' value="<?php if (isset($_POST['txtSecurityAns'])) echo $_POST['txtSecurityAns']; ?>"/>
+                      </div>
+                    </div>
 
-					<div class="modal-footer">
-					  <input type="submit" class="btn btn-primary" id="btnUpdateDetails" name="btnUpdateDetails" value="Update Details" />
-					</div>
-				  </div>
-				  <!-- End popup modal content -->
-				</div>
-			  </div>
-			  <!-- End popup modal -->
-			</form>
-		  </div>
-		  <!-- End profile tab  -->
+                    <div class="modal-footer">
+                      <input type="submit" class="btn btn-primary" id="btnUpdateDetails" name="btnUpdateDetails" value="Update Details" />
+                    </div>
+                  </div>
+                  <!-- End popup modal content -->
+                </div>
+              </div>
+              <!-- End popup modal -->
+            </form>
+          </div>
+          <!-- End profile tab  -->
 
-		  <!-- Login tab -->
-		  <div class="tab-pane fade" id="tabLogin">
-			<form id="tab2" data-parsley-validate method="post">
-			  <div class="form-group">
-				<label for="txtPassword">New Password *</label>
-				<input type="password" class="form-control" id='txtPassword' name='txtPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-minlength="5" data-parsley-equalto="#txtConfirmPassword" value="<?php if (isset($_POST['txtPassword'])) echo $_POST['txtPassword']; ?>" maxlength="60" />
-			  </div>
+          <!-- Login tab -->
+          <div class="tab-pane fade" id="tabLogin">
+            <form id="tab2" data-parsley-validate method="post">
+              <div class="form-group">
+                <label for="txtPassword">New Password *</label>
+                <input type="password" class="form-control" id='txtPassword' name='txtPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-minlength="5" data-parsley-equalto="#txtConfirmPassword" value="<?php if (isset($_POST['txtPassword'])) echo $_POST['txtPassword']; ?>" maxlength="60" />
+              </div>
 
-			  <div class="form-group">
-				<label for="txtConfirmPassword">Confirm New Password *</label>
-				<input type="password" class="form-control" id='txtConfirmPassword' name='txtConfirmPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" value='<?php if (isset($_POST['txtConfirmPassword'])) echo $_POST['txtConfirmPassword']; ?>' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5" maxlength="60" />
-			  </div>
+              <div class="form-group">
+                <label for="txtConfirmPassword">Confirm New Password *</label>
+                <input type="password" class="form-control" id='txtConfirmPassword' name='txtConfirmPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" value='<?php if (isset($_POST['txtConfirmPassword'])) echo $_POST['txtConfirmPassword']; ?>' data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5" maxlength="60" />
+              </div>
 
-			  <div>
-				<input type="submit" class="btn btn-primary" id="btnUpdatePassword" name="btnUpdatePassword" value="Save" />
-			  </div>
+              <div>
+                <input type="submit" class="btn btn-primary" id="btnUpdatePassword" name="btnUpdatePassword" value="Save" />
+              </div>
 
-			  <!-- Popup modal -->
-			  <div class="modal fade" id="modalSecurity2" role="dialog">
-				<div class="modal-dialog">
-				  <!-- Modal content-->
-				  <div class="modal-content">
-					<div class="modal-header">
-					  <button type="button" class="close" data-dismiss="modal">&times;</button>
-					  <h4 class="modal-title">Provide Your Security Question & Answer</h4>
-					</div>
+              <!-- Popup modal -->
+              <div class="modal fade" id="modalSecurity2" role="dialog">
+                <div class="modal-dialog">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Provide Your Security Question & Answer</h4>
+                    </div>
 
-					<!-- TODO: Unable to add parsley js validation in modal -->
-					<!-- data-parsley-required="true" data-parsley-errors-messages-disabled -->
-					<div class="modal-body">
-					  <div class="form-group">
-						<label for="ddlSecurityQuestion2">Security Question *</label>
-						<select class="form-control" id='ddlSecurityQuestion2' name='ddlSecurityQuestion2'>
-						  <option value="" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='') echo 'selected';?>>----SELECT----</option>
-						  <option value="favouriteBook" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='favouriteBook') echo 'selected';?>>What is your favourite book?</option>
-						  <option value="maidenName" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='maidenName') echo 'selected';?>>What is your mother's maiden name?</option>
-						  <option value="favouriteFood" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='favouriteFood') echo 'selected';?>>What is your favourite food?</option>
-						  <option value="birthPlace" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='birthPlace') echo 'selected';?>>What city were you born in?</option>
-						  <option value="school" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='school') echo 'selected';?>>Where did you go to high school/college?</option>
-						</select>
-					  </div>
+                    <!-- TODO: Unable to add parsley js validation in modal -->
+                    <!-- data-parsley-required="true" data-parsley-errors-messages-disabled -->
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="ddlSecurityQuestion2">Security Question *</label>
+                        <select class="form-control" id='ddlSecurityQuestion2' name='ddlSecurityQuestion2'>
+                          <option value="" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='') echo 'selected';?>>----SELECT----</option>
+                          <option value="favouriteBook" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='favouriteBook') echo 'selected';?>>What is your favourite book?</option>
+                          <option value="maidenName" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='maidenName') echo 'selected';?>>What is your mother's maiden name?</option>
+                          <option value="favouriteFood" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='favouriteFood') echo 'selected';?>>What is your favourite food?</option>
+                          <option value="birthPlace" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='birthPlace') echo 'selected';?>>What city were you born in?</option>
+                          <option value="school" <?php if (isset($_POST['ddlSecurityQuestion2']) && $_POST['ddlSecurityQuestion2']=='school') echo 'selected';?>>Where did you go to high school/college?</option>
+                        </select>
+                      </div>
 
-					  <div class="form-group">
-						<label for="txtSecurityAns2">Answer *</label>
-						<input class="form-control" id='txtSecurityAns2' name='txtSecurityAns2' value="<?php if (isset($_POST['txtSecurityAns2'])) echo $_POST['txtSecurityAns2']; ?>"/>
-					  </div>
-					</div>
+                      <div class="form-group">
+                        <label for="txtSecurityAns2">Answer *</label>
+                        <input class="form-control" id='txtSecurityAns2' name='txtSecurityAns2' value="<?php if (isset($_POST['txtSecurityAns2'])) echo $_POST['txtSecurityAns2']; ?>"/>
+                      </div>
+                    </div>
 
-					<div class="modal-footer">
-					  <input type="submit" class="btn btn-primary" id="btnUpdateDetails2" name="btnUpdateDetails2" value="Update Details" />
-					</div>
-				  </div>
-				  <!-- End popup modal content -->
-				</div>
-			  </div>
-			  <!-- End popup modal -->
-			</form>
-		  </div>
-		  <!-- End tab login -->
+                    <div class="modal-footer">
+                      <input type="submit" class="btn btn-primary" id="btnUpdateDetails2" name="btnUpdateDetails2" value="Update Details" />
+                    </div>
+                  </div>
+                  <!-- End popup modal content -->
+                </div>
+              </div>
+              <!-- End popup modal -->
+            </form>
+          </div>
+          <!-- End tab login -->
 
-		  <!-- Security tab -->
-		  <div class="tab-pane fade" id="tabSecurity">
-			<form id="tab3" data-parsley-validate method="post">
-			  <div class="form-group">
-				<label for="ddlSecurityQuestion3">Security Question *</label>
-				<select class="form-control" id='ddlSecurityQuestion3' name='ddlSecurityQuestion3' data-parsley-required="true" data-parsley-errors-messages-disabled>
-				  <option value="" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='') echo 'selected';?>>----SELECT----</option>
-				  <option value="favouriteBook" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='favouriteBook') echo 'selected';?>>What is your favourite book?</option>
-				  <option value="maidenName" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='maidenName') echo 'selected';?>>What is your mother's maiden name?</option>
-				  <option value="favouriteFood" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='favouriteFood') echo 'selected';?>>What is your favourite food?</option>
-				  <option value="birthPlace" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='birthPlace') echo 'selected';?>>What city were you born in?</option>
-				  <option value="school" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='school') echo 'selected';?>>Where did you go to high school/college?</option>
-				</select>
-			  </div>
+          <!-- Security tab -->
+          <div class="tab-pane fade" id="tabSecurity">
+            <form id="tab3" data-parsley-validate method="post">
+              <div class="form-group">
+                <label for="ddlSecurityQuestion3">Security Question *</label>
+                <select class="form-control" id='ddlSecurityQuestion3' name='ddlSecurityQuestion3' data-parsley-required="true" data-parsley-errors-messages-disabled>
+                  <option value="" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='') echo 'selected';?>>----SELECT----</option>
+                  <option value="favouriteBook" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='favouriteBook') echo 'selected';?>>What is your favourite book?</option>
+                  <option value="maidenName" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='maidenName') echo 'selected';?>>What is your mother's maiden name?</option>
+                  <option value="favouriteFood" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='favouriteFood') echo 'selected';?>>What is your favourite food?</option>
+                  <option value="birthPlace" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='birthPlace') echo 'selected';?>>What city were you born in?</option>
+                  <option value="school" <?php if (isset($_POST['ddlSecurityQuestion3']) && $_POST['ddlSecurityQuestion3']=='school') echo 'selected';?>>Where did you go to high school/college?</option>
+                </select>
+              </div>
 
-			  <div class="form-group">
-				<label for="txtSecurityAns3">Answer *</label>
-				<input class="form-control" id='txtSecurityAns3' name='txtSecurityAns3' value="<?php if (isset($_POST['txtSecurityAns3'])) echo $_POST['txtSecurityAns3']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>
-			  </div>
+              <div class="form-group">
+                <label for="txtSecurityAns3">Answer *</label>
+                <input class="form-control" id='txtSecurityAns3' name='txtSecurityAns3' value="<?php if (isset($_POST['txtSecurityAns3'])) echo $_POST['txtSecurityAns3']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>
+              </div>
 
-			  <div>
-				<input type="submit" class="btn btn-primary" id="btnUpdateSecurity" name="btnUpdateSecurity" value="Save" />
-			  </div>
+              <div>
+                <input type="submit" class="btn btn-primary" id="btnUpdateSecurity" name="btnUpdateSecurity" value="Save" />
+              </div>
 
-			  <!-- Popup modal -->
-			  <div class="modal fade" id="modalSecurity3" role="dialog">
-				<div class="modal-dialog">
-				  <!-- Modal content-->
-				  <div class="modal-content">
-					<div class="modal-header">
-					  <button type="button" class="close" data-dismiss="modal">&times;</button>
-					  <h4 class="modal-title">Provide Your Current Security Question & Answer</h4>
-					</div>
+              <!-- Popup modal -->
+              <div class="modal fade" id="modalSecurity3" role="dialog">
+                <div class="modal-dialog">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Provide Your Current Security Question & Answer</h4>
+                    </div>
 
-					<!-- TODO: Unable to add parsley js validation in modal -->
-					<!-- data-parsley-required="true" data-parsley-errors-messages-disabled -->
-					<div class="modal-body">
-					  <div class="form-group">
-						<label for="ddlSecurityQuestion4">Security Question *</label>
-						<select class="form-control" id='ddlSecurityQuestion4' name='ddlSecurityQuestion4'>
-						  <option value="" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='') echo 'selected';?>>----SELECT----</option>
-						  <option value="favouriteBook" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='favouriteBook') echo 'selected';?>>What is your favourite book?</option>
-						  <option value="maidenName" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='maidenName') echo 'selected';?>>What is your mother's maiden name?</option>
-						  <option value="favouriteFood" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='favouriteFood') echo 'selected';?>>What is your favourite food?</option>
-						  <option value="birthPlace" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='birthPlace') echo 'selected';?>>What city were you born in?</option>
-						  <option value="school" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='school') echo 'selected';?>>Where did you go to high school/college?</option>
-						</select>
-					  </div>
+                    <!-- TODO: Unable to add parsley js validation in modal -->
+                    <!-- data-parsley-required="true" data-parsley-errors-messages-disabled -->
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="ddlSecurityQuestion4">Security Question *</label>
+                        <select class="form-control" id='ddlSecurityQuestion4' name='ddlSecurityQuestion4'>
+                          <option value="" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='') echo 'selected';?>>----SELECT----</option>
+                          <option value="favouriteBook" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='favouriteBook') echo 'selected';?>>What is your favourite book?</option>
+                          <option value="maidenName" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='maidenName') echo 'selected';?>>What is your mother's maiden name?</option>
+                          <option value="favouriteFood" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='favouriteFood') echo 'selected';?>>What is your favourite food?</option>
+                          <option value="birthPlace" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='birthPlace') echo 'selected';?>>What city were you born in?</option>
+                          <option value="school" <?php if (isset($_POST['ddlSecurityQuestion4']) && $_POST['ddlSecurityQuestion4']=='school') echo 'selected';?>>Where did you go to high school/college?</option>
+                        </select>
+                      </div>
 
-					  <div class="form-group">
-						<label for="txtSecurityAns4">Answer *</label>
-						<input class="form-control" id='txtSecurityAns4' name='txtSecurityAns4' value="<?php if (isset($_POST['txtSecurityAns4'])) echo $_POST['txtSecurityAns4']; ?>"/>
-					  </div>
-					</div>
+                      <div class="form-group">
+                        <label for="txtSecurityAns4">Answer *</label>
+                        <input class="form-control" id='txtSecurityAns4' name='txtSecurityAns4' value="<?php if (isset($_POST['txtSecurityAns4'])) echo $_POST['txtSecurityAns4']; ?>"/>
+                      </div>
+                    </div>
 
-					<div class="modal-footer">
-					  <input type="submit" class="btn btn-primary" id="btnUpdateDetails4" name="btnUpdateDetails4" value="Update Details" />
-					</div>
-				  </div>
-				  <!-- End popup modal content -->
-				</div>
-			  </div>
-			  <!-- End popup modal -->
-			</form>
-		  </div>
-		  <!-- End tab security -->
-		</div>
-		<!-- End tab content -->
-	  </div>
-	</div>
-</div>
+                    <div class="modal-footer">
+                      <input type="submit" class="btn btn-primary" id="btnUpdateDetails4" name="btnUpdateDetails4" value="Update Details" />
+                    </div>
+                  </div>
+                  <!-- End popup modal content -->
+                </div>
+              </div>
+              <!-- End popup modal -->
+            </form>
+          </div>
+          <!-- End tab security -->
+        </div>
+        <!-- End tab content -->
+      </div>
+    </div>
+  </div>
   <?php
   if (isset($_POST['btnSave'])) { //Check if user is allowed to update personal details
     //Obtain user input
