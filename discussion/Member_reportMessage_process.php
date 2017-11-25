@@ -1,86 +1,137 @@
 <?php
-  include '../db/database_conn.php';
-  ini_set("session.save_path", "");
-  session_start();
-?>
-  <!-- CSS style -->
-  <link rel='stylesheet' href='../css/bootstrap.css' />
-  <link rel="stylesheet" href="../css/jquery-ui.min.css" />
-  <link rel="stylesheet" href="../css/parsley.css" />
-  <link rel="stylesheet" href="../css/stylesheet.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,400i,700">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i">
-  <script src='../jquery-2.2.0.js'></script>
-  <script src="../scripts/bootstrap.min.js"></script>
-  <script src="../scripts/jquery.js"></script>
-  <script src="../scripts/parsley.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-<!--*******************************************************************************************************************************************************
-      DISCUSSION BOARD: Report Inappropriate Message Content
-********************************************************************************************************************************************************-->
-<?php
-    $replyThread  = $_POST['reportSelection'];
-
-    //report content type  is discussion
-    $contentType = "discussion";
-
-    $sqlReportMessage = "INSERT INTO report (contentID, userID, reportReason, reportFrom, contentType)	VALUES (?,?,?,?,?)";
-    $stmtReportMessage = mysqli_prepare($conn, $sqlReportMessage) or die( mysqli_error($conn));
-    mysqli_stmt_bind_param($stmtReportMessage, 'si', $post_message, $_SESSION['userID'], $replyReason, $messageID);
-    mysqli_stmt_execute($stmtReportMessage);
-
-    if(mysqli_stmt_affected_rows($stmtReportMessage) > 0){
-      echo "<script>alert('The message has been reported')</script>";
-    }
-    else {
-      echo "<script>alert('Try again!')</script>";
-
-    }
-    //validation: Prevent Resubmit Users' Previous Input Data
-
-    // $url="Member_postMessage.php?threadID=".$replyThread;
-    // header('Location: '.$url);
+ini_set("session.save_path", "");
+session_start();
+include '../db/database_conn.php';
+include_once '../config.php';
+require_once('../controls.php');
+require_once('../functions.php');
+echo makePageStart("Report Message");
+echo makeWrapper("");
+echo "<form method='post'>" . makeLoginLogoutBtn("") . "</form>";
+echo makeProfileButton("");
+echo makeNavMenu("");
+echo makeHeader("Report Message");
+$environment = LOCAL;
 ?>
 
-<!--*******************************************************************************************************************************************************
-      DISCUSSION BOARD: Automatic Moderation inappropriate Word
-*******************************************************************************************************************************************************-->
+<!-- CSS style -->
+<link rel='stylesheet' href='../css/bootstrap.css' />
+<link rel="stylesheet" href="../css/jquery-ui.min.css" />
+<link rel="stylesheet" href="../css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="../css/stylesheet.css" />
+
+<!-- <script src='../scripts/bootstrap.js'></script> -->
+<!-- <script src='../scripts/jquery.dataTables.min.js'></script> -->
+<script src="../scripts/jquery.js"></script>
+
+<!-- TODO: Verification - Only Admin Allowed to Login -->
+<!--******************************************************************************************************************
+    Validation - Only Only admin can view "Create New Thread" button
+******************************************************************************************************************-->
 <?php
-echo  $replyInput;
-//check inappropriate language
-  $array_message = explode(" ", $replyInput);
-  print_r ($array_message);
+  $_SESSION['userID'] = 3; //TODO: Remove session
+  $_SESSION['userType'] = 'admin'; //TODO: Remove
+  $_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
+  $_SESSION['logged-in'] = true; //TODO: Remove
 
-	$sqlCheckInappropriate = "SELECT inappropriatePhrase FROM discussion_inappropriate";
-	$stmtCheckInappropriate = mysqli_prepare($con, $sqlCheckInappropriate) or die( mysqli_error($conn));
-  mysqli_stmt_execute($stmtCheckInappropriate);
-  mysqli_stmt_bind_result($stmtCheckInappropriate, $inappropriate_phrase);
+  $userID = $_SESSION['userID'];
+    if(isset($_POST['msgID'])){
+      $msgID = $_POST['msgID'];
+      $_SESSION['msgID'] = $msgID;
 
-  if(mysqli_stmt_affected_rows($stmtCheckInappropriate) > 0){
+      $threadID = $_POST['threadID'];
+      $_SESSION['threadID'] = $threadID;
 
-      while(mysqli_stmt_fetch($stmtCheckInappropriate)){
-
-	    	for($i = 0; $i < count($array_message); $i++){
-	    		if(strtolower($array_message[$i]) == $inappropriate_phrase){
-	    			$array_message[$i] = '*';
-	    		}
-	    	}
+      $postedUserID = $_POST['PostedUserID'];
+      $_SESSION['PostedUserID'] = $postedUserID;
+    }else{
+      $threadID = $_SESSION['threadID'];
+      $msgID = $_SESSION['msgID'];
+      $postedUserID = $_SESSION['PostedUserID'];
     }
-    echo "<script>alert('Found Inappropriate Phrase')</script>";
-  }
-  else
-  {
-		echo "<script>alert('No result')</script>";
-	    //No Result
-	}
 
-clearstatcache();
-mysqli_stmt_close($stmtReplyMessage);
-mysqli_stmt_close($stmtCheckInappropriate);
-  ?>
+    $sqlGetReport = "SELECT user.username, discussion_message.messageContent,
+                              discussion_message.messageID,
+                              discussion_message.messageDateTime
+                        FROM discussion_message
+                        INNER JOIN user
+                        ON discussion_message.userID=user.userID
+                        WHERE discussion_message.messageID = $msgID";
+    $MsgReport = mysqli_query($conn, $sqlGetReport) or die(mysqli_error($conn));
+
+    if (mysqli_num_rows($MsgReport) > 0){
+        while($rows = mysqli_fetch_assoc($MsgReport)){
+          $messageID = $rows['messageID'];
+          $username = $rows['username'];
+          $MsgDateTime= $rows['messageDateTime'];
+          $MsgContent= $rows['messageContent'];
+          echo "</br>
+                <b>Reply Msg : $MsgContent </b> by $username - $MsgDateTime";
+
+      }
+    }
+
+    ?>
+
+    <br/><br/><br/>
+    <div class='message-report'>
+      <form method='post' action='Member_reportMessage_process.php'>
+      Report:
+      <select name='reportSelection'>
+        <option value='sexual'>Sexual content</option>
+        <option value='spam'>Spam</option>
+        <option value='offensive'>Offensive</option>
+        <option value='scam'>Scam or misleading</option>
+        <option value='falsenews'>False news story</option>
+        <option value='violent'>Violent or repulsive content</option>
+        <option value='others'>Others</option>
+      </select>
+      <input type='submit' id='reportSelection_submit' name='reportSelection_submit' value='Post'/>
+      </form>
+    </div>
+    <br/><br/><br/>
+    <!--**********************************************************
+     ***** Validation: only admin can access this page **********
+    ***********************************************************-->
+    <?php
+    $dropdown = "sexual";
+    if(isset($_POST['reportSelection'])) {
+      $dropdown = $_POST['reportSelection'];
+    }
+
+    // echo "msgID :" . $msgID;
+    // echo "<br/> postedUserID :" . $postedUserID;
+    // echo "<br/> dropdown :" . $dropdown;
+    // echo "<br/> userID :" . $_SESSION['userID'];
+
+    if(isset($_POST['reportSelection']) )   {
+
+      if ($conn->connect_error) {
+         die("Connection failed: " . $conn->connect_error);
+      }
+
+      $sqlReport = "INSERT INTO report (contentID, userID, reportReason, reportFrom,contentType)
+                    VALUES ('$msgID','$postedUserID','$dropdown','$userID','discussion message')";
+
+      if (mysqli_query($conn, $sqlReport)) {
+          echo "<script>alert('Your report has been posted!!!!')</script>";
+          echo "<script>
+                        top.window.location='../discussion/Member_postMessage.php?threadID=$threadID';
+               </script>";
+      } else {
+          echo "<script>alert('Error')</script>";
+      }
+
+      mysqli_close($conn);
+    }
+    ?>
+
+    <!--*******************************************************************************************************************************************************
+          DISCUSSION BOARD : Create New Thread Form
+    *******************************************************************************************************************************************************-->
+
+
+    <?php
+    echo makeFooter("");
+    echo makePageEnd("");
+    ?>

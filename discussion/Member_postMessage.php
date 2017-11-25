@@ -46,9 +46,11 @@ border: none;
 cursor: pointer;
 cursor: hand;
 }
+
 </style>
 
 <script>
+
 function myFunction(msgID,threadID,userID) {
     var msgID = msgID;
     var threadID = threadID;
@@ -67,7 +69,6 @@ function myFunction(msgID,threadID,userID) {
                 location.reload();
             });
     }
-
 }
 </script>
 
@@ -89,10 +90,7 @@ function myFunction(msgID,threadID,userID) {
                 echo "<pre><h3>&nbsp;&nbsp;".$threadDesc."</h3></pre>";
             }
       }
-
 ?>
-
-
 
 <!--*******************************************************************************************************************************************************
       DISCUSSION BOARD: Messages
@@ -107,7 +105,7 @@ function myFunction(msgID,threadID,userID) {
           DISCUSSION BOARD: (1.1) Display Posted Message Content
     *******************************************************************************************************************************************************/
     $sqlGetMessage = "SELECT user.username, discussion_message.messageContent, discussion_message.messageID,
-                              discussion_message.messageDateTime
+                              discussion_message.messageDateTime,discussion_message.userID,discussion_message.threadID
                         FROM discussion_message
                         INNER JOIN discussion_thread
                         ON discussion_message.threadID=discussion_thread.threadID
@@ -119,11 +117,21 @@ function myFunction(msgID,threadID,userID) {
     if (mysqli_num_rows($Msgresult) > 0){
         while($rows = mysqli_fetch_assoc($Msgresult)){
               $messageID = $rows['messageID'];
+              $userID = $rows['userID'];
+              $threadID = $rows['threadID'];
               $username = $rows['username'];
               $MsgDateTime= $rows['messageDateTime'];
               $MsgContent= $rows['messageContent'];
 
               echo "<b>Post Msg : $MsgContent </b> by $username - $MsgDateTime";
+              echo "&nbsp;";
+              echo
+              "<form method='post' action='Member_reportMessage_process.php'>
+                <input type='hidden' name='msgID' value='$messageID'>
+                <input type='hidden' name='threadID' value='$threadID'>
+                <input type='hidden' name='PostedUserID' value='$userID'>
+                <input type='submit' value='ReportMsg' name='ReportMsg' />
+              </form>";
 
               /*****************************************************************************************************************************************************
                             DISCUSSION BOARD: (1.2) Display Replied Message Content
@@ -149,40 +157,29 @@ function myFunction(msgID,threadID,userID) {
                     $MsgContent= $rows['messageContent'];
                     echo "</br>$spacing
                           <b>Reply Msg : $MsgContent </b> by $username - $MsgDateTime";
+                          echo
+                          "<form method='post' action='Member_reportMessage_process.php'>
+                            <input type='hidden' name='msgID' value='$messageID'>
+                            <input type='hidden' name='threadID' value='$threadID'>
+                            <input type='hidden' name='PostedUserID' value='$userID'>
+                            <input type='submit' value='ReportReply' name='ReportMsg' />
+                          </form>";
 
                 }
               }
-              echo '<br/>'.$spacing.'
-              <input type="button" class="submitLink" value="Reply" onclick="myFunction('. $messageID .','. $threadID.','. $_SESSION['userID'].')">';
-              echo "<br/><br/><br/>";
+              //Validation - Only member can view "Post" textfield
+              if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
+              (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
+                echo '<br/>'.$spacing.'
+                <input type="button" class="submitLink" value="Reply" onclick="myFunction('. $messageID .','. $threadID.','. $_SESSION['userID'].')">';
+              }
+                echo "<br/><br/><br/>";
           }
     }
 
 ?>
 </table>
 
-
-<?php
-    /**********************************************************************************************************************************************************
-          DISCUSSION BOARD: Report inappropriate Message Content
-    ***********************************************************************************************************************************************************/
-                  echo"
-                      <div class='message-report'>
-                        <form method='post' action='Member_reportMessage_process.php'>
-                        Report:
-                        <select name='reportSelection'>
-                          <option value='sexual'>Sexual content</option>
-                          <option value='spam'>Spam</option>
-                          <option value='offensive'>Offensive</option>
-                          <option value='scam'>Scam or misleading</option>
-                          <option value='falsenews'>False news story</option>
-                          <option value='violent'>Violent or repulsive content</option>
-                          <option value='others'>Others</option>
-                        </select>
-                        <input type='submit' id='reportSelection_submit' name='reportSelection_submit' value='Post'/>
-                        </form>
-                      </div>";
-?>
 
         <?php
             //Validation - Only member can view "Post" textfield
@@ -212,7 +209,7 @@ function myFunction(msgID,threadID,userID) {
                 }
 
                 $sql = "INSERT INTO discussion_message (userID, threadID, messageContent, messageStatus)
-                        VALUES ('$userID', '$threadID','$post_message','$messageStatus')";
+                        VALUES ('$userID','$threadID','$post_message','$messageStatus')";
 
                 if ($conn->query($sql) === TRUE) {
                   echo "<script>alert('The message has been posted')</script>";
@@ -248,65 +245,6 @@ function myFunction(msgID,threadID,userID) {
 </div>
 </div>
 </div>
-
-<script>
-window.onload = function() {
-  var replyButton = div.replyMessage_start;
-
-  replyTextbox.onchange = function()
-  {
-			if (this.click()) {
-          document.getElementById("replyMessage_cancel").style.visibility='visible';
-          document.getElementById("replyButton").style.visibility='hidden';
-          document.getElementById("txtReplyMessage").style.visibility='visible';
-			}
-			else {
-          document.getElementById("replyMessage_cancel").style.visibility='hidden';
-          document.getElementById("replyButton").style.visibility='visible';
-          document.getElementById("txtReplyMessage").style.visibility='hidden';
-			}
-		};
-
-
-    $('#replyMessage_start').click(function() {
-      $('#replyMessage_cancel').show();
-      $(this).hide();
-      $('#txtReplyMessage').show();
-    });
-
-    $('#replyMessage_cancel').click(function () {
-        $('#replyMessage_start').show();
-        $(this).hide();
-        $('#txtReplyMessage').hide();
-    });
-}
-</script>
-
-<script>
-    function changeLanguage(language) {
-        var element = document.getElementById("url");
-        element.value = language;
-        element.innerHTML = language;
-    }
-
-    function showDropdown() {
-        document.getElementById("reportContent").classList.toggle("show");
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
-    }
-</script>
 
 <?php
 mysqli_close($conn);
