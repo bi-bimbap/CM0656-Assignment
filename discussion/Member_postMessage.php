@@ -6,23 +6,11 @@ include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Discussion Forum");
-echo makeWrapper("");
+echo makeWrapper("../");
 echo "<form method='post'>" . makeLoginLogoutBtn("") . "</form>";
-echo makeProfileButton("");
-echo makeNavMenu("");
-
-$environment = LOCAL; //TODO: Change to server
-
-//Validation - Only Only member can view "Reply" button
-//Only show content if user is logged in
-$_SESSION['userID'] = '1'; //TODO: Remove session
-$_SESSION['userType'] = 'senior'; //TODO: Remove
-$_SESSION['username'] = 'seahjm'; //TODO: Remove
-$_SESSION['logged-in'] = true; //TODO: Remove
-// $_SESSION['userID'] = '3'; //TODO: Remove session
-// $_SESSION['userType'] = 'admin'; //TODO: Remove
-// $_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
-// $_SESSION['logged-in'] = true; //TODO: Remove
+echo makeProfileButton("../");
+echo makeNavMenu("../");
+$environment = WEB;
 ?>
 <!-- CSS style -->
 <link rel='stylesheet' href='../css/bootstrap.css' />
@@ -49,8 +37,8 @@ cursor: hand;
 
 </style>
 
+<!-- Reply Message -->
 <script>
-
 function myFunction(msgID,threadID,userID) {
     var msgID = msgID;
     var threadID = threadID;
@@ -167,7 +155,7 @@ function myFunction(msgID,threadID,userID) {
 
                 }
               }
-              //Validation - Only member can view "Post" textfield
+              //Validation - Only member can view "Reply" textfield
               if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
               (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
                 echo '<br/>'.$spacing.'
@@ -179,7 +167,6 @@ function myFunction(msgID,threadID,userID) {
 
 ?>
 </table>
-
 
         <?php
             //Validation - Only member can view "Post" textfield
@@ -219,7 +206,7 @@ function myFunction(msgID,threadID,userID) {
                 } else {
                   echo "<script>alert('Try again!')</script>";
                 }$conn->close();
-
+                //validation: Prevent Resubmit Users' Previous Input Data
                 clearstatcache();
 
               } //END: (3) Post New Message
@@ -240,6 +227,7 @@ function myFunction(msgID,threadID,userID) {
             </form>
             </div>";
             }
+        mysqli_close($conn);
         ?>
 
 </div>
@@ -247,8 +235,6 @@ function myFunction(msgID,threadID,userID) {
 </div>
 
 <?php
-mysqli_close($conn);
-//} //for ajax, close
-echo makeFooter("");
+echo makeFooter("../");
 echo makePageEnd();
 ?>

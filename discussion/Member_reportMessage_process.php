@@ -6,42 +6,33 @@ include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Report Message");
-echo makeWrapper("");
-echo "<form method='post'>" . makeLoginLogoutBtn("") . "</form>";
-echo makeProfileButton("");
-echo makeNavMenu("");
+echo makeWrapper("../");
+echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
+echo makeProfileButton("../");
+echo makeNavMenu("../");
 echo makeHeader("Report Message");
-$environment = LOCAL;
+$environment = WEB;
 ?>
-
 <!-- CSS style -->
 <link rel='stylesheet' href='../css/bootstrap.css' />
 <link rel="stylesheet" href="../css/jquery-ui.min.css" />
 <link rel="stylesheet" href="../css/jquery.dataTables.min.css" />
 <link rel="stylesheet" href="../css/stylesheet.css" />
-
 <!-- <script src='../scripts/bootstrap.js'></script> -->
 <!-- <script src='../scripts/jquery.dataTables.min.js'></script> -->
 <script src="../scripts/jquery.js"></script>
 
-<!-- TODO: Verification - Only Admin Allowed to Login -->
-<!--******************************************************************************************************************
-    Validation - Only Only admin can view "Create New Thread" button
-******************************************************************************************************************-->
 <?php
-  $_SESSION['userID'] = 3; //TODO: Remove session
-  $_SESSION['userType'] = 'admin'; //TODO: Remove
-  $_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
-  $_SESSION['logged-in'] = true; //TODO: Remove
-
+  //retrieve selected messageID
   $userID = $_SESSION['userID'];
     if(isset($_POST['msgID'])){
+      //retrieve selected messageID
       $msgID = $_POST['msgID'];
       $_SESSION['msgID'] = $msgID;
-
+      //retrieve selected threadID
       $threadID = $_POST['threadID'];
       $_SESSION['threadID'] = $threadID;
-
+      //retrieve userID of posted message
       $postedUserID = $_POST['PostedUserID'];
       $_SESSION['PostedUserID'] = $postedUserID;
     }else{
@@ -50,6 +41,9 @@ $environment = LOCAL;
       $postedUserID = $_SESSION['PostedUserID'];
     }
 
+    /*******************************************************************************************************************************************************
+          DISCUSSION BOARD: Display Message Content Before Report
+    *******************************************************************************************************************************************************/
     $sqlGetReport = "SELECT user.username, discussion_message.messageContent,
                               discussion_message.messageID,
                               discussion_message.messageDateTime
@@ -73,6 +67,9 @@ $environment = LOCAL;
 
     ?>
 
+    <!--*******************************************************************************************************************************************************
+          DISCUSSION BOARD : Report Message/Reply Form
+    *******************************************************************************************************************************************************-->
     <br/><br/><br/>
     <div class='message-report'>
       <form method='post' action='Member_reportMessage_process.php'>
@@ -90,48 +87,43 @@ $environment = LOCAL;
       </form>
     </div>
     <br/><br/><br/>
-    <!--**********************************************************
-     ***** Validation: only admin can access this page **********
-    ***********************************************************-->
-    <?php
-    $dropdown = "sexual";
-    if(isset($_POST['reportSelection'])) {
-      $dropdown = $_POST['reportSelection'];
-    }
 
-    // echo "msgID :" . $msgID;
-    // echo "<br/> postedUserID :" . $postedUserID;
-    // echo "<br/> dropdown :" . $dropdown;
-    // echo "<br/> userID :" . $_SESSION['userID'];
+<?php
+/*******************************************************************************************************************************************************
+      DISCUSSION BOARD: Report Message Function
+*******************************************************************************************************************************************************/
+    //Validation - Only member can view "Report" button
+    if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
+    (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
 
-    if(isset($_POST['reportSelection']) )   {
-
-      if ($conn->connect_error) {
-         die("Connection failed: " . $conn->connect_error);
+      $dropdown = "";
+      if(isset($_POST['reportSelection'])) {
+        $dropdown = $_POST['reportSelection'];
       }
 
-      $sqlReport = "INSERT INTO report (contentID, userID, reportReason, reportFrom,contentType)
-                    VALUES ('$msgID','$postedUserID','$dropdown','$userID','discussion message')";
+      if(isset($_POST['reportSelection']) )   {
 
-      if (mysqli_query($conn, $sqlReport)) {
-          echo "<script>alert('Your report has been posted!!!!')</script>";
-          echo "<script>
-                        top.window.location='../discussion/Member_postMessage.php?threadID=$threadID';
-               </script>";
-      } else {
-          echo "<script>alert('Error')</script>";
+        if ($conn->connect_error) {
+           die("Connection failed: " . $conn->connect_error);
+        }
+
+        $sqlReport = "INSERT INTO report (contentID, userID, reportReason, reportFrom,contentType)
+                      VALUES ('$msgID','$postedUserID','$dropdown','$userID','discussion message')";
+
+        if (mysqli_query($conn, $sqlReport)) {
+            echo "<script>alert('Your report has been posted!!!!')</script>";
+            echo "<script>
+                          top.window.location='../discussion/Member_postMessage.php?threadID=$threadID';
+                 </script>";
+        } else {
+            echo "<script>alert('Error')</script>";
+        }
+        mysqli_close($conn);
       }
-
-      mysqli_close($conn);
     }
-    ?>
+?>
 
-    <!--*******************************************************************************************************************************************************
-          DISCUSSION BOARD : Create New Thread Form
-    *******************************************************************************************************************************************************-->
-
-
-    <?php
-    echo makeFooter("");
-    echo makePageEnd("");
-    ?>
+<?php
+    echo makeFooter("../");
+    echo makePageEnd();
+?>

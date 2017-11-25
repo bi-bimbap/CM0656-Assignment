@@ -4,15 +4,16 @@
   session_start();
 ?>
 
+<!--**********************************************************************************************************
+      DISCUSSION BOARD: (2.1) Post New Message (Member)
+**************************************************************************************************************
 <?php
-
+//Validation - Only member can reply message
 if(isset($_POST['msgID'])  && isset($_POST['threadID']) && isset($_POST['myReply']) ){
   $msgID = $_POST['msgID'];
   $threadID = $_POST['threadID'];
   $myReply = $_POST['myReply'];
   $userID = $_POST['userID'];
-  // echo $msgID . " - " . $threadID. " - " . $myReply;
-  // echo $userID;
 
   $sqlInsertReply = "INSERT INTO discussion_message (userID, threadID, messageContent, messageStatus,replyTo)
                       VALUES ('$userID', '$threadID','$myReply','active','$msgID')";

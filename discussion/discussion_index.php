@@ -2,38 +2,28 @@
 ini_set("session.save_path", "");
 session_start();
 include '../db/database_conn.php';
-require_once('../config.php');
+include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Discussion Index");
-echo makeWrapper("");
-echo "<form method='post'>" . makeLoginLogoutBtn("") . "</form>";
-echo makeProfileButton("");
-echo makeNavMenu("");
+echo makeWrapper("../");
+echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
+echo makeProfileButton("../");
+echo makeNavMenu("../");
 echo makeHeader("Discussion Index");
-$environment = LOCAL;
+$environment = WEB;
 ?>
-
 <!-- CSS style -->
 <link rel='stylesheet' href='../css/bootstrap.css' />
 <link rel="stylesheet" href="../css/jquery-ui.min.css" />
 <link rel="stylesheet" href="../css/jquery.dataTables.min.css" />
 <link rel="stylesheet" href="../css/stylesheet.css" />
-
 <!-- <script src='../scripts/bootstrap.js'></script> -->
 <!-- <script src='../scripts/jquery.dataTables.min.js'></script> -->
 <script src="../scripts/jquery.js"></script>
 
-<!-- TODO: Verification - Only Admin Allowed to Login -->
-<!--******************************************************************************************************************
-    Validation - Only Only admin can view "Create New Thread" button
-******************************************************************************************************************-->
 <?php
-  // $_SESSION['userID'] = '3'; //TODO: Remove session
-  // $_SESSION['userType'] = 'admin'; //TODO: Remove
-  // $_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
-  // $_SESSION['logged-in'] = true; //TODO: Remove
-
+  //Validation - Only admin can view "Create New Thread " button
   if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
   (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
 
@@ -84,7 +74,7 @@ $environment = LOCAL;
 										    $SumOfMsg = $SumOfMsg +1;
 										}
 								}
-                // End calculate total msg
+                // End calculate total message
 
               echo
                   "<tbody>
@@ -100,23 +90,12 @@ $environment = LOCAL;
               }
 
     }
+    mysqli_close($conn);
   ?>
-<!--***************************************************************************************************************
-    Discussiom: Search Function
-****************************************************************************************************************-->
-
-<!--***************************************************************************************************************
-    Discussiom: Update Function
-****************************************************************************************************************-->
-<!--***************************************************************************************************************
-    Discussiom: Delete Function
-****************************************************************************************************************-->
 </table>
 </div>
+
 <?php
-    // mysqli_stmt_close($stmtDiscussion);
-    mysqli_close($conn);
-//} //for ajax, close
-echo makeFooter("");
+echo makeFooter("../");
 echo makePageEnd();
 ?>

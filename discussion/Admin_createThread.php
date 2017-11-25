@@ -1,4 +1,3 @@
-<!-- TODO  MOVE TO "DISCUSSION INDEX" AJAX POP OUT -->
 <?php
 ini_set("session.save_path", "");
 session_start();
@@ -6,30 +5,25 @@ include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
-echo makePageStart("Discussion Forum");
-echo makeWrapper("");
+echo makePageStart("Create New Thread");
+echo makeWrapper("../");
 echo "<form method='post'>" . makeLoginLogoutBtn("") . "</form>";
-echo makeProfileButton("");
-echo makeNavMenu("");
-$environment = LOCAL; //TODO: Change to server
-
-$_SESSION['userID'] = '3'; //TODO: Remove session
-$_SESSION['userType'] = 'admin'; //TODO: Remove
-$_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
-$_SESSION['logged-in'] = true; //TODO: Remove
+echo makeProfileButton("../");
+echo makeNavMenu("../");
+echo makeHeader("Create New Thread");
+$environment = WEB;
 ?>
-    <!-- CSS style -->
-    <link rel='stylesheet' href='../css/bootstrap.css' />
-    <link rel="stylesheet" href="../css/jquery-ui.min.css" />
-    <link rel="stylesheet" href="../css/parsley.css" />
-    <link rel="stylesheet" href="../css/stylesheet.css" />
+<!-- CSS style -->
+<link rel='stylesheet' href='../css/bootstrap.css' />
+<link rel="stylesheet" href="../css/jquery-ui.min.css" />
+<link rel="stylesheet" href="../css/parsley.css" />
+<link rel="stylesheet" href="../css/stylesheet.css" />
 
-    <script src="../scripts/jquery.js"></script>
-    <script src="../scripts/parsley.min.js"></script>
+<script src="../scripts/jquery.js"></script>
+<script src="../scripts/parsley.min.js"></script>
 
-<!-- TODO: Change the form to be POP OUT form -->
 <!--*******************************************************************************************************************************************************
-   Script - Pop Our Form for Create New Thread
+      DISCUSSION BOARD : Create New Thread Form
 *******************************************************************************************************************************************************-->
 <form id="createThreadForm" data-parsley-validate method="post">
     <p>Thread Name: <input type="text" id="txtThreadName" name="txtThreadName" data-parsley-required="true" placeholder="Thread Name" /></p>
@@ -40,12 +34,8 @@ $_SESSION['logged-in'] = true; //TODO: Remove
       </br>
 </form>
 
-<!--**********************************************************
- ***** Validation: only admin can access this page **********
-***********************************************************-->
-<?php //Only show content if user is logged in
-
-
+<?php
+    //Validation - Only admin can access this page
     if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
     (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
 
@@ -95,12 +85,7 @@ $_SESSION['logged-in'] = true; //TODO: Remove
     }
 ?>
 
-<!--*******************************************************************************************************************************************************
-      DISCUSSION BOARD : Create New Thread Form
-*******************************************************************************************************************************************************-->
-
-
 <?php
-echo makeFooter("");
-echo makePageEnd("");
+echo makeFooter("../");
+echo makePageEnd();
 ?>
