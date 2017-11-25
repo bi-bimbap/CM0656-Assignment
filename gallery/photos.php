@@ -59,9 +59,7 @@
 <?php 
 	$id = $_GET['albumID'];
 	$albumtitle = $_GET['albumtitle'];
-	$photo = "SELECT * FROM album_photo WHERE albumID=".$id." AND photoStatus = '1' ORDER BY uploadDate";
 	
-	$rs = mysqli_query($conn,$photo) or die (mysqli_error($conn));
 	
 	require_once('../controls.php');
 	echo makePageStart($albumtitle);
@@ -72,40 +70,85 @@
 	echo makeHeader($albumtitle);
 ?>
 <title><?php echo $albumtitle; ?></title>
+<form id='searchBar' method='post'>
+	<input type='text' name='search' placeholder='Search...'/>
+	<input type='submit' name='SUBMIT' value='Search'/>
+</form>
 <div class="content">
 	<div class="container">
 <?php	
-	while ($photos = mysqli_fetch_assoc($rs))
-	{
-			
+	
+			if (isset($_POST["SUBMIT"])){
+				$search = $_POST['search'];
 				
-				echo "\t<div class='photo'>
-							<a class ='various fancybox' data-fancybox-type='iframe' href='photoDetails.php?photoID={$photos['photoID']}'>";
-							
-					$filename = $photos['photoPath'];
+				$photo = "SELECT * FROM album_photo WHERE albumID=".$id." AND photoStatus = '1' AND photoDescription LIKE '%$search%' ORDER BY uploadDate";
+	
+				$rs = mysqli_query($conn,$photo) or die (mysqli_error($conn));
+				while ($photos = mysqli_fetch_assoc($rs))
+				{
+					echo "\t<div class='photo'>
+									<a class ='various fancybox' data-fancybox-type='iframe' href='photoDetails.php?photoID={$photos['photoID']}'>";
+									
+							$filename = $photos['photoPath'];
 
-					if (file_exists($filename)) {
-						echo "<img src='{$photos['photoPath']}' width='100%' height='270px'/>";
-					} else {
-						echo "<img src='../images/notfound.png' width='100%' height='270px'/>";
-					}			
+							if (file_exists($filename)) {
+								echo "<img src='{$photos['photoPath']}' width='100%' height='270px'/>";
+							} else {
+								echo "<img src='../images/notfound.png' width='100%' height='270px'/>";
+							}			
+										
+										
+										
+						echo "		</a>
+									<div><div class='variousContainer'><a class ='various fancybox' href='photoDetails.php?photoID={$photos['photoID']}'>{$photos['photoDescription']}</a></div>";
+									
+									
+									
+									$sqlphoto = "SELECT commentID
+											 FROM album_comment WHERE commentStatus = '1' AND photoID = '".$photos['photoID']."'";
+									$photors = mysqli_query($conn, $sqlphoto);
+									$count = 0;
+									while($rowphoto = mysqli_fetch_row($photors)){
+										$count += 1;
+									};
+						echo "\t<span class='photoCount'>$count comments</span>
+								</div></div>";
+				}
+			}
+			else{
+				$photo = "SELECT * FROM album_photo WHERE albumID=".$id." AND photoStatus = '1' ORDER BY uploadDate";
+	
+				$rs = mysqli_query($conn,$photo) or die (mysqli_error($conn));
+				while ($photos = mysqli_fetch_assoc($rs))
+				{
+					echo "\t<div class='photo'>
+								<a class ='various fancybox' data-fancybox-type='iframe' href='photoDetails.php?photoID={$photos['photoID']}'>";
+								
+						$filename = $photos['photoPath'];
+
+						if (file_exists($filename)) {
+							echo "<img src='{$photos['photoPath']}' width='100%' height='270px'/>";
+						} else {
+							echo "<img src='../images/notfound.png' width='100%' height='270px'/>";
+						}			
+									
+									
+									
+					echo "		</a>
+								<div><div class='variousContainer'><a class ='various fancybox' href='photoDetails.php?photoID={$photos['photoID']}'>{$photos['photoDescription']}</a></div>";
 								
 								
 								
-				echo "		</a>
-							<div><a class ='various fancybox' href='photoDetails.php?photoID={$photos['photoID']}'>{$photos['photoDescription']}</a>";
-							
-							
-							
-							$sqlphoto = "SELECT commentID
-									 FROM album_comment WHERE commentStatus = '1' AND photoID = '".$photos['photoID']."'";
-							$photors = mysqli_query($conn, $sqlphoto);
-							$count = 0;
-							while($rowphoto = mysqli_fetch_row($photors)){
-								$count += 1;
-							};
-				echo "\t<span class='photoCount'>$count comments</span>
-						</div></div>";
+								$sqlphoto = "SELECT commentID
+										 FROM album_comment WHERE commentStatus = '1' AND photoID = '".$photos['photoID']."'";
+								$photors = mysqli_query($conn, $sqlphoto);
+								$count = 0;
+								while($rowphoto = mysqli_fetch_row($photors)){
+									$count += 1;
+								};
+					echo "\t<span class='photoCount'>$count comments</span>
+							</div></div>";
+			}
 	}
 ?>
 
