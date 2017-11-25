@@ -1,7 +1,8 @@
 <?php
-// include "action.php";
+
 include '../db/database_conn.php';
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -15,10 +16,10 @@ include '../db/database_conn.php';
   <!-- Latest compiled JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Your Website</title>
+  <title>Create Template</title>
   <link rel="stylesheet" href="" type="text/css" />
   <script type="text/javascript"></script>
-</head>
+  </head>
 
 <body>
   <div class ="container">
@@ -38,10 +39,12 @@ include '../db/database_conn.php';
             if(isset($_GET["templateID"])){
               $templateID = $_GET["templateID"] ?? null;
 
-              $templateSQL = "SELECT * FROM competition_template WHERE templateID=".$templateID;
+
+
+              $templateSQL = "SELECT * FROM competition_template JOIN competition_question ON competition_template.templateID = competition_question.templateID WHERE competition_template.templateID=" . $templateID;
               $templateRs = mysqli_query($conn, $templateSQL) or die(mysqli_error($conn));
 
-              while ($row = mysqli_fetch_assoc($templateRs)){
+              if ($row = mysqli_fetch_assoc($templateRs)){
 
                 ?>
 
@@ -52,23 +55,23 @@ include '../db/database_conn.php';
                     </tr>
                     <tr>
                       <td>Template Title</td>
-                      <td><input type="text" class="form-control" value="<?php echo $row["templateTitle"];  ?>" name="title" placeholder="Enter Template Title"></td>
+                      <td><input type="text" class="form-control" value="<?php echo $row["templateTitle"];  ?>" name="title" ></td>
                     </tr>
                     <tr>
                       <td>Question 1</td>
-                      <td><input type="text" class="form-control" name="question1" ></td>
+                      <td><input type="text" class="form-control" value="<?php echo $row["questionTitle"];  ?>" name="questionTitle" ></td>
                     </tr>
                     <tr>
                       <td>Answer 1</td>
-                      <td><input type="text" class="form-control" name="answer1" ></td>
+                      <td><input type="text" class="form-control" value="<?php echo $row["questionAns"];  ?>" name="answer1" ></td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                       <td>Question 2</td>
                       <td><input type="text" class="form-control" name="question2" ></td>
                     </tr>
                     <tr>
                       <td>Asnwer 2</td>
-                      <td><input type="text" class="form-control" name="question2" ></td>
+                      <td><input type="text" class="form-control" name="answer2" ></td>
                     </tr>
                     <tr>
                       <td>Question 3</td>
@@ -77,10 +80,11 @@ include '../db/database_conn.php';
                     <tr>
                       <td>Answer 3</td>
                       <td><input type="text" class="form-control" name="answer3" ></td>
-                    </tr>
+                    </tr> -->
                     <tr>
                       <td colspan="2" align="center"><input type="submit" class="btn btn-primary" name="edit" value="update"/></td>
                     </tr>
+                    <td colspan="2" align="center"><a href="create_template.php" onclick="history.back(1);" class="btn btn-primary">Back</a></td>
                   </table>
                 </form>
                 <?php
@@ -101,7 +105,7 @@ include '../db/database_conn.php';
                       <td>Answer 1</td>
                       <td><input type="text" class="form-control" name="answer1" ></td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                       <td>Question 2</td>
                       <td><input type="text" class="form-control" name="q2ID" placeholder="Enter Question 2" ></td>
                     </tr>
@@ -116,7 +120,7 @@ include '../db/database_conn.php';
                     <tr>
                       <td>Answer 3</td>
                       <td><input type="text" class="form-control" name="answer3" ></td>
-                    </tr>
+                    </tr> -->
                     <tr>
                       <td colspan="2" align="center"><input type="submit" class="btn btn-primary" name="submit" value="Save"></td>
                     </tr>
@@ -139,8 +143,7 @@ include '../db/database_conn.php';
         <div class="col-md-8">
           <table class="table table-bordered">
             <tr>
-              <th></th>
-
+              <th>Template ID</th>
               <th>Template Title</th>
               <th>&nbsp;</th>
               <th>&nbsp;</th>
@@ -196,21 +199,60 @@ include '../db/database_conn.php';
     mysqli_stmt_close($stmt);
 
     //Obtain user input
-    $question = filter_has_var(INPUT_POST, 'q1ID') ? $_POST['q1ID']: null;
+    $question1 = filter_has_var(INPUT_POST, 'q1ID') ? $_POST['q1ID']: null;
     //Trim white space
-    $question = trim($question);
+    $question1 = trim($question1);
     //Sanitize user input
-    $question = filter_var($question, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    $question1 = filter_var($question1, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-    $answer = 'answer';
+    $answer1 = filter_has_var(INPUT_POST, 'answer1') ? $_POST['answer1']: null;
+    //Trim white space
+    $answer1 = trim($answer1);
+    //Sanitize user input
+    $answer1 = filter_var($answer1, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-    $questionSQL = "INSERT INTO competition_question (templateID, questionTitle, questionAns) VALUES (?, ?, ?)";
-    $stmt = mysqli_prepare($conn, $questionSQL) or die( mysqli_error($conn));
-    mysqli_stmt_bind_param($stmt, "iss", $tempID, $question, $answer);
+    $question1SQL = "INSERT INTO competition_question (templateID, questionTitle, questionAns) VALUES (?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $question1SQL) or die( mysqli_error($conn));
+    mysqli_stmt_bind_param($stmt, "iss", $tempID, $question1, $answer1);
     mysqli_stmt_execute($stmt);
+
+    // $question2 = filter_has_var(INPUT_POST, 'q2ID') ? $_POST['q2ID']: null;
+    // //Trim white space
+    // $question2 = trim($question2);
+    // //Sanitize user input
+    // $question2 = filter_var($question2, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    //
+    // $answer2 = filter_has_var(INPUT_POST, 'answer2') ? $_POST['answer2']: null;
+    // //Trim white space
+    // $answer2 = trim($answer2);
+    // //Sanitize user input
+    // $answer2 = filter_var($answer2, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    //
+    // $question2SQL = "INSERT INTO competition_question (templateID, questionTitle, questionAns) VALUES (?, ?, ?)";
+    // $stmt2 = mysqli_prepare($conn, $question2SQL) or die( mysqli_error($conn));
+    // mysqli_stmt_bind_param($stmt2, "iss", $tempID, $question2, $answer2);
+    // mysqli_stmt_execute($stmt2);
+    //
+    // $question3 = filter_has_var(INPUT_POST, 'q3ID') ? $_POST['q3ID']: null;
+    // //Trim white space
+    // $question3 = trim($question3);
+    // //Sanitize user input
+    // $question3 = filter_var($question3, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    //
+    // $answer3 = filter_has_var(INPUT_POST, 'answer3') ? $_POST['answer3']: null;
+    // //Trim white space
+    // $answer3 = trim($answer3);
+    // //Sanitize user input
+    // $answer3 = filter_var($answer3, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    //
+    // $question3SQL = "INSERT INTO competition_question (templateID, questionTitle, questionAns) VALUES (?, ?, ?)";
+    // $stmt3 = mysqli_prepare($conn, $question3SQL) or die( mysqli_error($conn));
+    // mysqli_stmt_bind_param($stmt3, "iss", $tempID, $question3, $answer3);
+    // mysqli_stmt_execute($stmt3);
 
     if (mysqli_stmt_affected_rows($stmt) > 0) {
       echo "<script>alert('Question created!')</script>";
+      echo "<meta http-equiv=\"refresh\" content=\"0;URL=create_template.php\">";
     }
     else {
       echo "<script>alert('Failed to create Question!')</script>";
@@ -219,48 +261,75 @@ include '../db/database_conn.php';
     else {
       echo "<script>alert('Failed to create template!')</script>";
     }
+
     mysqli_stmt_close($stmt);
+    // mysqli_stmt_close($stmt2);
+    // mysqli_stmt_close($stmt3);
   }
   ?>
 
   <?php
-  if (isset($_POST['update'])) { //Clicked on update button
+  if (isset($_POST['edit'])) { //Clicked on update button
     //Obtain user input
+    $templateID = filter_has_var(INPUT_POST, 'templateID') ? $_POST['templateID']: null;
+    //Trim white space
+    $templateID = trim($templateID);
+    //Sanitize user input
+    $templateID = filter_var($templateID, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
     $title = filter_has_var(INPUT_POST, 'title') ? $_POST['title']: null;
     //Trim white space
     $title = trim($title);
     //Sanitize user input
     $title = filter_var($title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-    // $templateID = filter_has_var(INPUT_POST, 'templateID') ? $_POST['templateID']: null;
-    // //Trim white space
-    // $templateID = trim($templateID);
-    // //Sanitize user input
-    // $templateID = filter_var($templateID, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-    // $templateID = "3";
+    $questionTitle = filter_has_var(INPUT_POST, 'questionTitle') ? $_POST['questionTitle']: null;
+    //Trim white space
+    $questionTitle = trim($questionTitle);
+    //Sanitize user input
+    $questionTitle = filter_var($questionTitle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-    $updateSQL = "SELECT questionID, questionTitle FROM competition_question WHERE templateID  = ?,?";
+    $answer = filter_has_var(INPUT_POST, 'answer1') ? $_POST['answer1']: null;
+    //Trim white space
+    $answer = trim($answer);
+    //Sanitize user input
+    $answer = filter_var($answer, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+    $updateSQL = "UPDATE competition_template SET templateTitle=? WHERE templateID=?";
     $stmt = mysqli_prepare($conn, $updateSQL) or die( mysqli_error($conn));
-    mysqli_stmt_bind_param($stmt, "is", $templateID);
+    mysqli_stmt_bind_param($stmt, "si", $title, $templateID);
     mysqli_stmt_execute($stmt);
-    mysqli_stmt_bind_result($stmt, $questionID, $questionTitle);
-    mysqli_stmt_fetch($stmt);
-    mysqli_stmt_close($stmt);
+    //
+    $updateSQL2 = "UPDATE competition_question SET questionTitle=?, questionAns=? WHERE templateID=?";
+    $stmt2 = mysqli_prepare($conn, $updateSQL2) or die( mysqli_error($conn));
+    mysqli_stmt_bind_param($stmt2, "ssi", $questionTitle, $answer, $templateID);
+    mysqli_stmt_execute($stmt2);
 
-    // if ("select *") {
-    //   echo "<script>alert('Template Updated!')</script>";
-    // }
-    // else {
-    //   echo "<script>alert('Failed to update template!')</script>";
-    // }
-    // mysqli_stmt_close($stmt);
+    if (mysqli_stmt_affected_rows($stmt) > 0) {
+      echo "<script>alert('Titile updated!')</script>";
+      echo "<meta http-equiv=\"refresh\" content=\"0;URL=create_template.php\">";
+    }
+    else {
+
+    }
+    if (mysqli_stmt_affected_rows($stmt2) > 0) {
+      echo "<meta http-equiv=\"refresh\" content=\"0;URL=create_template.php\">";
+    }
+    else {
+
+    }
+    mysqli_stmt_close($stmt);
+    mysqli_stmt_close($stmt2);
+    // mysqli_stmt_close($stmt2);
   }
 
 
   ?>
 
   <?php
+
   if (isset($_POST['delete'])) {
+
     $templateID = $_POST["templateID"];
 
     ?><script>alert('Your template had been deleted !');</script><?php
@@ -269,13 +338,12 @@ include '../db/database_conn.php';
 
     if (mysqli_query($conn, $sql)) {
       echo "Record deleted successfully";
+      echo "<meta http-equiv=\"refresh\" content=\"0;URL=create_template.php\">";
     } else {
       echo "Error deleting record: " . mysqli_error($conn);
     }
     ?>
-    <Script>
-    window.url('create_template.php');
-    </script>
+
     <?php
   }
   else
