@@ -27,7 +27,7 @@ a:hover{
     font-size: 20px;
 	position: relative;
 	transition:all 0.3s;
-	
+
 	border:1px dotted black!important;
 }
 .various.outer:hover{
@@ -56,7 +56,7 @@ a:hover{
 }
 .album > div > span:last-child, .photo > div > span:last-child{
 	float:right;
-	
+
 }
 .album a, .photo a{
 	color:white;
@@ -96,7 +96,7 @@ a:hover{
 	width:850px;
 }
 #createAlbum input, #uploadPhoto input{
-	margin-bottom:30px;	
+	margin-bottom:30px;
 }
 #createAlbum > h2+div, #uploadPhoto > h2+div{
 	padding-left:30px;
@@ -489,4 +489,12 @@ footer > div > div:last-child{
 .dataTables_wrapper .dataTables_filter input{
     border: 1px solid #ac967a;
     padding: 5px 10px;
+}
+
+#biddingHistory {
+	display: none;
+}
+
+#errorMsg {
+	
 }
