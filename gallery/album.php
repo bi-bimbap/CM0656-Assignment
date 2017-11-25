@@ -45,31 +45,95 @@
 <title>Gallery</title>
 </head>
 <body>
+<form id='searchBar' method='post'>
+	<input type='text' name='search' placeholder='Search...'/>
+	<input type='submit' name='SUBMIT' value='Search'/>
+</form>
 <div class="content">
 	<div class="container">
 		<?php
+			if (isset($_POST["SUBMIT"])){
+				$search = $_POST['search'];
+				$sqlAlbum = "SELECT * from album WHERE albumStatus= '1' AND albumDescription LIKE '%$search%' order by albumCreateDate";
+				$rsAlbum = mysqli_query($conn, $sqlAlbum);
+				while ($album = mysqli_fetch_assoc($rsAlbum)) {
+					
+					
+					echo "\t<div class='album'>
+								<a href=\"photos.php?albumID={$album['albumID']}&albumtitle={$album['albumDescription']}\">";
+								
+								
+									$filename = $album['albumCoverPath'];
+
+									if (file_exists($filename)) {
+										echo "<img src='{$album['albumCoverPath']}' width='100%' height='270px'/>";
+									} else {
+										echo "<img src='../images/notfound.png' width='100%' height='270px'/>";
+									}
+								
+								
+								
+								
+								
+								
+					echo "			</a>
+								<div><div class='variousContainer'><a href='photos.php?albumID={$album['albumID']}&albumtitle={$album['albumDescription']}'>{$album['albumDescription']}</a></div>";
+								
+								
+								
+								$sql1 = "SELECT photoID
+										 FROM album_photo WHERE photoStatus = '1' AND albumID = '".$album['albumID']."'";
+								$result1 = mysqli_query($conn, $sql1);
+								$count = 0;
+								while($row1 = mysqli_fetch_row($result1)){
+									$count += 1;
+								};
+					echo "\t<span class='photoCount'>$count photos</span>
+							</div></div>";
+				
+				
+				}
+			}
 			
-			$sqlAlbum = "SELECT * from album WHERE albumStatus= '1' order by albumCreateDate";
-			$rsAlbum = mysqli_query($conn, $sqlAlbum);
-			while ($album = mysqli_fetch_assoc($rsAlbum)) {
-				
-				
-				echo "\t<div class='album'>
-							<a href=\"photos.php?albumID={$album['albumID']}&albumtitle={$album['albumDescription']}\"><img src='{$album['albumCoverPath']}' width='100%' height='270px'/></a>
-							<div><span class='albumTitle'>{$album['albumDescription']}</span>";
-							
-							
-							
-							$sql1 = "SELECT photoID
-									 FROM album_photo WHERE photoStatus = '1' AND albumID = '".$album['albumID']."'";
-							$result1 = mysqli_query($conn, $sql1);
-							$count = 0;
-							while($row1 = mysqli_fetch_row($result1)){
-								$count += 1;
-							};
-				echo "\t<span class='photoCount'>$count photos</span>
-						</div></div>";
-			};
+			else{
+				$sqlAlbum = "SELECT * from album WHERE albumStatus= '1' order by albumCreateDate";
+				$rsAlbum = mysqli_query($conn, $sqlAlbum);
+				while ($album = mysqli_fetch_assoc($rsAlbum)) {
+					
+					
+					echo "\t<div class='album'>
+								<a href=\"photos.php?albumID={$album['albumID']}&albumtitle={$album['albumDescription']}\">";
+								
+								
+									$filename = $album['albumCoverPath'];
+
+									if (file_exists($filename)) {
+										echo "<img src='{$album['albumCoverPath']}' width='100%' height='270px'/>";
+									} else {
+										echo "<img src='../images/notfound.png' width='100%' height='270px'/>";
+									}
+								
+								
+								
+								
+								
+								
+					echo "			</a>
+								<div><div class='variousContainer'><a href='photos.php?albumID={$album['albumID']}&albumtitle={$album['albumDescription']}'>{$album['albumDescription']}</a></div>";
+								
+								
+								
+								$sql1 = "SELECT photoID
+										 FROM album_photo WHERE photoStatus = '1' AND albumID = '".$album['albumID']."'";
+								$result1 = mysqli_query($conn, $sql1);
+								$count = 0;
+								while($row1 = mysqli_fetch_row($result1)){
+									$count += 1;
+								};
+					echo "\t<span class='photoCount'>$count photos</span>
+							</div></div>";
+				};
+			}
 		?>
 		<a class='various outer' data-fancybox-type='iframe' href='createAlbum.php'>Create an Album</a>
 		
