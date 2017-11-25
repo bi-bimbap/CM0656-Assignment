@@ -65,22 +65,6 @@ include '../db/database_conn.php';
                       <td>Answer 1</td>
                       <td><input type="text" class="form-control" value="<?php echo $row["questionAns"];  ?>" name="answer1" ></td>
                     </tr>
-                    <!-- <tr>
-                      <td>Question 2</td>
-                      <td><input type="text" class="form-control" name="question2" ></td>
-                    </tr>
-                    <tr>
-                      <td>Asnwer 2</td>
-                      <td><input type="text" class="form-control" name="answer2" ></td>
-                    </tr>
-                    <tr>
-                      <td>Question 3</td>
-                      <td><input type="text" class="form-control" name="question3" ></td>
-                    </tr>
-                    <tr>
-                      <td>Answer 3</td>
-                      <td><input type="text" class="form-control" name="answer3" ></td>
-                    </tr> -->
                     <tr>
                       <td colspan="2" align="center"><input type="submit" class="btn btn-primary" name="edit" value="update"/></td>
                     </tr>
@@ -105,22 +89,6 @@ include '../db/database_conn.php';
                       <td>Answer 1</td>
                       <td><input type="text" class="form-control" name="answer1" ></td>
                     </tr>
-                    <!-- <tr>
-                      <td>Question 2</td>
-                      <td><input type="text" class="form-control" name="q2ID" placeholder="Enter Question 2" ></td>
-                    </tr>
-                    <tr>
-                      <td>Answer 2</td>
-                      <td><input type="text" class="form-control" name="answer2" ></td>
-                    </tr>
-                    <tr>
-                      <td>Question 3</td>
-                      <td><input type="text" class="form-control" name="q3ID" placeholder="Enter Question 3" ></td>
-                    </tr>
-                    <tr>
-                      <td>Answer 3</td>
-                      <td><input type="text" class="form-control" name="answer3" ></td>
-                    </tr> -->
                     <tr>
                       <td colspan="2" align="center"><input type="submit" class="btn btn-primary" name="submit" value="Save"></td>
                     </tr>
@@ -163,7 +131,7 @@ include '../db/database_conn.php';
               </tr>
               <?php
             }
-            // mysqli_stmt_close($stmt);
+
             ?>
           </table>
         </div>
@@ -216,40 +184,6 @@ include '../db/database_conn.php';
     mysqli_stmt_bind_param($stmt, "iss", $tempID, $question1, $answer1);
     mysqli_stmt_execute($stmt);
 
-    // $question2 = filter_has_var(INPUT_POST, 'q2ID') ? $_POST['q2ID']: null;
-    // //Trim white space
-    // $question2 = trim($question2);
-    // //Sanitize user input
-    // $question2 = filter_var($question2, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-    //
-    // $answer2 = filter_has_var(INPUT_POST, 'answer2') ? $_POST['answer2']: null;
-    // //Trim white space
-    // $answer2 = trim($answer2);
-    // //Sanitize user input
-    // $answer2 = filter_var($answer2, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-    //
-    // $question2SQL = "INSERT INTO competition_question (templateID, questionTitle, questionAns) VALUES (?, ?, ?)";
-    // $stmt2 = mysqli_prepare($conn, $question2SQL) or die( mysqli_error($conn));
-    // mysqli_stmt_bind_param($stmt2, "iss", $tempID, $question2, $answer2);
-    // mysqli_stmt_execute($stmt2);
-    //
-    // $question3 = filter_has_var(INPUT_POST, 'q3ID') ? $_POST['q3ID']: null;
-    // //Trim white space
-    // $question3 = trim($question3);
-    // //Sanitize user input
-    // $question3 = filter_var($question3, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-    //
-    // $answer3 = filter_has_var(INPUT_POST, 'answer3') ? $_POST['answer3']: null;
-    // //Trim white space
-    // $answer3 = trim($answer3);
-    // //Sanitize user input
-    // $answer3 = filter_var($answer3, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-    //
-    // $question3SQL = "INSERT INTO competition_question (templateID, questionTitle, questionAns) VALUES (?, ?, ?)";
-    // $stmt3 = mysqli_prepare($conn, $question3SQL) or die( mysqli_error($conn));
-    // mysqli_stmt_bind_param($stmt3, "iss", $tempID, $question3, $answer3);
-    // mysqli_stmt_execute($stmt3);
-
     if (mysqli_stmt_affected_rows($stmt) > 0) {
       echo "<script>alert('Question created!')</script>";
       echo "<meta http-equiv=\"refresh\" content=\"0;URL=create_template.php\">";
@@ -263,8 +197,6 @@ include '../db/database_conn.php';
     }
 
     mysqli_stmt_close($stmt);
-    // mysqli_stmt_close($stmt2);
-    // mysqli_stmt_close($stmt3);
   }
   ?>
 
@@ -320,7 +252,7 @@ include '../db/database_conn.php';
     }
     mysqli_stmt_close($stmt);
     mysqli_stmt_close($stmt2);
-    // mysqli_stmt_close($stmt2);
+
   }
 
 
