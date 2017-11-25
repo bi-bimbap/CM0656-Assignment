@@ -4,76 +4,23 @@
   session_start();
 ?>
 
-<!--******************************************************************************************************************************************************
-      DISCUSSION BOARD: (2.1) Reply Message (Member)
-*******************************************************************************************************************************************************-->
 <?php
-    $replyThread  = $_POST['replyTo_threadID'];
-    $replyInput   = $_POST['txtReplyMessage'];
-    $replyMessage = $_POST['replyTo_messageID'];
 
-    //obtain user input
-    $replyInput = filter_has_var(INPUT_POST,'txtReplyMessage') ? $_POST['txtReplyMessage']: null;
+if(isset($_POST['msgID'])  && isset($_POST['threadID']) && isset($_POST['myReply']) ){
+  $msgID = $_POST['msgID'];
+  $threadID = $_POST['threadID'];
+  $myReply = $_POST['myReply'];
+  $userID = $_POST['userID'];
+  // echo $msgID . " - " . $threadID. " - " . $myReply;
+  // echo $userID;
 
-    //Trim white space
-    $replyInput = trim($replyInput);
+  $sqlInsertReply = "INSERT INTO discussion_message (userID, threadID, messageContent, messageStatus,replyTo)
+                      VALUES ('$userID', '$threadID','$myReply','active','$msgID')";
 
-    //Sanitize user input
-    $replyInput = filter_var($replyInput, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
-    $messageStatus = "active";
-
-    $sqlReplyMessage = "INSERT INTO discussion_message (userID, threadID, messageContent, messageStatus, replyTo)	VALUES (?,?,?,?,?)";
-    $stmtReplyMessage = mysqli_prepare($conn, $sqlReplyMessage) or die( mysqli_error($conn));
-    mysqli_stmt_bind_param($stmtReplyMessage, 'iissi', $_SESSION['userID'], $replyThread, $replyInput, $messageStatus, $replyMessage);
-    mysqli_stmt_execute($stmtReplyMessage);
-
-    if(mysqli_stmt_affected_rows($stmtReplyMessage) > 0){
-      echo "<script>alert('The message has been posted')</script>";
-    }
-    else {
-      echo "<script>alert('Try again!')</script>";
-
-    }
-    //validation: Prevent Resubmit Users' Previous Input Data
-
-    $url="Member_postMessage.php?threadID=".$replyThread;
-    header('Location: '.$url);
+  if ($conn->query($sqlInsertReply) === TRUE) {
+    echo "Your reply has been posted!!!!";
+  }
+  $conn->close();
+}
 
 ?>
-
-<!--*******************************************************************************************************************************************************
-      DISCUSSION BOARD: Automatic Moderation inappropriate Word
-*******************************************************************************************************************************************************-->
-<?php
-//check inappropriate language
-  $array_message = explode(" ", $replyInput);
-  print_r ($array_message);
-
-	$sqlCheckInappropriate = "SELECT inappropriatePhrase FROM discussion_inappropriate";
-	$stmtCheckInappropriate = mysqli_prepare($con, $sqlCheckInappropriate) or die( mysqli_error($conn));
-  mysqli_stmt_execute($stmtCheckInappropriate);
-  mysqli_stmt_bind_result($stmtCheckInappropriate, $inappropriate_phrase);
-
-  if(mysqli_stmt_affected_rows($stmtCheckInappropriate) > 0){
-
-      while(mysqli_stmt_fetch($stmtCheckInappropriate)){
-
-	    	for($i = 0; $i < count($array_message); $i++){
-	    		if(strtolower($array_message[$i]) == $inappropriate_phrase){
-	    			$array_message[$i] = '***';
-	    		}
-	    	}
-    }
-    echo "<script>alert('Found Inappropriate Phrase')</script>";
-  }
-  else
-  {
-		echo "<script>alert('No result')</script>";
-	    //No Result
-	}
-  
-clearstatcache();
-mysqli_stmt_close($stmtReplyMessage);
-mysqli_stmt_close($stmtCheckInappropriate);
-  ?>
