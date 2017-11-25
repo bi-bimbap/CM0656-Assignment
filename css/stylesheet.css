@@ -490,3 +490,33 @@ footer > div > div:last-child{
     border: 1px solid #ac967a;
     padding: 5px 10px;
 }
+#searchBar{
+	    width: 1170px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: right;
+    vertical-align: -35px;
+    margin-bottom: 40px;
+    margin-top: -75px;
+}
+#searchBar input[type='text']{
+	width:280px;
+}
+#searchBar input[type='submit']{
+	    background: #ac967a;
+    border: 1px solid #ac967a;
+    padding: 7px 10px;
+    transition: all 0.3s;
+}
+#searchBar input[type='submit']:hover{
+	background:white;
+	color:#ac967a;
+	transition:all 0.3s
+}
+.variousContainer{
+	width: 115px;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
