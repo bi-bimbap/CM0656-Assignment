@@ -6,13 +6,17 @@ include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
-echo makePageStart("Create Discussion Thread");
-echo makeWrapper();
-echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
-echo makeProfileButton();
-echo makeNavMenu();
-echo makeHeader("Create Discussion Thread");
+echo makePageStart("Discussion Forum");
+echo makeWrapper("");
+echo "<form method='post'>" . makeLoginLogoutBtn("") . "</form>";
+echo makeProfileButton("");
+echo makeNavMenu("");
 $environment = LOCAL; //TODO: Change to server
+
+$_SESSION['userID'] = '3'; //TODO: Remove session
+$_SESSION['userType'] = 'admin'; //TODO: Remove
+$_SESSION['username'] = 'Seah Jia-min'; //TODO: Remove
+$_SESSION['logged-in'] = true; //TODO: Remove
 ?>
     <!-- CSS style -->
     <link rel='stylesheet' href='../css/bootstrap.css' />
@@ -27,7 +31,14 @@ $environment = LOCAL; //TODO: Change to server
 <!--*******************************************************************************************************************************************************
    Script - Pop Our Form for Create New Thread
 *******************************************************************************************************************************************************-->
-
+<form id="createThreadForm" data-parsley-validate method="post">
+    <p>Thread Name: <input type="text" id="txtThreadName" name="txtThreadName" data-parsley-required="true" placeholder="Thread Name" /></p>
+    <p>Thread Description: <textarea type="text" id="txtThreadDesc" name="txtThreadDesc" data-parsley-required="true" placeholder="Description" ></textarea></p>
+    <input type='submit' id='createThread_submit' name='createThread_submit' value='Create' />
+      </br>
+      </br>
+      </br>
+</form>
 
 <!--**********************************************************
  ***** Validation: only admin can access this page **********
@@ -41,7 +52,7 @@ $environment = LOCAL; //TODO: Change to server
     /*********************************************************************************************************************************************************
           DISCUSSION BOARD: "Create" Submit Button Function
     *********************************************************************************************************************************************************/
-        if(isset($_POST['createThread_submit']) && !empty($_POST['txtThreadName'] && ($_POST['txtThreadDesc'])) ){
+        if(isset($_POST['createThread_submit']) && isset($_POST['txtThreadName']) && isset($_POST['txtThreadDesc']) ){
 
           //obtain user input
           $thread_name = filter_has_var(INPUT_POST,'txtThreadName') ? $_POST['txtThreadName']: null;
@@ -87,16 +98,9 @@ $environment = LOCAL; //TODO: Change to server
 <!--*******************************************************************************************************************************************************
       DISCUSSION BOARD : Create New Thread Form
 *******************************************************************************************************************************************************-->
-    <form id="createThreadForm" data-parsley-validate method="post">
-        <p>Thread Name: <input type="text" id="txtThreadName" name="txtThreadName" data-parsley-required="true" placeholder="Thread Name" /></p>
-        <p>Thread Description: <textarea type="text" id="txtThreadDesc" name="txtThreadDesc" data-parsley-required="true" placeholder="Description" ></textarea></p>
-        <input type='submit' id='createThread_submit' name='createThread_submit' value='Create' />
-          </br>
-          </br>
-          </br>
-    </form>
+
 
 <?php
-echo makeFooter();
-echo makePageEnd();
+echo makeFooter("");
+echo makePageEnd("");
 ?>
