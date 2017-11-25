@@ -75,8 +75,8 @@ $(document).ready(function() {
 
   Start Price:
   <div class="input-group">
-    <span class="input-group-addon">$</span>
-    <input type="text" class="form-control" id='aucStartPrice' name='aucStartPrice' aria-label="Amount (to the nearest dollar)" data-parsley-required="true" data-parsley-errors-messages-disabled>
+    <span class="input-group-addon">£</span>
+    <input type="text" class="form-control" id='aucStartPrice' name='aucStartPrice' aria-label="Amount (to the nearest dollar)" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-type="number">
     <span class="input-group-addon">.00</span>
   </div>
   <br/>
@@ -89,7 +89,7 @@ $(document).ready(function() {
   <div id="inputBuyItNow">
     Item Price:
     <div class="input-group">
-      <input type="text" class="form-control" id='aucItemPrice' name='aucItemPrice' aria-label="Amount (to the nearest dollar)" data-parsley-errors-messages-disabled>
+      <input type="text" class="form-control" id='aucItemPrice' name='aucItemPrice' aria-label="Amount (to the nearest dollar)" data-parsley-type="number" data-parsley-errors-messages-disabled>
     </div>
   </div>
 
