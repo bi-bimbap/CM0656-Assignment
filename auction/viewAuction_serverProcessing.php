@@ -85,7 +85,7 @@ if ($function == "placeBid") { //Place bid
       mysqli_stmt_close($stmtWatchList);
 
       //update auction current bid
-      $sqlUpdateAuction = "UPDATE auction SET currentBid = ? WHERE auctionID = ?";
+      $sqlUpdateAuction  = "UPDATE auction SET currentBid = ? WHERE auctionID = ?";
       $stmtUpdateAuction = mysqli_prepare($conn, $sqlUpdateAuction) or die( mysqli_error($conn));
       mysqli_stmt_bind_param($stmtUpdateAuction, "ii", $bidAmount, $aucID);
       mysqli_stmt_execute($stmtUpdateAuction);
@@ -100,6 +100,35 @@ if ($function == "placeBid") { //Place bid
     echo json_encode("1Please enter an amount that is greater than £ $currentBid.00!");
   }
   mysqli_close($conn);
+}
+else if ($function == "addToWatch") { //add to watch list
+  $userID = filter_has_var(INPUT_POST, 'userID') ? $_POST['userID']: null;
+  $userID = trim($userID);
+  $userID = filter_var($userID, FILTER_SANITIZE_STRING);
+
+  $aucID = filter_has_var(INPUT_POST, 'aucID') ? $_POST['aucID']: null;
+  $aucID = trim($aucID);
+  $aucID = filter_var($aucID, FILTER_SANITIZE_STRING);
+
+  //check if user has bid on this auction
+  $sqlCheckUser  = "SELECT userID FROM bid WHERE auctionID = ? AND userID = ?";
+  $stmtCheckUSer = mysqli_prepare($conn, $sqlCheckUser) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmtCheckUSer, "ii", $aucID, $userID);
+  mysqli_stmt_execute($stmtCheckUSer);
+  $count = mysqli_stmt_num_rows($stmtCheckUSer);
+  mysqli_stmt_close($stmtCheckUSer);
+  if ($count > 0) { //user is one of the bidder; not allowed to add to watchlist
+    echo json_encode("1Add to Watchlist failed! You already have the privilege to receive updates on this auction as you are one of the bidders.");
+  } else { //auction has been added to the watchlist
+    $sqlAddToWatch = "INSERT INTO watchlist (userID,auctionID) VALUES (?,?)";
+    $stmtAddToWatch = mysqli_prepare($conn, $sqlAddToWatch) or die(mysqli_error($conn));
+    mysqli_stmt_bind_param($stmtAddToWatch, "ii", $userID, $aucID);
+    mysqli_stmt_execute($stmtAddToWatch);
+    if (mysqli_stmt_affected_rows($stmt) > 0) {
+        echo json_encode("2Successfully added to watchlist!");
+    }
+  }
+
 }
 
 ?>

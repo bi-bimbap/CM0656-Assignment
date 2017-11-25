@@ -93,7 +93,7 @@ $(document).ready(function() {
 
   $('#btnBid').on('click', function(e) { //Show confirm bid pop up box
     var bidAmt = $("#placeBid").val(); //Obtain bid Amount
-    if (bidAmt > 0 && !isNaN(bidAmt)) {
+    if (bidAmt > 0 && !isNaN(bidAmt) && bidAmt!=null) {
       if (confirm("Are you confirm to bid at £ " + bidAmt + ".00? Please note that we have") == true) {
         var bidAmt = $("#placeBid").val(); //Obtain bid Amount
         var userID = <?php echo $_SESSION['userID']?>;
@@ -126,12 +126,38 @@ $(document).ready(function() {
         });
       }
     } else {
-
+      $('#errorMsg').css("display","block");
+      $('#errorMsg').html("Please enter your bid amount in number format.");
     }
   });
 
-  $('#btnBidConfirm').on('click', function(e) { //Submit bid
+  $('#btnAddToWatch').on('click', function(e) { //Submit bid
+    $.ajax({
+      url :"viewAuction_serverProcessing.php",
+      type: "POST",
+      data: "action=addToWatch&userID=" + userID + "&aucID=" + aucID,
+      success: function(data) {
+        var dataString = data;
+        var firstChar  = dataString.charAt(0);
+        var message    = dataString.slice(1);
 
+        if (firstChar == "1") { //Email in use; Unable to add admin
+          alert(message);
+        }
+        else if (firstChar == "2") { //Admin successfully added
+          alert(message);
+        }
+        else if (firstChar == "3") { //Failed to send email
+          alert(message);
+        }
+        else if (firstChar == "4") { //Failed to add new admin
+          alert(message);
+        }
+        else if (firstChar == "5") { //Unable to add new admin
+          alert(message);
+        }
+      }
+    });
   });
 });
 </script>

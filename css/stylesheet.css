@@ -527,5 +527,5 @@ footer > div > div:last-child{
 
 #errorMsg {
 	display: none;
-	font-color: red;
+	color: red;
 }
