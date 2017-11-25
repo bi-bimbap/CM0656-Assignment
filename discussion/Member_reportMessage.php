@@ -72,7 +72,7 @@ $environment = WEB;
     *******************************************************************************************************************************************************-->
     <br/><br/><br/>
     <div class='message-report'>
-      <form method='post' action='Member_reportMessage_process.php'>
+      <form method='post' action='Member_reportMessage.php'>
       Report:
       <select name='reportSelection'>
         <option value='sexual'>Sexual content</option>

@@ -48,12 +48,12 @@ $environment = WEB;
     </tr>
   </thead>
 
-  <?php
+<?php
     $sqlDiscussion = "SELECT discussion_thread.threadID, discussion_thread.threadName,
                      discussion_thread.threadDateTime, user.username
-              FROM discussion_thread
-              INNER JOIN user ON discussion_thread.userID = user.userID
-              ORDER BY discussion_thread.threadDateTime DESC";
+                    FROM discussion_thread
+                    INNER JOIN user ON discussion_thread.userID = user.userID
+                    ORDER BY discussion_thread.threadDateTime DESC";
 
     $result = mysqli_query($conn, $sqlDiscussion);
 
@@ -73,8 +73,7 @@ $environment = WEB;
 										while($row = mysqli_fetch_assoc($MsgResult)) {
 										    $SumOfMsg = $SumOfMsg +1;
 										}
-								}
-                // End calculate total message
+								}// End calculate total message
 
               echo
                   "<tbody>
@@ -86,12 +85,11 @@ $environment = WEB;
                         <td>$SumOfMsg</td>
                       </tr>
                     </tbody>";
-
               }
 
     }
     mysqli_close($conn);
-  ?>
+?>
 </table>
 </div>
 

@@ -50,7 +50,7 @@ function myFunction(msgID,threadID,userID) {
     }else{
       $.ajax({
               type: "POST",
-              url: "../discussion/Member_postMessage_process.php",
+              url: "../discussion/Member_replyMessage.php",
               data: { msgID : msgID, threadID : threadID, myReply : myReply, userID : userID} //pass data through this variable
             }).done(function( dataReturn ) {
                 alert(dataReturn);
@@ -164,11 +164,10 @@ function myFunction(msgID,threadID,userID) {
                 echo "<br/><br/><br/>";
           }
     }
-
 ?>
 </table>
 
-        <?php
+<?php
             //Validation - Only member can view "Post" textfield
             if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
             (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
@@ -228,7 +227,7 @@ function myFunction(msgID,threadID,userID) {
             </div>";
             }
         mysqli_close($conn);
-        ?>
+?>
 
 </div>
 </div>
