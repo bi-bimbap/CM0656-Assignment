@@ -38,6 +38,25 @@ $(document).ready(function() {
    }
  });
 
+ function previewFile(){
+   var preview = document.querySelector('#preview');
+   var file    = document.querySelector('input[type=file]').files[0];
+   var reader  = new FileReader();
+
+   reader.onloadend = function () {
+      preview.style.display='block';
+     preview.src = reader.result;
+   }
+
+   if (file) {
+     reader.readAsDataURL(file);
+   } else {
+     preview.src = "";
+   }
+ }
+
+ previewFile();  //calls the function named previewFile()
+
 });
 </script>
 
@@ -138,31 +157,14 @@ $('.form_datetime2').datetimepicker({
     startDate: dateToday
 });
 
-function previewFile(){
-  var preview = document.querySelector('#preview');
-  var file    = document.querySelector('input[type=file]').files[0];
-  var reader  = new FileReader();
-
-  reader.onloadend = function () {
-     preview.style.display='block';
-    preview.src = reader.result;
-  }
-
-  if (file) {
-    reader.readAsDataURL(file);
-  } else {
-    preview.src = "";
-  }
-}
-
-previewFile();  //calls the function named previewFile()
-
 </script>
 
 <?php
 if (isset($_POST['btnSubmit'])) { //Clicked on submit button
-  $fileStatus = false;
+  $fileStatus    = false;
   $auctionStatus = false;
+  $photoStatus   = false;
+  $coverStatus   = false;
 
   //Obtain user input
   $fileCount = count($_FILES['files']['name']);
@@ -224,7 +226,7 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
   $allowedExtension = array('jpg', 'jpeg', 'png');
   //Set allowed MIME type
   $allowedMime = array('image/jpg', 'image/jpeg', 'image/pjeg', 'image/png', 'image/x-png');
-  if(in_array($ext, $allowedExtension) && (in_array($_FILES['photo']['type'], $allowedMime))) { //Check for valid file extensions/MIME type & file size
+  if(in_array($extCover, $allowedExtension) && (in_array($_FILES['coverPhoto']['type'], $allowedMime))) { //Check for valid file extensions/MIME type & file size
     if (move_uploaded_file($_FILES["coverPhoto"]["tmp_name"], $target_file)) {
       $fileName = basename($_FILES["coverPhoto"]["name"]);
       $filePath = "CM0656-Assignment/uploads/" . basename($_FILES["files"]["name"]);
@@ -234,7 +236,10 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
       $stmtCoverPhoto = mysqli_prepare($conn, $uploadSQL) or die( mysqli_error($conn));
       mysqli_stmt_bind_param($stmtCoverPhoto, "ssss", $aucID, $fileName, $filePath, $fileType);
       mysqli_stmt_execute($stmtCoverPhoto);
-      mysqli_stmt_close($stmtCoverPhoto);
+      if (mysqli_stmt_affected_rows($stmtUploadFile) > 0) {
+        mysqli_stmt_close($stmtCoverPhoto);
+        $coverStatus = true;
+      }
     }
   }
   else {
@@ -254,10 +259,9 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
         $stmtUploadFile = mysqli_prepare($conn, $sqlUploadFile) or die( mysqli_error($conn));
         mysqli_stmt_bind_param($stmtUploadFile, "ssss", $aucID, $fileName, $filePath, $fileType);
         mysqli_stmt_execute($stmtUploadFile);
-
         if (mysqli_stmt_affected_rows($stmtUploadFile) > 0) {
           mysqli_stmt_close($stmtUploadFile);
-          $fileStatus = true;
+          $photoStatus = true;
         }
       }
       else {
@@ -290,7 +294,8 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
       }
     }
   }
-  if ($auctionStatus = true && $fileStatus) {
+
+  if ($auctionStatus = true && $fileStatus = true && $photoStatus = true && $coverStatus = true) {
     echo "<script>alert(\"Auction has been created succesfully!\");";
     echo "top.window.location='auctionList.php';</script>";
   }
