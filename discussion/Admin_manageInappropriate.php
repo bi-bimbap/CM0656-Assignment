@@ -19,8 +19,11 @@ $environment = WEB;
 <link rel="stylesheet" href="../css/parsley.css" />
 <link rel="stylesheet" href="../css/stylesheet.css" />
 <script src="../scripts/jquery.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="../scripts/parsley.min.js"></script>
-
+<div class="content">
+	<div class="container" style='text-align:Center'>
 <!--*******************************************************************************************************************************************************
       DISCUSSION BOARD : Create New Inappropriate Phrase Form
 *******************************************************************************************************************************************************-->
@@ -56,7 +59,7 @@ $environment = WEB;
               for($i=0; $i<$length; $i++){
                 $replacementWord.="*";
               }
-              echo $replacementWord;
+			  
               //Insert user's input into database
                 $sqlInappropriate = "INSERT INTO discussion_inappropriate (InappropriatePhrase, replacementWord)	VALUES (?,?)";
                 $stmtInappropriate = mysqli_prepare($conn, $sqlInappropriate) or die( mysqli_error($conn));
@@ -80,10 +83,10 @@ $environment = WEB;
       **********************************************************************************************************************************************************/
       echo"
       <div class='displayInappropriateInfo'>
-      <table id='tblInappropriateList' class='display' width='30%'>
+      <table id='tblInappropriateList' style='margin-right: auto;margin-left: auto;    text-align: left;'class='display'>
         <thead>
           <tr>
-            <th>Inappropriate Phrase</th>
+            <th><h3>Inappropriate Phrase</h3></th>
           </tr>
         </thead>";
 
@@ -116,7 +119,8 @@ $environment = WEB;
   mysqli_stmt_close($stmtDisplayInappropriate);
   mysqli_close($conn);
  ?>
-
+</div>
+</div>
 <?php
 echo makeFooter("../");
 echo makePageEnd();
