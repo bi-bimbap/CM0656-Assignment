@@ -161,7 +161,16 @@ $environment = WEB; //TODO: change to server
 									}
 								}
 							},
-							{ data: null, defaultContent: '<button id="btnDeleteAdmin">Delete</button>' }
+							{
+								mRender: function ( data, type, row ) {
+									if (row.userStatus != "banned") {
+										return '<button id="btnDeleteAdmin">Delete</button>';
+									}
+									else {
+										return '';
+									}
+								}
+							},
 						],
 						columnDefs: [
 							{
@@ -203,6 +212,7 @@ $environment = WEB; //TODO: change to server
 								else if (firstChar == "5") { //Unable to add new admin
 									alert(message);
 								}
+								tblAdminList.ajax.reload(); //Reload data table
 							}
 						});
 					});
@@ -477,8 +487,8 @@ $environment = WEB; //TODO: change to server
 								</div>
 
 								<div class="modal-footer">
-									<input type="submit" class="btn" id="btnCancelBanActive" data-dismiss="modal" name="btnCancelBanActive" value="Cancel" />
-									<input type="submit" class="btn btn-primary" id="btnBanActiveMember" name="btnBanActiveMember" value="Confirm" />
+									<input type="button" class="btn" id="btnCancelBanActive" data-dismiss="modal" name="btnCancelBanActive" value="Cancel" />
+									<input type="button" class="btn btn-primary" id="btnBanActiveMember" name="btnBanActiveMember" value="Confirm" />
 								</div>
 							</div>
 							<!-- End popup modal content -->
@@ -502,12 +512,12 @@ $environment = WEB; //TODO: change to server
 									<label id='lblEmail'></label>
 									<label id='lblUserID' hidden></label>
 									<label id='lblFullName' hidden></label>
-									<input type="text" class="form-control" id='txtEmail' name='txtEmail' value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>
+									<input type="text" class="form-control" id='txtEmail' name='txtEmail' value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled autofocus/>
 								</div>
 
 								<div class="modal-footer">
-									<input type="submit" class="btn" id="btnCancelEmail" data-dismiss="modal" name="btnCancelEmail" value="Cancel" />
-									<input type="submit" class="btn btn-primary" id="btnUpdateEmail" name="btnUpdateEmail" value="Confirm" />
+									<input type="button" class="btn" id="btnCancelEmail" data-dismiss="modal" name="btnCancelEmail" value="Cancel" />
+									<input type="button" class="btn btn-primary" id="btnUpdateEmail" name="btnUpdateEmail" value="Confirm" />
 								</div>
 							</div>
 							<!-- End popup modal content -->
