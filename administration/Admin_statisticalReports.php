@@ -13,6 +13,12 @@ echo makeHeader("Statistical Reports");
 $environment = WEB; //TODO: change to server
 ?>
 
+<?php //Only show content if user is logged in
+if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
+(isset($_SESSION['userType']) && $_SESSION['userType'] == "admin")) {
+  if (checkUserStatus($conn, $_SESSION['userID']) == "active") { //Only allow if user status is active
+  ?>
+
 <link href="../css/bootstrap.css" rel="stylesheet">
 <script src="../scripts/jquery.js"></script>
 <script src="../scripts/Chart.min.js"></script>
@@ -547,6 +553,22 @@ $(document).ready(function() {
   }).change(); //End ddlCompetition on change
 }); //End document.ready
 </script>
+
+<?php
+}
+else { //User has been banned; Redirect to home page
+setCookie(session_name(), "", time() - 1000, "/");
+$_SESSION = array();
+session_destroy();
+echo "<script>alert('You are not allowed here!')</script>";
+header("Refresh:0;url=../index.php");
+}
+}
+else { //Redirect user to home page
+echo "<script>alert('You are not allowed here!')</script>";
+header("Refresh:0;url=../index.php");
+}
+?>
 
 <?php
 echo makeFooter("../");

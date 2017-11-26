@@ -34,6 +34,7 @@ $environment = WEB; //TODO: change to server
 		<?php //Only show content to admin/main admin
 		if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
 		(isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
+			if (checkUserStatus($conn, $_SESSION['userID']) == "active") { //Only allow if user status is active
 			?>
 
 			<script>
@@ -515,9 +516,17 @@ $environment = WEB; //TODO: change to server
 
 			<?php
 		}
+		else { //User has been banned; Redirect to home page
+		  setCookie(session_name(), "", time() - 1000, "/");
+		  $_SESSION = array();
+		  session_destroy();
+		  echo "<script>alert('You are not allowed here!')</script>";
+		  header("Refresh:0;url=../index.php");
+		}
+		}
 		else { //Redirect user to home page
 			echo "<script>alert('You are not allowed here!')</script>";
-			header("Refresh:1;url=../index.php");
+			header("Refresh:0;url=../index.php");
 		}
 		?>
 	</div>
