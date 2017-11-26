@@ -61,11 +61,9 @@ $environment = WEB;
           $MsgContent= $rows['messageContent'];
           echo "</br>
                 <b>Reply Msg : $MsgContent </b> by $username - $MsgDateTime";
-
       }
     }
-
-    ?>
+?>
 
     <!--*******************************************************************************************************************************************************
           DISCUSSION BOARD : Report Message/Reply Form
@@ -108,7 +106,7 @@ $environment = WEB;
         }
 
         $sqlReport = "INSERT INTO report (contentID, userID, reportReason, reportFrom,contentType)
-                      VALUES ('$msgID','$postedUserID','$dropdown','$userID','discussion message')";
+                      VALUES ('$msgID','$postedUserID','$dropdown','$userID','discussion-message')";
 
         if (mysqli_query($conn, $sqlReport)) {
             echo "<script>alert('Your report has been posted!!!!')</script>";
@@ -124,6 +122,6 @@ $environment = WEB;
 ?>
 
 <?php
-    echo makeFooter("../");
-    echo makePageEnd();
+echo makeFooter("../");
+echo makePageEnd();
 ?>
