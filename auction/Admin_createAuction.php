@@ -201,7 +201,7 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
 
   $sqlCreateAuction = "INSERT INTO auction (auctionTitle, itemName, itemDesc, startDate, endDate, startPrice, itemPrice, auctionStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
   $stmtCreateAuction = mysqli_prepare($conn, $sqlCreateAuction) or die( mysqli_error($conn));
-  mysqli_stmt_bind_param($stmtCreateAuction, "sssssii", $aucTitle, $aucItem, $aucDesc, $aucStartDate, $aucEndDate, $aucStartPrice, $aucItemPrice, $aucStatus);
+  mysqli_stmt_bind_param($stmtCreateAuction, "sssssiis", $aucTitle, $aucItem, $aucDesc, $aucStartDate, $aucEndDate, $aucStartPrice, $aucItemPrice, $aucStatus);
   mysqli_stmt_execute($stmtCreateAuction);
   if (mysqli_stmt_affected_rows($stmtCreateAuction) > 0) {
     $auctionStatus = true;
@@ -229,14 +229,14 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
   if(in_array($extCover, $allowedExtension) && (in_array($_FILES['coverPhoto']['type'], $allowedMime))) { //Check for valid file extensions/MIME type & file size
     if (move_uploaded_file($_FILES["coverPhoto"]["tmp_name"], $target_file)) {
       $fileName = basename($_FILES["coverPhoto"]["name"]);
-      $filePath = "CM0656-Assignment/uploads/" . basename($_FILES["files"]["name"]);
+      $filePath = "CM0656-Assignment/uploads/" . basename($_FILES["coverPhoto"]["name"]);
       $fileType = 'coverPhoto';
 
       $uploadSQL = "INSERT INTO file (auctionID, fileName, filePath, fileType) VALUES (?, ?, ?, ?)";
       $stmtCoverPhoto = mysqli_prepare($conn, $uploadSQL) or die( mysqli_error($conn));
       mysqli_stmt_bind_param($stmtCoverPhoto, "ssss", $aucID, $fileName, $filePath, $fileType);
       mysqli_stmt_execute($stmtCoverPhoto);
-      if (mysqli_stmt_affected_rows($stmtUploadFile) > 0) {
+      if (mysqli_stmt_affected_rows($stmtCoverPhoto) > 0) {
         mysqli_stmt_close($stmtCoverPhoto);
         $coverStatus = true;
       }
@@ -295,9 +295,11 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
     }
   }
 
-  if ($auctionStatus = true && $fileStatus = true && $photoStatus = true && $coverStatus = true) {
+  if ($auctionStatus == true && $fileStatus == true && $photoStatus == true && $coverStatus == true) {
     echo "<script>alert(\"Auction has been created succesfully!\");";
     echo "top.window.location='auctionList.php';</script>";
+  } else {
+    echo "<script>alert(\"Failed to create auction! Auction: $auctionStatus, File: $fileStatus, Photo: $photoStatus, Cover: $coverStatus\");";
   }
   mysqli_close($conn);
 }

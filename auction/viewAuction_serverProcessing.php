@@ -55,15 +55,9 @@ if ($function == "placeBid") { //Place bid
         $auctionIDEncoded = urlencode(base64_encode($auctionID));
         $url = $environment."/CM0656-Assignment/auction/Member_viewAuction.php?auctionID=".$auctionIDEncoded;
         if ($bidAmt == $currentBid) { //notify highest bidder has been outbidded
-          if (sendBidUpdateEmail($email, $fullName, 'You have been outbidded on '.$aucTitle.'!', '../email/notifier_outbidded.html', $url, $bidAmount, $aucTitle)) { //Email sent
-            //testing purpose
-            echo json_encode("3Outbid email has been sent.");
-          }
+          sendBidUpdateEmail($email, $fullName, 'You have been outbidded on '.$aucTitle.'!', '../email/notifier_outbidded.html', $url, $bidAmount, $aucTitle);
         } else {
-          if (sendBidUpdateEmail($email, $fullName, 'New bid on '.$aucTitle.'!', '../email/notifier_bidUpdate.html', $url, $bidAmount, $aucTitle)) { //Email sent
-            //testing purpose
-            echo json_encode("4Bid update email has been sent.");
-          }
+          sendBidUpdateEmail($email, $fullName, 'New bid on '.$aucTitle.'!', '../email/notifier_bidUpdate.html', $url, $bidAmount, $aucTitle);
         }
       }
       mysqli_stmt_close($stmtBidderList);
@@ -80,10 +74,7 @@ if ($function == "placeBid") { //Place bid
         //encode variable to be used in url
         $auctionIDEncoded = urlencode(base64_encode($auctionID));
         $url = $environment."/CM0656-Assignment/auction/Member_viewAuction.php?auctionID=".$auctionIDEncoded;
-        if (sendBidUpdateEmail($email, $fullName, 'New bid on '.$aucTitle.'!', '../email/notifier_bidUpdate.html', $url, $bidAmount, $aucTitle)) { //Email sent
-          //testing purpose
-          echo json_encode("5Watchlist email has been sent.");
-        }
+        sendBidUpdateEmail($email, $fullName, 'New bid on '.$aucTitle.'!', '../email/notifier_bidUpdate.html', $url, $bidAmount, $aucTitle);
       }
       mysqli_stmt_close($stmtWatchList);
 

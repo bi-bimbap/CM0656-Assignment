@@ -120,22 +120,22 @@ $(document).ready(function() {
             var firstChar  = dataString.charAt(0);
             var message    = dataString.slice(1);
 
-            if (firstChar == "1") { //Email in use; Unable to add admin
+            if (firstChar == "1") {
               alert(message);
             }
-            else if (firstChar == "2") { //Admin successfully added
+            else if (firstChar == "2") {
               alert(message);
             }
-            else if (firstChar == "3") { //Failed to send email
+            else if (firstChar == "3") {
               alert(message);
             }
-            else if (firstChar == "4") { //Failed to add new admin
+            else if (firstChar == "4") {
               alert(message);
             }
-            else if (firstChar == "5") { //Unable to add new admin
+            else if (firstChar == "5") {
               alert(message);
             }
-            else if (firstChar == "6") { //Unable to add new admin
+            else if (firstChar == "6") { 
               alert(message);
             }
           }
@@ -190,6 +190,32 @@ $(document).ready(function() {
       }
     });
   });
+
+  $('#btnBuyItNow').on('click', function(e) { //Withdraw bid
+    var userID = <?php echo $_SESSION['userID']?>;
+    var aucID  = <?php echo $aucID?>;
+    if (confirm("Are you confirm to buy this item? Please note that we have strict rule for withdrawing bid.") == true) {
+      $.ajax({
+        url :"viewAuction_serverProcessing.php",
+        type: "POST",
+        data: "action=buyItNow&userID=" + userID + "&aucID=" + aucID,
+        success: function(data) {
+          var dataString = data;
+          var firstChar  = dataString.charAt(0);
+          var message    = dataString.slice(1);
+
+          if (firstChar == "1") { //Email in use; Unable to add admin
+            alert(message);
+          }
+          else if (firstChar == "2") { //Admin successfully added
+            alert(message);
+          }
+        }
+      });
+    }
+  });
+
+
 }); //end document ready
 </script>
 <?php
@@ -234,8 +260,11 @@ $(document).ready(function() {
         }
         echo "$bids bid(s)<br/>
         <input type=\"submit\" class=\"btn btn-primary\" id=\"btnPlaceBid\" name=\"btnPlaceBid\" value=\"Place bid\" />
-        <input type=\"submit\" class=\"btn btn-primary\" id=\"btnAddToWatch\" name=\"btnAddToWatch\" value=\"Add to Watch List\" />
-      </div>
+        <input type=\"submit\" class=\"btn btn-primary\" id=\"btnAddToWatch\" name=\"btnAddToWatch\" value=\"Add to Watch List\" />";
+        if ($aucItemPrice > 0) {
+          echo " <input type=\"submit\" class=\"btn btn-primary\" id=\"btnBuyItNow\" name=\"btnBuyItNow\" value=\"Buy It Now\" />";
+        }
+        echo "</div>
     </div>
     ";
 
