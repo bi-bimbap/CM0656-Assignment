@@ -1,5 +1,5 @@
 <?php
-ini_set("session.save_path", "");
+// ini_set("session.save_path", "");
 session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
@@ -43,15 +43,15 @@ function myFunction(msgID,threadID,userID) {
     var msgID = msgID;
     var threadID = threadID;
     var userID = userID;
-    var myReply = prompt("Reply to this Message?");
+    var replyMsg = prompt("Reply to this Message?");
 
-    if (myReply == null){
+    if (replyMsg == null){
     	alert("Empty reply....");
     }else{
       $.ajax({
               type: "POST",
               url: "../discussion/Member_replyMessage.php",
-              data: { msgID : msgID, threadID : threadID, myReply : myReply, userID : userID} //pass data through this variable
+              data: { msgID : msgID, threadID : threadID, replyMsg : replyMsg, userID : userID} //pass data through this variable
             }).done(function( dataReturn ) {
                 alert(dataReturn);
                 location.reload();
@@ -121,11 +121,11 @@ function myFunction(msgID,threadID,userID) {
               if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
               (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
                   echo
-                  "<form method='post' action='Member_reportMessage_process.php'>
+                  "<form method='post' action='Member_reportMessage.php'>
                     <input type='hidden' name='msgID' value='$messageID'>
                     <input type='hidden' name='threadID' value='$threadID'>
                     <input type='hidden' name='PostedUserID' value='$userID'>
-                    <input type='button' value='ReportMsg' name='ReportMsg' />
+                    <input type='submit' value='ReportMsg' name='ReportMsg' />
                   </form>";
               }
               /*****************************************************************************************************************************************************
@@ -153,17 +153,17 @@ function myFunction(msgID,threadID,userID) {
                     echo "</br>$spacing
                           <b>Reply Msg : $MsgContent </b> by $username - $MsgDateTime";
                           /*****************************************************************************************************************************************************
-                                        DISCUSSION BOARD: (REPORT REPLY MESSAGE) Display "Report" button
+                                        DISCUSSION BOARD: (REPORT REPLY MESSAGE) Display "Report" submit
                           *******************************************************************************************************************************************************/
-                          //Validation - Only member can view "Report" button
+                          //Validation - Only member can view "Report" submit
                           if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
                           (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
                               echo
-                              "<form method='post' action='Member_reportMessage_process.php'>
+                              "<form method='post' action='Member_reportMessage.php'>
                                 <input type='hidden' name='msgID' value='$messageID'>
                                 <input type='hidden' name='threadID' value='$threadID'>
                                 <input type='hidden' name='PostedUserID' value='$userID'>
-                                <input type='button' value='ReportReply' name='ReportMsg' />
+                                <input type='submit' value='ReportReply' name='ReportMsg' />
                               </form>";
                           }
                 }
@@ -172,7 +172,7 @@ function myFunction(msgID,threadID,userID) {
               if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
               (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
                 echo '<br/>'.$spacing.'
-                <input type="button" class="submitLink" value="Reply" onclick="myFunction('. $messageID .','. $threadID.','. $_SESSION['userID'].')">';
+                <input type="submit" class="submitLink" value="Reply" onclick="myFunction('. $messageID .','. $threadID.','. $_SESSION['userID'].')">';
               }
                 echo "<br/><br/><br/>";
           }

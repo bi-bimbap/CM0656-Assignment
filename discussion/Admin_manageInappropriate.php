@@ -1,5 +1,5 @@
 <?php
-ini_set("session.save_path", "");
+// ini_set("session.save_path", "");
 session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
@@ -11,9 +11,6 @@ echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
 echo makeProfileButton("../");
 echo makeNavMenu("../");
 echo makeHeader("Create Inappropriate Phrase");
-$_SESSION['userID'] = '3'; //TODO: Remove
-$_SESSION['userType'] = 'mainAdmin'; //TODO: Remove
-$_SESSION['logged-in'] = true; //TODO: Remove
 $environment = WEB;
 ?>
 <!-- CSS style -->
@@ -53,11 +50,17 @@ $environment = WEB;
 
               //Sanitize user input
               $inappropriate_phrase = filter_var($inappropriate_phrase, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+              $length = strlen($inappropriate_phrase);
+              $replacementWord = "";
 
+              for($i=0; $i<$length; $i++){
+                $replacementWord.="*";
+              }
+              echo $replacementWord;
               //Insert user's input into database
-                $sqlInappropriate = "INSERT INTO discussion_inappropriate (InappropriatePhrase)	VALUES (?)";
+                $sqlInappropriate = "INSERT INTO discussion_inappropriate (InappropriatePhrase, replacementWord)	VALUES (?,?)";
                 $stmtInappropriate = mysqli_prepare($conn, $sqlInappropriate) or die( mysqli_error($conn));
-                mysqli_stmt_bind_param($stmtInappropriate, 's', $inappropriate_phrase);
+                mysqli_stmt_bind_param($stmtInappropriate, 'ss', $inappropriate_phrase, $replacementWord);
                 mysqli_stmt_execute($stmtInappropriate);
 
               	if (mysqli_stmt_affected_rows($stmtInappropriate) > 0) {
