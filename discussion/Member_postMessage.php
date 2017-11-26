@@ -11,9 +11,6 @@ echo "<form method='post'>" . makeLoginLogoutBtn("") . "</form>";
 echo makeProfileButton("../");
 echo makeNavMenu("../");
 $environment = WEB;
-$_SESSION['userID'] = '1'; //TODO: Remove
-$_SESSION['userType'] = 'senior'; //TODO: Remove
-$_SESSION['logged-in'] = true; //TODO: Remove
 ?>
 <!-- CSS style -->
 <link rel='stylesheet' href='../css/bootstrap.css' />
