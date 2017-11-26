@@ -184,11 +184,12 @@ $(document).ready(function() {
   $('#btnBuyItNow').on('click', function(e) { //Withdraw bid
     var userID = <?php echo $_SESSION['userID']?>;
     var aucID  = <?php echo $aucID?>;
+    var itemPrice = <?php echo $aucItemPrice?>;
     if (confirm("Are you confirm to buy this item? Please note that we have strict rule for withdrawing bid.") == true) {
       $.ajax({
         url :"viewAuction_serverProcessing.php",
         type: "POST",
-        data: "action=buyItNow&userID=" + userID + "&aucID=" + aucID,
+        data: "action=buyItNow&userID=" + userID + "&aucID=" + aucID + "&itemPrice=" + itemPrice,
         success: function(data) {
           var dataString = data;
           var firstChar  = dataString.charAt(0);
@@ -197,7 +198,7 @@ $(document).ready(function() {
           if (firstChar == "1") {
             alert(message);
           }
-          else if (firstChar == "2") { 
+          else if (firstChar == "2") {
             alert(message);
           }
         }

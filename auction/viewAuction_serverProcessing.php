@@ -69,7 +69,7 @@ if ($function == "placeBid") { //Place bid
       $stmtWatchList = mysqli_prepare($conn, $sqlWatchList) or die( mysqli_error($conn));
       mysqli_stmt_bind_param($stmtWatchList, "i", $aucID);
       mysqli_stmt_execute($stmtWatchList);
-      mysqli_stmt_bind_result($stmtWatchList, $email, $fullName, $bidAmt);
+      mysqli_stmt_bind_result($stmtWatchList, $email, $fullName);
       while (mysqli_stmt_fetch($stmtWatchList)){
         //encode variable to be used in url
         $auctionIDEncoded = urlencode(base64_encode($auctionID));
@@ -244,8 +244,8 @@ else if ($function == "withdrawBid") { //withdraw bid
       mysqli_stmt_bind_param($stmtUpdateCurrentBid, "ii", $alternateBid, $aucID);
       mysqli_stmt_execute($stmtUpdateCurrentBid);
       if (mysqli_stmt_affected_rows($stmtUpdateCurrentBid) > 0) {
-        //notify bidder
-        $sqlBidderList = "SELECT DISTINCT u.emailAddr, u.fullName, b.bidAmount FROM user u JOIN bid b ON u.userID = b.userID WHERE b.auctionID = ? AND b.bidStatus = 'active'";
+        //notify bidder "attention for the max bid amount"
+        $sqlBidderList = "SELECT DISTINCT u.emailAddr, u.fullName, MAX(b.bidAmount) FROM user u JOIN bid b ON u.userID = b.userID WHERE b.auctionID = ? AND b.bidStatus = 'active'";
         $stmtBidderList = mysqli_prepare($conn, $sqlBidderList) or die( mysqli_error($conn));
         mysqli_stmt_bind_param($stmtBidderList, "i", $aucID);
         mysqli_stmt_execute($stmtBidderList);
@@ -265,6 +265,98 @@ else if ($function == "withdrawBid") { //withdraw bid
       }
     }
   }
+  mysqli_close($conn);
+}
+else if ($function == "buyItNow") { //buy the item with specific price
+  $userID = filter_has_var(INPUT_POST, 'userID') ? $_POST['userID']: null;
+  $userID = trim($userID);
+  $userID = filter_var($userID, FILTER_SANITIZE_STRING);
+
+  $aucID = filter_has_var(INPUT_POST, 'aucID') ? $_POST['aucID']: null;
+  $aucID = trim($aucID);
+  $aucID = filter_var($aucID, FILTER_SANITIZE_STRING);
+
+  $itemPrice = filter_has_var(INPUT_POST, 'itemPrice') ? $_POST['itemPrice']: null;
+  $itemPrice = trim($itemPrice);
+  $itemPrice = filter_var($itemPrice, FILTER_SANITIZE_STRING);
+
+  $bidDateTime = date('Y-m-d H:i:s');
+  $aucStatus = 'ended';
+  //Update auction status as ended
+  $sqlUpdateAucStatus = "UPDATE auction SET auctionStatus = ? WHERE auctionID = ?";
+  $stmtUpdateAucStatus = mysqli_prepare($conn, $sqlUpdateAucStatus) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmtUpdateAucStatus, "si", $aucStatus, $aucID);
+  mysqli_stmt_execute($stmtUpdateAucStatus);
+  mysqli_stmt_close($stmtUpdateAucStatus);
+
+  $bidStatus = 'buyItNow';
+  //insert to bid table
+  $sqlInsertBid = "INSERT INTO bid (userID,auctionID,bidAmount,bidStatus,bidTime) VALUES (?,?,?,?,?)";
+  $stmtInsertBid = mysqli_prepare($conn, $sqlInsertBid) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmtInsertBid, "iiiss", $userID, $aucID, $itemPrice, $bidStatus, $bidDateTime);
+  mysqli_stmt_execute($stmtInsertBid);
+  mysqli_stmt_close($stmtInsertBid);
+
+  //pull bid amount and ID
+  $sqlBidInfo = "SELECT bidID,bidAmount FROM bid WHERE auctionID = ? AND bidStatus = 'buyItNow'";
+  $stmtBidInfo = mysqli_prepare($conn, $sqlBidInfo) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmtBidInfo, "i", $aucID);
+  mysqli_stmt_execute($stmtBidInfo);
+  mysqli_stmt_bind_result($stmtBidInfo, $bidID, $payAmount);
+  mysqli_stmt_fetch($stmtBidInfo);
+  mysqli_stmt_close($stmtBidInfo);
+
+  $paymentStatus = 'pending';
+  //insert to payment table
+  $sqlInsertPayment = "INSERT INTO payment (auctionID,bidID,paymentStatus) VALUES (?,?,?)";
+  $stmtInsertPayment = mysqli_prepare($conn, $sqlInsertPayment) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmtInsertPayment, "iiiss", $aucID, $bidID, $paymentStatus);
+  mysqli_stmt_execute($stmtInsertPayment);
+  mysqli_stmt_close($stmtInsertPayment);
+
+  //pull Auction title
+  $sqlAucTitle = "SELECT auctionTitle FROM auction WHERE auctionID = ?";
+  $stmtAucTitle = mysqli_prepare($conn, $sqlAucTitle) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmtAucTitle, "i", $aucID);
+  mysqli_stmt_execute($stmtAucTitle);
+  mysqli_stmt_bind_result($stmtAucTitle, $aucTitle);
+  mysqli_stmt_fetch($stmtAucTitle);
+  mysqli_stmt_close($stmtAucTitle);
+
+  //notify the winning bidder
+  $sqlWinningBidder = "SELECT DISTINCT emailAddr, fullName FROM user WHERE userID = ?";
+  $stmtWinningBidder = mysqli_prepare($conn, $sqlWinningBidder) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmtWinningBidder, "i", $userID);
+  mysqli_stmt_execute($stmtWinningBidder);
+  mysqli_stmt_bind_result($stmtWinningBidder, $email, $fullName);
+  mysqli_stmt_fetch($stmtWinningBidder);
+  mysqli_stmt_close($stmtWinningBidder);
+  sendPaymentEmail($email, $fullName, 'Congratulation on winning the item on'.$aucTitle.'!', '../email/notifier_paymentInfo.html', $aucTitle, $aucID, $itemPrice); //Email sent
+
+  //notify the bidders auction has ended
+  $sqlBidderList = "SELECT DISTINCT u.emailAddr, u.fullName FROM user u JOIN bid b ON u.userID = b.userID WHERE b.auctionID = ? AND b.bidStatus = 'active'";
+  $stmtBidderList = mysqli_prepare($conn, $sqlBidderList) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmtBidderList, "i", $aucID);
+  mysqli_stmt_execute($stmtBidderList);
+  mysqli_stmt_bind_result($stmtBidderList, $bidEmail, $bidFullName);
+  while (mysqli_stmt_fetch($stmtBidderList)) {
+    sendAuctionEndEmail($bidEmail, $bidFullName, ' '.$aucTitle.'has ended!', '../email/notifier_auctionEnd.html', $aucTitle); //Email sent
+  }
+  mysqli_stmt_close($stmtBidderList);
+
+  //notify the watchlist member
+  $sqlWatchList = "SELECT u.emailAddr, u.fullName FROM watchlist w
+                          JOIN user u ON w.userID = u.userID
+                          WHERE w.auctionID = ?";
+  $stmtWatchList = mysqli_prepare($conn, $sqlWatchList) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmtWatchList, "i", $aucID);
+  mysqli_stmt_execute($stmtWatchList);
+  mysqli_stmt_bind_result($stmtWatchList, $watchEmail, $watchFullName);
+  while (mysqli_stmt_fetch($stmtWatchList)) {
+    sendAuctionEndEmail($watchEmail, $watchFullName, ' '.$aucTitle.'has ended!', '../email/notifier_auctionEnd.html', $aucTitle); //Email sent
+  }
+  mysqli_stmt_close($stmtWatchList);
+  echo json_encode("You have successfully bought the item. An email has been sent to your inbox with the bank transfer info. Please proceed to the \"Payment\" page to upload your payment receipt once you have made your payment.");
   mysqli_close($conn);
 }
 ?>

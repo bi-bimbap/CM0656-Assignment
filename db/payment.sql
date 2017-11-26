@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 26, 2017 at 09:28 AM
+-- Generation Time: Nov 26, 2017 at 10:22 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.0.15
 
@@ -28,8 +28,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `payment` (
   `paymentID` int(10) NOT NULL,
-  `userID` int(10) NOT NULL,
-  `paymentFile` varchar(255) NOT NULL,
+  `auctionID` int(10) NOT NULL,
+  `bidID` int(10) NOT NULL,
+  `paymentFile` varchar(255) DEFAULT NULL,
   `paymentStatus` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -51,7 +52,7 @@ ALTER TABLE `payment`
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `paymentID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `paymentID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
