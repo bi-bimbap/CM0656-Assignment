@@ -465,7 +465,7 @@ ALTER TABLE `bid`
 --
 -- Indexes for table `comment`
 --
-ALTER TABLE `comment`
+ALTER TABLE `album_comment`
   ADD PRIMARY KEY (`commentID`);
 
 --
@@ -525,7 +525,7 @@ ALTER TABLE `payment`
 --
 -- Indexes for table `photo`
 --
-ALTER TABLE `photo`
+ALTER TABLE `album_photo`
   ADD PRIMARY KEY (`photoID`);
 
 --
