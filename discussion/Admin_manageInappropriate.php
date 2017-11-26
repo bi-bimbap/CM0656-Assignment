@@ -11,6 +11,9 @@ echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
 echo makeProfileButton("../");
 echo makeNavMenu("../");
 echo makeHeader("Create Inappropriate Phrase");
+$_SESSION['userID'] = '3'; //TODO: Remove
+$_SESSION['userType'] = 'mainAdmin'; //TODO: Remove
+$_SESSION['logged-in'] = true; //TODO: Remove
 $environment = WEB;
 ?>
 <!-- CSS style -->
@@ -63,9 +66,7 @@ $environment = WEB;
                 else {
               		echo "<script>alert('Failed to add! Try Again!')</script>";
               	}
-
                 mysqli_stmt_close($stmtInappropriate);
-                mysqli_close($conn);
 
                 //validation: Prevent Resubmit Users' Previous Input Data
                 clearstatcache();
@@ -83,11 +84,11 @@ $environment = WEB;
           </tr>
         </thead>";
 
-          $sqlDisplayInappropriate = "SELECT * FROM discussion_inappropriate ORDER BY inappropriatePhrase ASC";
+          $sqlDisplayInappropriate = "SELECT inappropriatePhrase FROM discussion_inappropriate ORDER BY inappropriatePhrase ASC";
 
           $stmtDisplayInappropriate = mysqli_prepare($conn, $sqlDisplayInappropriate) or die( mysqli_error($conn));
           mysqli_stmt_execute($stmtDisplayInappropriate);
-          mysqli_stmt_bind_result($stmtDisplayInappropriate, $inappropriatePhraseID, $inappropriatePhrase);
+          mysqli_stmt_bind_result($stmtDisplayInappropriate, $inappropriatePhrase);
           while (mysqli_stmt_fetch($stmtDisplayInappropriate)) {
               echo"
                   <tbody>
@@ -109,6 +110,8 @@ $environment = WEB;
     echo 'window.location.href="'.$url.'";';
     echo "</script>";
   }
+  mysqli_stmt_close($stmtDisplayInappropriate);
+  mysqli_close($conn);
  ?>
 
 <?php
