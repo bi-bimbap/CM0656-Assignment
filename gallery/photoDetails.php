@@ -60,7 +60,9 @@
 				
 				
 			
-				echo "
+				echo "<a class='various' data-fancybox-type='iframe' href='reportPhoto.php?photoID={$Detail['photoID']}&baduser={$Detail['userID']}' id='report'>
+							<i class='fa fa-exclamation-circle'></i><span id='report'>Report</span>
+						</a>
 					</div>
 					<div class='right'>";
 					
@@ -93,7 +95,7 @@
 									echo  "<div><span id='commentUser'>{$ususer1['username']} :</span>
 									<span id='comment'>{$CoComment['commentDescription']}</span>
 									
-									<a class='various' data-fancybox-type='iframe' href='reportComment.php?commentID={$CoComment['commentID']}&baduser={$CoComment['userID']}' id='report'><i class='fa fa-exclamation-circle'></i>Report</a>
+									<a class='various' data-fancybox-type='iframe' href='reportComment.php?commentID={$CoComment['commentID']}&baduser={$CoComment['userID']}' id='report'><i class='fa fa-exclamation-circle'></i><span id='report'>Report</span></a>
 									<span id='time'>".humanTiming($commentTime)." ago</span></div>";
 								};
 								
