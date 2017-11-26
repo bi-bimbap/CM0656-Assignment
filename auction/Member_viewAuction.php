@@ -13,16 +13,15 @@ if(isset($_GET['aucID'])){
 
 //Pull auction info from database
 $sqlAuctionInfo = "SELECT auction.auctionID, auction.auctionTitle, auction.itemName, auction.itemDesc, auction.startDate,auction.endDate,
-                          auction.startPrice, auction.itemPrice, auction.currentBid, COUNT(bid.bidID)
-                          FROM auction LEFT JOIN bid ON auction.auctionID = bid.auctionID
-                          WHERE auction.auctionID = ? GROUP BY auction.auctionID";
+                          auction.startPrice, auction.itemPrice, auction.currentBid, COUNT(bid.bidID), file.filePath
+                          FROM auction LEFT JOIN bid ON auction.auctionID = bid.auctionID JOIN file ON auction.auctionID = file.auctionID
+                          WHERE auction.auctionID = ? AND file.fileType = 'coverPhoto' GROUP BY auction.auctionID";
 $stmtAuctionInfo = mysqli_prepare($conn, $sqlAuctionInfo) or die( mysqli_error($conn));
 mysqli_stmt_bind_param($stmtAuctionInfo, "i", $aucID);
 mysqli_stmt_execute($stmtAuctionInfo);
-mysqli_stmt_bind_result($stmtAuctionInfo, $aucID, $aucTitle, $aucItem, $aucDesc, $aucStartDate, $aucEndDate, $aucStartPrice, $aucItemPrice, $aucCurrentBid, $bids);
+mysqli_stmt_bind_result($stmtAuctionInfo, $aucID, $aucTitle, $aucItem, $aucDesc, $aucStartDate, $aucEndDate, $aucStartPrice, $aucItemPrice, $aucCurrentBid, $bids, $coverPhoto);
 mysqli_stmt_fetch($stmtAuctionInfo);
 mysqli_stmt_close($stmtAuctionInfo);
-
 
 //Pull current active bidders from database
 $sqlActiveBidder = "SELECT COUNT(DISTINCT userID)
@@ -53,15 +52,6 @@ mysqli_stmt_execute($stmtCheckUserBid);
 mysqli_stmt_bind_result($stmtCheckUserBid, $testingBidCount);
 mysqli_stmt_fetch($stmtCheckUserBid);
 mysqli_stmt_close($stmtCheckUserBid);
-
-//Pull bidding history
-$sqlBidHistory = "SELECT b.bidAmount, b.bidTime, b.userID, u.username
-                          FROM bid b JOIN user u ON b.userID = u.userID WHERE b.auctionID = ? AND b.bidStatus ='active'
-                          ORDER BY bidTime DESC";
-$stmtBidHistory = mysqli_prepare($conn, $sqlBidHistory) or die( mysqli_error($conn));
-mysqli_stmt_bind_param($stmtBidHistory, "i", $aucID);
-mysqli_stmt_execute($stmtBidHistory);
-mysqli_stmt_bind_result($stmtBidHistory, $bidAmount, $bidTime, $bidUser, $username);
 
 //Only show content if user is logged in & is senior
 $_SESSION['userID'] = '1'; //TODO: Remove session
@@ -135,7 +125,7 @@ $(document).ready(function() {
             else if (firstChar == "5") {
               alert(message);
             }
-            else if (firstChar == "6") { 
+            else if (firstChar == "6") {
               alert(message);
             }
           }
@@ -159,10 +149,10 @@ $(document).ready(function() {
         var firstChar  = dataString.charAt(0);
         var message    = dataString.slice(1);
 
-        if (firstChar == "1") { //Email in use; Unable to add admin
+        if (firstChar == "1") {
           alert(message);
         }
-        else if (firstChar == "2") { //Admin successfully added
+        else if (firstChar == "2") {
           alert(message);
         }
       }
@@ -181,10 +171,10 @@ $(document).ready(function() {
         var firstChar  = dataString.charAt(0);
         var message    = dataString.slice(1);
 
-        if (firstChar == "1") { //Email in use; Unable to add admin
+        if (firstChar == "1") {
           alert(message);
         }
-        else if (firstChar == "2") { //Admin successfully added
+        else if (firstChar == "2") {
           alert(message);
         }
       }
@@ -204,10 +194,10 @@ $(document).ready(function() {
           var firstChar  = dataString.charAt(0);
           var message    = dataString.slice(1);
 
-          if (firstChar == "1") { //Email in use; Unable to add admin
+          if (firstChar == "1") {
             alert(message);
           }
-          else if (firstChar == "2") { //Admin successfully added
+          else if (firstChar == "2") { 
             alert(message);
           }
         }
@@ -229,44 +219,70 @@ $(document).ready(function() {
 
   $minutes = floor($seconds / 60);
   $seconds %= 60;
-
     echo "
-    <div id=\"auctionInfo\" class=\"media\">
-      <div class=\"media-left media-middle\">
-        <a href=\"#\">
-          <img class=\"media-object\" src=\"...\" alt=\"...\">
-        </a>
-      </div>
-      <div class=\"media-body\">
-        Item Name: $aucItem <br/>
-        Item Description: $aucDesc <br/>";
-        $startDatetime = date_create($aucStartDate);
-        $endDatetime = date_create($aucEndDate);
-        echo "Start Date: ".date_format($startDatetime, 'd M Y h:i:s A')."<br/>End Date: ".date_format($endDatetime, 'd M Y h:i:s A')."<br/>";
-        if ($aucItemPrice > 0) {
-          echo "Item Price: $aucItemPrice<br/>";
-        }
-        if ($aucCurrentBid > 0) {
-          echo "Currend Bid: $aucCurrentBid<br/>";
-        } else {
-          echo "Start Price: $aucStartPrice<br/><br/>";
-        }
-        if ($days == 0) {
-          echo "Time Left: $hours hours and $minutes minutes<br/>";
-        } else if ($days == 0 && $hours == 0 ) {
-          echo "Time Left: $minutes minutes<br/>";
-        } else {
-          echo "Time Left: $days days and $hours hours and $minutes minutes<br/>";
-        }
-        echo "$bids bid(s)<br/>
-        <input type=\"submit\" class=\"btn btn-primary\" id=\"btnPlaceBid\" name=\"btnPlaceBid\" value=\"Place bid\" />
-        <input type=\"submit\" class=\"btn btn-primary\" id=\"btnAddToWatch\" name=\"btnAddToWatch\" value=\"Add to Watch List\" />";
-        if ($aucItemPrice > 0) {
-          echo " <input type=\"submit\" class=\"btn btn-primary\" id=\"btnBuyItNow\" name=\"btnBuyItNow\" value=\"Buy It Now\" />";
-        }
-        echo "</div>
-    </div>
+    <div id=\"auctionInfo\">
+      <div class=\"media\">
+        <div class=\"media-left media-middle\">
+          <a href=\"#\">
+            <img class=\"media-object\" src=\"$environment/$coverPhoto\" alt=\"...\" height=\"200px\" width=\"150px\">
+          </a>
+        </div>
+        <div class=\"media-body\">
+          Item Name: $aucItem <br/>
+          Item Description: $aucDesc <br/>";
+          $startDatetime = date_create($aucStartDate);
+          $endDatetime = date_create($aucEndDate);
+          echo "Start Date: ".date_format($startDatetime, 'd M Y h:i:s A')."<br/>End Date: ".date_format($endDatetime, 'd M Y h:i:s A')."<br/>";
+          if ($aucItemPrice > 0) {
+            echo "Item Price: $aucItemPrice<br/>";
+          }
+          if ($aucCurrentBid > 0) {
+            echo "Currend Bid: $aucCurrentBid<br/>";
+          } else {
+            echo "Start Price: $aucStartPrice<br/><br/>";
+          }
+
+          if ($days == 0) {
+            echo "Time Left: $hours hours and $minutes minutes<br/>";
+          } else if ($days == 0 && $hours == 0 ) {
+            echo "Time Left: $minutes minutes<br/>";
+          } else {
+            echo "Time Left: $days days and $hours hours and $minutes minutes<br/>";
+          }
+          echo "
+          <input type=\"submit\" class=\"btn btn-primary\" id=\"btnPlaceBid\" name=\"btnPlaceBid\" value=\"Place bid\" /> $bids bid(s)<br/><br/>
+          <input type=\"submit\" class=\"btn btn-primary\" id=\"btnAddToWatch\" name=\"btnAddToWatch\" value=\"Add to Watch List\" />";
+          if ($aucItemPrice > 0) {
+            echo " <input type=\"submit\" class=\"btn btn-primary\" id=\"btnBuyItNow\" name=\"btnBuyItNow\" value=\"Buy It Now\" />";
+          }
+      echo "</div>
+      </div>";
+          $sqlSelectPhotos = "SELECT filePath FROM file WHERE fileType = 'itemPhoto' AND auctionID = ?";
+          $stmtSelectPhotos = mysqli_prepare($conn, $sqlSelectPhotos) or die( mysqli_error($conn));
+          mysqli_stmt_bind_param($stmtSelectPhotos, "i", $aucID);
+          mysqli_stmt_execute($stmtSelectPhotos);
+          mysqli_stmt_bind_result($stmtSelectPhotos, $photoPath);
+            echo "Item Photos: <br/>";
+            while (mysqli_stmt_fetch($stmtSelectPhotos)) {
+              echo "<img src=\"$environment/$photoPath\" alt=\"...\" height=\"200px\" width=\"150px\"> ";
+            }
+          mysqli_stmt_close($stmtSelectPhotos);
+          echo "<br/>";
+
+          $sqlSelectArticles = "SELECT fileName, filePath FROM file WHERE fileType = 'article' AND auctionID = ?";
+          $stmtSelectArticles = mysqli_prepare($conn, $sqlSelectArticles) or die( mysqli_error($conn));
+          mysqli_stmt_bind_param($stmtSelectArticles, "i", $aucID);
+          mysqli_stmt_execute($stmtSelectArticles);
+          mysqli_stmt_bind_result($stmtSelectArticles, $articleName, $articlePath);
+            echo "Articles: <br/>";
+            while (mysqli_stmt_fetch($stmtSelectArticles)) {
+              echo "<a href=\"$environment/$articlePath\">$articleName</a><br/> ";
+            }
+          mysqli_stmt_close($stmtSelectArticles);
+    echo "</div>
     ";
+
+
 
     echo "
     <div id=\"biddingHistory\">
@@ -284,6 +300,14 @@ $(document).ready(function() {
           <th>Bidder</th>
           <th>Bid Amount</th>
           <th>Bid Time</th>";
+          //Pull bidding history
+          $sqlBidHistory = "SELECT b.bidAmount, b.bidTime, b.userID, u.username
+                                    FROM bid b JOIN user u ON b.userID = u.userID WHERE b.auctionID = ? AND b.bidStatus ='active'
+                                    ORDER BY bidTime DESC";
+          $stmtBidHistory = mysqli_prepare($conn, $sqlBidHistory) or die( mysqli_error($conn));
+          mysqli_stmt_bind_param($stmtBidHistory, "i", $aucID);
+          mysqli_stmt_execute($stmtBidHistory);
+          mysqli_stmt_bind_result($stmtBidHistory, $bidAmount, $bidTime, $bidUser, $username);
           while (mysqli_stmt_fetch($stmtBidHistory)){
             if ($bidUser == $_SESSION['userID']) {
               echo "<tr>
@@ -313,10 +337,6 @@ $(document).ready(function() {
   echo "Sorry you have no permission to access to this page.";
 }
 
-?>
-
-
-<?php
 mysqli_close($conn);
 //} //for ajax, close
 echo makeFooter("../");
