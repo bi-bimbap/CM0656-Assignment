@@ -73,10 +73,10 @@ function makeNavMenu($prefix) {
   $navBar = '
   <nav><ul>
   <li><a href="' . $prefix . 'index.php">Home</a></li>
-  <li><a href="' . $prefix . 'auctionList.php">Auction</a></li>
-  <li><a href="' . $prefix . 'album.php">Gallery</a></li>
-  <li><a href="' . $prefix . 'discussion_index.php">Discussion Board</a></li>
-  <li><a href="' . $prefix . 'Member_joinCompetition.php">Competition</a></li>
+  <li><a href="' . $prefix . 'auction/auctionList.php">Auction</a></li>
+  <li><a href="' . $prefix . 'gallery/album.php">Gallery</a></li>
+  <li><a href="' . $prefix . 'discussion/discussion_index.php">Discussion Board</a></li>
+  <li><a href="' . $prefix . 'competition/Member_joinCompetition.php">Competition</a></li>
   </ul></nav></div></div>';
 
   return $navBar;
