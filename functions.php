@@ -1,4 +1,5 @@
 <?php
+include_once 'db/database_conn.php';
 include 'email/PHPMailerAutoload.php';
 
 function sendEmail($recipientEmail, $recipientName, $subject, $body, $url) {
@@ -97,6 +98,18 @@ function sendBidUpdateEmail($recipientEmail, $recipientName, $subject, $body, $u
       //echo 'Message has been sent';
       return true;
   }
+}
+
+function checkUserStatus($conn, $userID) { //Check if user status is active
+  $detailsSQL = "SELECT userStatus FROM user WHERE userID = ?";
+  $stmt = mysqli_prepare($conn, $detailsSQL) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmt, "s", $userID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_bind_result($stmt, $userStatus);
+  mysqli_stmt_fetch($stmt);
+  mysqli_stmt_close($stmt);
+
+  return $userStatus;
 }
 
 //sendEmail("seahjm96@gmail.com", "Seah Jia-Min", 'Please Verify Your Email Address', 'email/notifier_verifyEmail.html', 'www.google.com');
