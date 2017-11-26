@@ -1,4 +1,3 @@
-<!-- TODO: Focus on input in popup modal when open -->
 <!-- TODO: Feature to allow mainAdmin to bring back removed admin (Consider scenario where he/she remove pending admin, if bring back how to do?) -->
 <?php
 // ini_set("session.save_path", ""); //TODO: comment out
@@ -20,24 +19,19 @@ $environment = WEB; //TODO: change to server
 <link href="../css/bootstrap.css" rel="stylesheet">
 <script src="../scripts/jquery.js"></script>
 <script src="../scripts/bootstrap.min.js"></script>
+<!-- <script src="../scripts/jquery.js"></script> -->
 <script src="../scripts/jquery.dataTables.min.js"></script>
-<script src="scripts/jquery.js"></script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
-<script src="scripts/parsley.min.js"></script>
-<link rel="stylesheet" href="../css/parsley.css" type="text/css" />
 <link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
-<link href="../css/bootstrap.css" rel="stylesheet">
-<script src="scripts/bootstrap.min.js"></script>
+<!-- <link href="../css/bootstrap.css" rel="stylesheet"> -->
+<!-- <script src="../scripts/bootstrap.min.js"></script> -->
 
 <div class="content">
 	<div class="container">
 		<?php //Only show content to admin/main admin
-		// $_SESSION['userID'] = '3'; //TODO: Remove
-		// $_SESSION['userType'] = 'mainAdmin'; //TODO: Remove
-		// $_SESSION['logged-in'] = true; //TODO: Remove
 		if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
 		(isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
 			?>
@@ -64,26 +58,29 @@ $environment = WEB; //TODO: change to server
 					$("#modalReasonConfirmation").find('.modal-body #lblReason').text('Reason for banning ' + data["username"] + ":");
 					$("#modalReasonConfirmation").find('.modal-body #lblActiveUsername').text(data["username"]); //Hidden label; For ajax use when btnBanMember onclick
 					$("#modalReasonConfirmation").modal("show");
-					$("#txtReason").focus();
 				});
 
 				$('#btnBanActiveMember').on('click', function(e) { //Confirm to ban a member
-					var reason = $("#modalReasonConfirmation").find('.modal-body #txtReason').val();
-					var username = $("#modalReasonConfirmation").find('.modal-body #lblActiveUsername').text(); //Obtain username from hidden label
-					var userID = <?php echo $_SESSION['userID'] ?>;
-					var tab = $('.nav-tabs .active').text(); //Get currently selected tab
+					$('#formReasonConfirmation').parsley().validate();
 
-					$.ajax({
-						url :"userManagement_serverProcessing.php",
-						type: "POST",
-						data: "action=banMember&username=" + username + "&banBy=" + userID + "&reason=" + reason + "&tab=" + tab,
-						success: function(data) {
-							$("#modalReasonConfirmation").modal("hide");
-							alert(username + " has been banned!");
-							table.ajax.reload(); //Reload data table
-							tblBannedMembers.ajax.reload();
-						}
-					});
+					if ($('#formReasonConfirmation').parsley().isValid()) {
+						var reason = $("#modalReasonConfirmation").find('.modal-body #txtReason').val();
+						var username = $("#modalReasonConfirmation").find('.modal-body #lblActiveUsername').text(); //Obtain username from hidden label
+						var userID = <?php echo $_SESSION['userID'] ?>;
+						var tab = $('.nav-tabs .active').text(); //Get currently selected tab
+
+						$.ajax({
+							url :"userManagement_serverProcessing.php",
+							type: "POST",
+							data: "action=banMember&username=" + username + "&banBy=" + userID + "&reason=" + reason + "&tab=" + tab,
+							success: function(data) {
+								$("#modalReasonConfirmation").modal("hide");
+								alert(username + " has been banned!");
+								table.ajax.reload(); //Reload data table
+								tblBannedMembers.ajax.reload();
+							}
+						});
+					}
 				});
 				//End active member list
 
@@ -222,35 +219,38 @@ $environment = WEB; //TODO: change to server
 				});
 
 				$('#btnUpdateEmail').on('click', function(e) { //Update email for admin
-					var email = $("#modalRequestEmail").find('.modal-body #txtEmail').val();
-					var userID = $("#modalRequestEmail").find('.modal-body #lblUserID').text(); //Obtain userID from hidden label
-					var fullName = $("#modalRequestEmail").find('.modal-body #lblFullName').text(); //Obtain fullName from hidden label
+					if ($('#formRequestEmail').parsley().isValid()) {
 
-					$.ajax({
-						url :"userManagement_serverProcessing.php",
-						type: "POST",
-						data: "action=updateAdminEmail&userID=" + userID + "&email=" + email + "&fullName=" + fullName,
-						success: function(data) {
-							var dataString = data;
-							var firstChar  = dataString.charAt(0);
-							var message    = dataString.slice(1);
+						var email = $("#modalRequestEmail").find('.modal-body #txtEmail').val();
+						var userID = $("#modalRequestEmail").find('.modal-body #lblUserID').text(); //Obtain userID from hidden label
+						var fullName = $("#modalRequestEmail").find('.modal-body #lblFullName').text(); //Obtain fullName from hidden label
 
-							if (firstChar == "1") { //Successfully updated email & send email
-								$("#modalRequestEmail").modal("hide");
-								alert(message);
-								tblAdminList.ajax.reload(); //Reload data table
+						$.ajax({
+							url :"userManagement_serverProcessing.php",
+							type: "POST",
+							data: "action=updateAdminEmail&userID=" + userID + "&email=" + email + "&fullName=" + fullName,
+							success: function(data) {
+								var dataString = data;
+								var firstChar  = dataString.charAt(0);
+								var message    = dataString.slice(1);
+
+								if (firstChar == "1") { //Successfully updated email & send email
+									$("#modalRequestEmail").modal("hide");
+									alert(message);
+									tblAdminList.ajax.reload(); //Reload data table
+								}
+								else if (firstChar == "2") { //Email failed to send
+									alert(message);
+								}
+								else if (firstChar == "3") { //Failed to update email address
+									alert(message);
+								}
+								else if (firstChar == "4") { //Email in use
+									alert(message);
+								}
 							}
-							else if (firstChar == "2") { //Email failed to send
-								alert(message);
-							}
-							else if (firstChar == "3") { //Failed to update email address
-								alert(message);
-							}
-							else if (firstChar == "4") { //Email in use
-								alert(message);
-							}
-						}
-					});
+						});
+					}
 				});
 
 				$('#tblAdminList tbody').on('click', '#btnDeleteAdmin', function () { //Delete admin
@@ -294,237 +294,233 @@ $environment = WEB; //TODO: change to server
 					$("#txtEmail").val("");
 				});
 			});
-		</script>
+			</script>
 
-		<div class="well">
-			<!-- Tab options -->
-			<ul class="nav nav-tabs" id="tabDetails">
-				<li class="active"><a href="#tabMemberList" data-toggle="tab">Active Members</a></li>
-				<li><a href="#tabBlacklistMembers" data-toggle="tab">Blacklisted Members</a></li>
-				<li><a href="#tabBannedMembers" data-toggle="tab">Banned Members</a></li>
-				<?php
-				if ($_SESSION['userType'] == "mainAdmin") {
-					echo '<li><a href="#tabAdminList" data-toggle="tab">Admin</a></li>';
-				}
-				?>
-			</ul>
-			<!-- End tab options -->
+			<div class="well">
+				<!-- Tab options -->
+				<ul class="nav nav-tabs" id="tabDetails">
+					<li class="active"><a href="#tabMemberList" data-toggle="tab">Active Members</a></li>
+					<li><a href="#tabBlacklistMembers" data-toggle="tab">Blacklisted Members</a></li>
+					<li><a href="#tabBannedMembers" data-toggle="tab">Banned Members</a></li>
+					<?php
+					if ($_SESSION['userType'] == "mainAdmin") {
+						echo '<li><a href="#tabAdminList" data-toggle="tab">Admin</a></li>';
+					}
+					?>
+				</ul>
+				<!-- End tab options -->
 
-			<div id="myTabContent" class="tab-content">
-				<!-- Member list tab -->
-				<div class="tab-pane active in" id="tabMemberList">
-					<table id="tblMemberList" class="display" cellspacing="0" width="100%">
-						<thead>
-							<tr>
-								<th>Username</th>
-								<th>Email Address</th>
-								<th>Ban</th>
-							</tr>
-						</thead>
-					</table>
+				<div id="myTabContent" class="tab-content">
+					<!-- Member list tab -->
+					<div class="tab-pane active in" id="tabMemberList">
+						<table id="tblMemberList" class="display" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>Username</th>
+									<th>Email Address</th>
+									<th>Ban</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<!-- End member list tab -->
+
+					<!-- Blacklisted member list tab -->
+					<div class="tab-pane" id="tabBlacklistMembers">
+						<table id="tblBlacklistMembers" class="display" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>Username</th>
+									<th>Email Address</th>
+									<th>Blacklist Reason</th>
+									<th>Ban</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<!-- End blacklisted member list tab -->
+
+					<!-- Banned member list tab -->
+					<div class="tab-pane" id="tabBannedMembers">
+						<table id="tblBannedMembers" class="display" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>Username</th>
+									<th>Email Address</th>
+									<th>Ban Reason</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<!-- End blacklisted member list tab -->
+
+					<!-- Admin list tab -->
+					<div class="tab-pane fade" id="tabAdminList">
+						<p>
+							<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseTabAdminList" aria-expanded="false" aria-controls="collapseExample">
+								+ New Admin
+							</button>
+						</p>
+
+						<div class="collapse" id="collapseTabAdminList">
+							<div class="card card-body">
+								<form id="tab2" data-parsley-validate>
+									<div class="form-group">
+										<label for="txtFullName">Full Name *</label>
+										<input type="text" class="form-control" id='txtFullName' name='txtFullName' value="<?php if (isset($_POST['txtFullName'])) echo $_POST['txtFullName']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>
+									</div>
+
+									<div class="form-group">
+										<label for="txtEmailAddr">Email Address *</label>
+										<input type="text" class="form-control" id='txtEmailAddr' name='txtEmailAddr' placeholder="name@email.com" value="<?php if (isset($_POST['txtEmailAddr'])) echo $_POST['txtEmailAddr']; ?>" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled/>
+									</div>
+
+									<div>
+										<button class="btn" type="button" data-toggle="collapse" data-target="#collapseTabAdminList" aria-expanded="false" aria-controls="collapseExample">
+											Cancel
+										</button>
+
+										<button class="btn btn-primary" type="button" id="btnAddAdmin" name='btnAddAdmin' aria-expanded="false" aria-controls="collapseExample">
+											Add
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+
+						<table id="tblAdminList" class="display" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>Full Name</th>
+									<th>Email Address</th>
+									<th>Status</th>
+									<th>Edit</th>
+									<th>Delete</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<!-- End admin list tab -->
 				</div>
-				<!-- End member list tab -->
+			</div>
 
-				<!-- Blacklisted member list tab -->
-				<div class="tab-pane" id="tabBlacklistMembers">
-					<table id="tblBlacklistMembers" class="display" cellspacing="0" width="100%">
-						<thead>
-							<tr>
-								<th>Username</th>
-								<th>Email Address</th>
-								<th>Blacklist Reason</th>
-								<th>Ban</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-				<!-- End blacklisted member list tab -->
+			<!-- Popup modal to request confirmation -->
+			<div class="modal fade" id="modalConfirmation" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Ban Member</h4>
+						</div>
 
-				<!-- Banned member list tab -->
-				<div class="tab-pane" id="tabBannedMembers">
-					<table id="tblBannedMembers" class="display" cellspacing="0" width="100%">
-						<thead>
-							<tr>
-								<th>Username</th>
-								<th>Email Address</th>
-								<th>Ban Reason</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-				<!-- End blacklisted member list tab -->
+						<div class="modal-body">
+							<!-- <div class="form-group"> -->
+							<label id='lblConfirmation'></label>
+							<label id='lblUsername' hidden></label>
+							<!-- </div> -->
+						</div>
 
-				<!-- Admin list tab -->
-				<div class="tab-pane fade" id="tabAdminList">
-					<p>
-						<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseTabAdminList" aria-expanded="false" aria-controls="collapseExample">
-							+ New Admin
-						</button>
-					</p>
-
-					<div class="collapse" id="collapseTabAdminList">
-						<div class="card card-body">
-							<form id="tab2" data-parsley-validate>
-								<div class="form-group">
-									<label for="txtFullName">Full Name *</label>
-									<input type="text" class="form-control" id='txtFullName' name='txtFullName' value="<?php if (isset($_POST['txtFullName'])) echo $_POST['txtFullName']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>
-								</div>
-
-								<div class="form-group">
-									<label for="txtEmailAddr">Email Address *</label>
-									<input type="text" class="form-control" id='txtEmailAddr' name='txtEmailAddr' placeholder="name@email.com" value="<?php if (isset($_POST['txtEmailAddr'])) echo $_POST['txtEmailAddr']; ?>" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled/>
-								</div>
-
-								<div>
-									<button class="btn" type="button" data-toggle="collapse" data-target="#collapseTabAdminList" aria-expanded="false" aria-controls="collapseExample">
-										Cancel
-									</button>
-
-									<button class="btn btn-primary" type="button" id="btnAddAdmin" name='btnAddAdmin' aria-expanded="false" aria-controls="collapseExample">
-										Add
-									</button>
-								</div>
-							</form>
+						<div class="modal-footer">
+							<input type="submit" class="btn" id="btnCancelBan" data-dismiss="modal" name="btnCancelBan" value="Cancel" />
+							<input type="submit" class="btn btn-primary" id="btnBanMember" name="btnBanMember" value="Confirm" />
 						</div>
 					</div>
-
-					<table id="tblAdminList" class="display" cellspacing="0" width="100%">
-						<thead>
-							<tr>
-								<th>Full Name</th>
-								<th>Email Address</th>
-								<th>Status</th>
-								<th>Edit</th>
-								<th>Delete</th>
-							</tr>
-						</thead>
-					</table>
+					<!-- End popup modal content -->
 				</div>
-				<!-- End admin list tab -->
 			</div>
-		</div>
+			<!-- End popup modal -->
 
-		<!-- Popup modal to request confirmation -->
-		<div class="modal fade" id="modalConfirmation" role="dialog">
-			<div class="modal-dialog">
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Ban Member</h4>
-					</div>
+			<!-- Popup modal to request reason to ban a member -->
+			<div class="modal fade" id="modalReasonConfirmation" role="dialog">
+				<form id="formReasonConfirmation" data-parsley-validate>
+					<div class="modal-dialog">
+						<!-- Modal content-->
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title">Ban Member</h4>
+							</div>
 
-					<div class="modal-body">
-						<!-- <div class="form-group"> -->
-						<label id='lblConfirmation'></label>
-						<label id='lblUsername' hidden></label>
-						<!-- </div> -->
-					</div>
+							<div class="modal-body">
+								<label id='lblReason'></label>
+								<input type="text" class="form-control" id='txtReason' name='txtReason' value="<?php if (isset($_POST['txtReason'])) echo $_POST['txtReason']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled autofocus/>
+								<label id='lblActiveUsername' hidden></label>
+							</div>
 
-					<div class="modal-footer">
-						<input type="submit" class="btn" id="btnCancelBan" data-dismiss="modal" name="btnCancelBan" value="Cancel" />
-						<input type="submit" class="btn btn-primary" id="btnBanMember" name="btnBanMember" value="Confirm" />
+							<div class="modal-footer">
+								<input type="submit" class="btn" id="btnCancelBanActive" data-dismiss="modal" name="btnCancelBanActive" value="Cancel" />
+								<input type="submit" class="btn btn-primary" id="btnBanActiveMember" name="btnBanActiveMember" value="Confirm" />
+							</div>
+						</div>
+						<!-- End popup modal content -->
 					</div>
+				</form>
+			</div>
+			<!-- End popup modal -->
+
+			<!-- Popup modal to request new email for admin -->
+			<div class="modal fade" id="modalRequestEmail" role="dialog">
+				<form id="formRequestEmail" data-parsley-validate>
+					<div class="modal-dialog">
+						<!-- Modal content-->
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title">New Email</h4>
+							</div>
+
+							<div class="modal-body">
+								<label id='lblEmail'></label>
+								<label id='lblUserID' hidden></label>
+								<label id='lblFullName' hidden></label>
+								<input type="text" class="form-control" id='txtEmail' name='txtEmail' value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>
+							</div>
+
+							<div class="modal-footer">
+								<input type="submit" class="btn" id="btnCancelEmail" data-dismiss="modal" name="btnCancelEmail" value="Cancel" />
+								<input type="submit" class="btn btn-primary" id="btnUpdateEmail" name="btnUpdateEmail" value="Confirm" />
+							</div>
+						</div>
+						<!-- End popup modal content -->
+					</div>
+				</form>
+			</div>
+			<!-- End popup modal -->
+
+			<!-- Popup modal to delete admin -->
+			<div class="modal fade" id="modalDeleteAdmin" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Remove Admin</h4>
+						</div>
+
+						<div class="modal-body">
+							<label id='lblContent'></label>
+							<label id='lblAdminUserID' hidden></label>
+						</div>
+
+						<div class="modal-footer">
+							<input type="submit" class="btn" id="btnCancelDelete" data-dismiss="modal" name="btnCancelDelete" value="Cancel" />
+							<input type="submit" class="btn btn-primary" id="btnConfirmDeleteAdmin" name="btnConfirmDeleteAdmin" value="Confirm" />
+						</div>
+					</div>
+					<!-- End popup modal content -->
 				</div>
-				<!-- End popup modal content -->
 			</div>
-		</div>
-		<!-- End popup modal -->
+			<!-- End popup modal -->
 
-		<!-- Popup modal to request reason to ban a member -->
-		<div class="modal fade" id="modalReasonConfirmation" role="dialog">
-			<div class="modal-dialog">
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Ban Member</h4>
-					</div>
-
-					<div class="modal-body">
-						<!-- <div class="form-group"> -->
-						<label id='lblReason'></label>
-						<!-- TODO: Add parsley js validation -->
-						<input type="text" class="form-control" id='txtReason' name='txtReason' value="<?php if (isset($_POST['txtReason'])) echo $_POST['txtReason']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>
-						<label id='lblActiveUsername' hidden></label>
-						<!-- </div> -->
-					</div>
-
-					<div class="modal-footer">
-						<input type="submit" class="btn" id="btnCancelBanActive" data-dismiss="modal" name="btnCancelBanActive" value="Cancel" />
-						<input type="submit" class="btn btn-primary" id="btnBanActiveMember" name="btnBanActiveMember" value="Confirm" />
-					</div>
-				</div>
-				<!-- End popup modal content -->
-			</div>
-		</div>
-		<!-- End popup modal -->
-
-		<!-- Popup modal to request new email for admin -->
-		<div class="modal fade" id="modalRequestEmail" role="dialog">
-			<div class="modal-dialog">
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">New Email</h4>
-					</div>
-
-					<div class="modal-body">
-						<!-- <div class="form-group"> -->
-						<label id='lblEmail'></label>
-						<label id='lblUserID' hidden></label>
-						<label id='lblFullName' hidden></label>
-						<!-- TODO: Add parsley js validation -->
-						<input type="text" class="form-control" id='txtEmail' name='txtEmail' value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>
-						<!-- </div> -->
-					</div>
-
-					<div class="modal-footer">
-						<input type="submit" class="btn" id="btnCancelEmail" data-dismiss="modal" name="btnCancelEmail" value="Cancel" />
-						<input type="submit" class="btn btn-primary" id="btnUpdateEmail" name="btnUpdateEmail" value="Confirm" />
-					</div>
-				</div>
-				<!-- End popup modal content -->
-			</div>
-		</div>
-		<!-- End popup modal -->
-
-		<!-- Popup modal to delete admin -->
-		<div class="modal fade" id="modalDeleteAdmin" role="dialog">
-			<div class="modal-dialog">
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Remove Admin</h4>
-					</div>
-
-					<div class="modal-body">
-						<!-- <div class="form-group"> -->
-						<label id='lblContent'></label>
-						<label id='lblAdminUserID' hidden></label>
-						<!-- </div> -->
-					</div>
-
-					<div class="modal-footer">
-						<input type="submit" class="btn" id="btnCancelDelete" data-dismiss="modal" name="btnCancelDelete" value="Cancel" />
-						<input type="submit" class="btn btn-primary" id="btnConfirmDeleteAdmin" name="btnConfirmDeleteAdmin" value="Confirm" />
-					</div>
-				</div>
-				<!-- End popup modal content -->
-			</div>
-		</div>
-		<!-- End popup modal -->
-
-		<?php
-	}
-	else { //Redirect user to home page
-		echo "<script>alert('You are not allowed here!')</script>";
-		header("Refresh:1;url=../index.php");
-	}
-	?>
-</div>
+			<?php
+		}
+		else { //Redirect user to home page
+			echo "<script>alert('You are not allowed here!')</script>";
+			header("Refresh:1;url=../index.php");
+		}
+		?>
+	</div>
 </div>
 <script src="../scripts/parsley.min.js"></script>
 <link rel="stylesheet" href="../css/parsley.css" type="text/css" />
