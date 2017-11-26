@@ -51,7 +51,8 @@
 								<span>Reported From :</span>{$userFrom['username']}
 							</div>
 							<form method='post'>
-								<input type='hidden' name='reportID' value='{$userDetail['userID']}'/>
+								<input type='hidden' name='reportID' value='$report'/>
+								<input type='hidden' name='reportedID' value='{$userDetail['userID']}'/>
 								<input type='submit' name='punish' value='Add Penalty'/>
 							</form>";
 					}
@@ -86,7 +87,8 @@
 								<span>Reported From :</span>{$userFrom['username']}
 							</div>
 							<form method='post'>
-								<input type='hidden' name='reportID' value='{$userDetail['userID']}'/>
+								<input type='hidden' name='reportID' value='$report'/>
+								<input type='hidden' name='reportedID' value='{$userDetail['userID']}'/>
 								<input type='submit' name='punish' value='Add Penalty'/>
 							</form>";
 					}
@@ -119,7 +121,8 @@
 								<span>Reported From :</span>{$userFrom['username']}
 							</div>
 							<form method='post'>
-								<input type='hidden' name='reportID' value='{$userDetail['userID']}'/>
+								<input type='hidden' name='reportID' value='$report'/>
+								<input type='hidden' name='reportedID' value='{$userDetail['userID']}'/>
 								<input type='submit' name='punish' value='Add Penalty'/>
 							</form>";
 					}
@@ -132,7 +135,8 @@
 	
 	
 	if(isset($_POST['punish'])){
-		$punish = $_POST['reportID'];
+		$punish = $_POST['reportedID'];
+		$content = $_POST['reportID'];
 		$SELECTid = "SELECT * from user WHERE userID = $punish";
 		$SELECT = mysqli_query($conn, $SELECTid);
 		while ($userSelect = mysqli_fetch_assoc($SELECT)) {
@@ -145,6 +149,10 @@
 				$sql = "UPDATE user SET penaltyCount = $count WHERE userID = $punish";
 				$conn->query($sql);
 			}
+			$sql = "UPDATE report SET reportStatus = 1 WHERE reportID = $content";
+			$conn->query($sql);
+			echo "<script>alert('Penalty Added');
+					window.location.href='manageReport.php?reportid=$report';</script>";
 			
 		}
 	}
