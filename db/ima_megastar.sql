@@ -585,7 +585,7 @@ ALTER TABLE `bid`
 --
 -- AUTO_INCREMENT for table `comment`
 --
-ALTER TABLE `comment`
+ALTER TABLE `album_comment`
   MODIFY `commentID` int(10) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `competition_question`
@@ -635,7 +635,7 @@ ALTER TABLE `payment`
 --
 -- AUTO_INCREMENT for table `photo`
 --
-ALTER TABLE `photo`
+ALTER TABLE `album_photo`
   MODIFY `photoID` int(10) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `report`
