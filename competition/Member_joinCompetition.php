@@ -21,9 +21,9 @@ echo makeHeader("Welcome to join competition");
 
 <div class="content">
   <div class ="container">
-      <td><a href= "test-13.php"><button>10-13</button></a></td>
-      <td><a href= "test-16.php"><button>13-16</button></a></td>
-      <td><a href= "test-18.php"><button>16-18</button></a></td>
+      <td><a href= "Member_test13.php"><button>10-13</button></a></td>
+      <td><a href= "Member_test16.php"><button>13-16</button></a></td>
+      <td><a href= "Member_test18.php"><button>16-18</button></a></td>
 </div>
 </div>
 

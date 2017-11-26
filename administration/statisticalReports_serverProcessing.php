@@ -189,34 +189,36 @@ else if ($function == "competition") { //Get no. of users that participated in a
   $testID = trim($testID);
   $testID = filter_var($testID, FILTER_SANITIZE_STRING);
 
-  for ($i = 10; $i <= 16; $i = $i + 3) {
-    if ($i == 16) {
-      //Get no. of participated members based on age group
-      $participatedSQL = "SELECT fullName FROM user u JOIN competition_result r
-      ON u.userID = r.userID JOIN competition_test t ON r.testID = t.testID WHERE t.testID = ?
-      AND YEAR(CURDATE()) - YEAR(dob) >= " . intval($i) . " AND YEAR(CURDATE()) - YEAR(dob) < " . intval($i + 2);
+  $ageSQL = "SELECT ageRange FROM competition_test WHERE testID = ?";
+  $stmt = mysqli_prepare($conn, $ageSQL) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmt, "s", $testID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_bind_result($stmt, $ageGroup);
+  mysqli_stmt_fetch($stmt);
+  mysqli_stmt_close($stmt);
 
-      $ageGroup = $i . " - " . intval($i + 2);
-    }
-    else {
-      //Get no. of participated members based on age group
-      $participatedSQL = "SELECT fullName FROM user u JOIN competition_result r ON
-      u.userID = r.userID JOIN competition_test t ON r.testID = t.testID WHERE t.testID = ?
-      AND YEAR(CURDATE()) - YEAR(dob) >= " . intval($i) . " AND YEAR(CURDATE()) - YEAR(dob) < " . intval($i + 3);
-
-      $ageGroup = $i . " - " . intval($i + 3);
-    }
-
-    $stmt = mysqli_prepare($conn, $participatedSQL) or die( mysqli_error($conn));
-    mysqli_stmt_bind_param($stmt, "s", $testID);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_store_result($stmt);
-    $participatedCount = mysqli_stmt_num_rows($stmt);
-    mysqli_stmt_close($stmt);
-
-    $a_json_row = array("ageGroup" => $ageGroup, "participatedCount" => $participatedCount);
-    array_push($a_json, $a_json_row);
+  if ($ageGroup == "13") {
+    $ageGroup = "10 - 13";
   }
+  else if ($ageGroup == "16") {
+    $ageGroup = "13 - 16";
+  }
+  else if ($ageGroup == "18") {
+    $ageGroup = "16 - 18";
+  }
+
+  //Get no. of participated members based on age group
+  $participatedSQL = "SELECT fullName FROM user u JOIN competition_result r
+  ON u.userID = r.userID JOIN competition_test t ON r.testID = t.testID WHERE r.testID = ?";
+  $stmt = mysqli_prepare($conn, $participatedSQL) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmt, "s", $testID);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_store_result($stmt);
+  $participatedCount = mysqli_stmt_num_rows($stmt);
+  mysqli_stmt_close($stmt);
+
+  $a_json_row = array("ageGroup" => $ageGroup, "participatedCount" => $participatedCount);
+  array_push($a_json, $a_json_row);
   echo json_encode($a_json, JSON_PRETTY_PRINT);
 }
 ?>

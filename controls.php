@@ -95,7 +95,7 @@ function makeProfileButton($prefix) {
     //Show user management features to admin/main admin only
     if((isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
     $profileButton .= "<p><a class='dropdown-item' href='" . $prefix . "administration/Admin_userManagement.php'>User Management</a></p>";
-    $profileButton .= "<p><a class='dropdown-item' href='" . $prefix . "administration/Admin_statisticalReport.php'>View Reports</a></p>";
+    $profileButton .= "<p><a class='dropdown-item' href='" . $prefix . "administration/Admin_statisticalReports.php'>View Reports</a></p>";
     $profileButton .= "<p><a class='dropdown-item' href='" . $prefix . "competition/Admin_createTemplate.php'>Create Template</a></p>";
     $profileButton .= "<p><a class='dropdown-item' href='" . $prefix . "competition/Admin_createTest.php'>Create Competition</a></p>";
     $profileButton .= "<p><a class='dropdown-item' href='" . $prefix . "competition/Admin_viewResult.php'>View Competition Results</a></p>";

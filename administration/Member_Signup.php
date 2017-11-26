@@ -125,8 +125,8 @@ $(document).ready(function() {
       ?>
 
       <div>
-        <div id="password"><h4 id="label">Password:</h4> <input type="password" id='txtPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5" maxlength="60" /></div>
-        <div id="password"><h4 id="label">Confirm Password:</h4> <input type="password" id='txtConfirmPassword' data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5" maxlength="60" /></div>
+        <div id="password"><h4 id="label">Password:</h4> <input type="password" id='txtPassword' name='txtPassword' value="<?php if (isset($_POST['txtPassword'])) echo $_POST['txtPassword']; ?>" data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtConfirmPassword" data-parsley-minlength="5" maxlength="60" /></div>
+        <div id="password"><h4 id="label">Confirm Password:</h4> <input type="password" id='txtConfirmPassword' name='txtConfirmPassword' value="<?php if (isset($_POST['txtConfirmPassword'])) echo $_POST['txtConfirmPassword']; ?>" data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5" maxlength="60" /></div>
       </div>
 
       <?php
@@ -196,7 +196,7 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
   }
   $securityAns = filter_var($securityAns, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-  $password = password_hash($password, PASSWORD_DEFAULT); //Hash password
+  $passwordHash = password_hash($password, PASSWORD_DEFAULT); //Hash password
 
   if (!isset($_GET['mail']) && !isset($_GET['name']) && !isset($_GET['exDate'])) { //For normal member registration use
     //Determine user type
@@ -237,11 +237,10 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
 
       if ($count == 0) {
         try {
-          //echo "<script>alert('Registration successful!')</script>";
           $signupSQL = "INSERT INTO user (fullName, username, emailAddr, passwordHash, shippingAddr, dob, userType,
             userStatus, memberConfirmationExpiryDate, securityQuestion, securityAns) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($conn, $signupSQL) or die( mysqli_error($conn));
-            mysqli_stmt_bind_param($stmt, "sssssssssss", $fullName, $username, $email, $password, $shippingAddr, $dob, $userType,
+            mysqli_stmt_bind_param($stmt, "sssssssssss", $fullName, $username, $email, $passwordHash, $shippingAddr, $dob, $userType,
             $userStatus, $memberConfirmationExpiryDate, $securityQuestion, $securityAns);
             mysqli_stmt_execute($stmt);
 
@@ -281,7 +280,7 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
         $signupSQL = "UPDATE user SET fullName = ?, passwordHash = ?, userType = ?, userStatus = ?,
         memberConfirmationExpiryDate = ?, securityQuestion = ?,  securityAns = ? WHERE emailAddr = ?";
         $stmt = mysqli_prepare($conn, $signupSQL);
-        mysqli_stmt_bind_param($stmt, "ssssssss", $fullName, $password, $userType,
+        mysqli_stmt_bind_param($stmt, "ssssssss", $fullName, $passwordHash, $userType,
         $userStatus, $memberConfirmationExpiryDate, $securityQuestion, $securityAns, $email);
         mysqli_stmt_execute($stmt);
 
