@@ -83,7 +83,7 @@ else if ($function == "updateAdminEmail") { //Update email address for admin (wi
   $userID = filter_has_var(INPUT_POST, 'userID') ? $_POST['userID']: null;
   $userID = trim($userID);
   $userID = filter_var($userID, FILTER_SANITIZE_STRING);
-  
+
   $email = filter_has_var(INPUT_POST, 'email') ? $_POST['email']: null;
   $email = trim($email);
   $email = filter_var($email, FILTER_SANITIZE_STRING);
@@ -306,6 +306,21 @@ else if ($function == "banMember") { //Ban selected member
   else { //Failed to ban member
     echo false;
   }
+  mysqli_stmt_close($stmt);
+  mysqli_close($conn);
+}
+else if ($function == "loadReportedContents") {
+  $repotSQL = "SELECT reportID, contentID, contentType, userID, reportReason, reportFrom FROM report";
+  $stmt = mysqli_prepare($conn, $repotSQL) or die( mysqli_error($conn));
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_bind_result($stmt, $reportID, $contentID, $contentType, $reportedID, $reason, $reportFrom);
+
+  while (mysqli_stmt_fetch($stmt)) {
+    $a_json_row = array("ReportID" => $reportID, "ContentType" => $contentType, "ReportedUser" => $reportedID, "ReportedBy" => $reportFrom);
+    array_push($a_json, $a_json_row);
+  }
+  echo json_encode($a_json, JSON_PRETTY_PRINT); //Convert the array into JSON format
+
   mysqli_stmt_close($stmt);
   mysqli_close($conn);
 }

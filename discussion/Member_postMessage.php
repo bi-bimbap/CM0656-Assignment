@@ -90,7 +90,7 @@ function myFunction(msgID,threadID,userID) {
 
 <?php
     /*******************************************************************************************************************************************************
-          DISCUSSION BOARD: (1.1) Display Posted Message Content
+          DISCUSSION BOARD: (POST MESSAGE) Display Posted Message Content
     *******************************************************************************************************************************************************/
     $sqlGetMessage = "SELECT user.username, discussion_message.messageContent, discussion_message.messageID,
                               discussion_message.messageDateTime,discussion_message.userID,discussion_message.threadID
@@ -113,16 +113,23 @@ function myFunction(msgID,threadID,userID) {
 
               echo "<b>Post Msg : $MsgContent </b> by $username - $MsgDateTime";
               echo "&nbsp;";
-              echo
-              "<form method='post' action='Member_reportMessage_process.php'>
-                <input type='hidden' name='msgID' value='$messageID'>
-                <input type='hidden' name='threadID' value='$threadID'>
-                <input type='hidden' name='PostedUserID' value='$userID'>
-                <input type='submit' value='ReportMsg' name='ReportMsg' />
-              </form>";
 
               /*****************************************************************************************************************************************************
-                            DISCUSSION BOARD: (1.2) Display Replied Message Content
+                            DISCUSSION BOARD: (REPORT POST MESSAGE) Display "Report" button
+              *******************************************************************************************************************************************************/
+              //Validation - Only member can view "Report" button
+              if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
+              (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
+                  echo
+                  "<form method='post' action='Member_reportMessage_process.php'>
+                    <input type='hidden' name='msgID' value='$messageID'>
+                    <input type='hidden' name='threadID' value='$threadID'>
+                    <input type='hidden' name='PostedUserID' value='$userID'>
+                    <input type='button' value='ReportMsg' name='ReportMsg' />
+                  </form>";
+              }
+              /*****************************************************************************************************************************************************
+                            DISCUSSION BOARD: (REPLY MESSAGE) Display Replied Message Content
               *******************************************************************************************************************************************************/
               $sqlGetReply = "SELECT discussion_message.messageID, user.username, discussion_message.messageContent,
                                      discussion_thread.threadID,discussion_message.messageDateTime, discussion_message.replyTo
@@ -145,14 +152,20 @@ function myFunction(msgID,threadID,userID) {
                     $MsgContent= $rows['messageContent'];
                     echo "</br>$spacing
                           <b>Reply Msg : $MsgContent </b> by $username - $MsgDateTime";
-                          echo
-                          "<form method='post' action='Member_reportMessage_process.php'>
-                            <input type='hidden' name='msgID' value='$messageID'>
-                            <input type='hidden' name='threadID' value='$threadID'>
-                            <input type='hidden' name='PostedUserID' value='$userID'>
-                            <input type='submit' value='ReportReply' name='ReportMsg' />
-                          </form>";
-
+                          /*****************************************************************************************************************************************************
+                                        DISCUSSION BOARD: (REPORT REPLY MESSAGE) Display "Report" button
+                          *******************************************************************************************************************************************************/
+                          //Validation - Only member can view "Report" button
+                          if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
+                          (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
+                              echo
+                              "<form method='post' action='Member_reportMessage_process.php'>
+                                <input type='hidden' name='msgID' value='$messageID'>
+                                <input type='hidden' name='threadID' value='$threadID'>
+                                <input type='hidden' name='PostedUserID' value='$userID'>
+                                <input type='button' value='ReportReply' name='ReportMsg' />
+                              </form>";
+                          }
                 }
               }
               //Validation - Only member can view "Reply" textfield
@@ -173,7 +186,7 @@ function myFunction(msgID,threadID,userID) {
             (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
 
               /*******************************************************************************************************************************************************
-                    DISCUSSION BOARD: (2.1) Post New Message (Member)
+                    DISCUSSION BOARD: (POST MESSAGE) Post New Message Function
               *******************************************************************************************************************************************************/
               if(isset($_POST['postMessage_submit']) && !empty($_POST['txtPostMessage'])){
                 //obtain user input
@@ -185,17 +198,38 @@ function myFunction(msgID,threadID,userID) {
                 //Sanitize user input
                 $post_message = filter_var($post_message, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-                //new posted message status is active
-                $messageStatus = "active";
-
                 $userID = $_SESSION['userID'];
                 // Check connection
                 if ($conn->connect_error) {
                    die("Connection failed: " . $conn->connect_error);
                 }
 
+                /*******************************************************************************************************************************************************
+                      DISCUSSION BOARD: (POST MESSAGE - INAPPROPRIATE) Automatic Moderate Inappropriate Phrase
+                *******************************************************************************************************************************************************/
+                //check inappropriate Phrase
+                $str_message = $post_message;
+                $array_message = explode(" ", $str_message);
+                echo $array_message;
+              	$check_postInappropriateSQL = "SELECT * FROM discussion_inappropriate";
+
+              	$check_postInappropriateResult = mysqli_query($conn, $check_postInappropriateSQL);
+
+              	if (mysqli_num_rows($check_postInappropriateResult) > 0) {
+              	    // output data of each row
+              	    while($row = mysqli_fetch_assoc($check_postInappropriateResult)) {
+              	    	for($i = 0; $i < count($array_message); $i++){
+              	    		if(strtolower($array_message[$i]) == $row['inappropriatePhrase']){
+              	    			$array_message[$i] = $row['replacementWord'];
+              	    		}
+              	    	}
+              	    }
+              	}
+              	$post_message = implode(" ", $array_message);
+
+                //insert post message content
                 $sql = "INSERT INTO discussion_message (userID, threadID, messageContent, messageStatus)
-                        VALUES ('$userID','$threadID','$post_message','$messageStatus')";
+                        VALUES ('$userID','$threadID','$post_message','active')"; //new posted message status is active
 
                 if ($conn->query($sql) === TRUE) {
                   echo "<script>alert('The message has been posted')</script>";
@@ -207,7 +241,6 @@ function myFunction(msgID,threadID,userID) {
                 }$conn->close();
                 //validation: Prevent Resubmit Users' Previous Input Data
                 clearstatcache();
-
               } //END: (3) Post New Message
 
               echo "
@@ -220,11 +253,11 @@ function myFunction(msgID,threadID,userID) {
             }
             else
             {
-            echo "
-            <div class='message-new'>
-            <form id='postMessage_field' method='post'>
-            </form>
-            </div>";
+              echo "
+              <div class='message-new'>
+              <form id='postMessage_field' method='post'>
+              </form>
+              </div>";
             }
         mysqli_close($conn);
 ?>
