@@ -60,7 +60,7 @@ echo makeHeader("Competition (16 - 18 Years Old)");
             </tr> -->
             <tr>
               <td colspan="2" align="left"><input type="submit" class="btn btn-primary" name="submit" value="Submit"></td>
-              <td colspan="2" align="right"><a href="main_page.php" onclick="history.back(1);" class="btn btn-primary">Give up</a></td>
+              <td colspan="2" align="right"><a href="Member_joinCompetition.php" onclick="history.back(1);" class="btn btn-primary">Give up</a></td>
             </tr>
           </table>
         </form>

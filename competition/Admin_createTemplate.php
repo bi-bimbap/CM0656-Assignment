@@ -62,7 +62,7 @@ echo makeHeader("Create Template");
                         <tr>
                           <td colspan="2" align="center"><input type="submit" class="btn btn-primary" name="edit" value="update"/></td>
                         </tr>
-                        <td colspan="2" align="center"><a href="create_template.php" onclick="history.back(1);" class="btn btn-primary">Back</a></td>
+                        <td colspan="2" align="center"><a href="Admin_createTemplate.php" onclick="history.back(1);" class="btn btn-primary">Back</a></td>
                       </table>
                     </form>
                     <?php
@@ -119,7 +119,7 @@ echo makeHeader("Create Template");
                     <tr>
                       <td><?php echo $row["templateID"]; ?></td>
                       <td><?php echo $row["templateTitle"]; ?></td>
-                      <td><a href= "create_template.php?templateID=<?php echo $row["templateID"]; ?>"><button>UPDATE</button></a></td>
+                      <td><a href= "Admin_createTemplate.php?templateID=<?php echo $row["templateID"]; ?>"><button>UPDATE</button></a></td>
                       <td><form method ="post"><input type="hidden" name="templateID" value ="<?php echo $row["templateID"]; ?>"/><input type="submit" name="delete" value="DELETE"></form></td>
                     </tr>
                     <?php
@@ -193,7 +193,7 @@ echo makeHeader("Create Template");
 
       if (mysqli_stmt_affected_rows($stmt) > 0) {
         echo "<script>alert('Question created!')</script>";
-        echo "<meta http-equiv=\"refresh\" content=\"0;URL=create_template.php\">";
+        echo "<meta http-equiv=\"refresh\" content=\"0;URL=Admin_createTemplate.php\">";
       }
       else {
         echo "<script>alert('Failed to create Question!')</script>";
@@ -246,13 +246,13 @@ echo makeHeader("Create Template");
 
     if (mysqli_stmt_affected_rows($stmt) > 0) {
       echo "<script>alert('Titile updated!')</script>";
-      echo "<meta http-equiv=\"refresh\" content=\"0;URL=create_template.php\">";
+      echo "<meta http-equiv=\"refresh\" content=\"0;URL=Admin_createTemplate.php\">";
     }
     else {
 
     }
     if (mysqli_stmt_affected_rows($stmt2) > 0) {
-      echo "<meta http-equiv=\"refresh\" content=\"0;URL=create_template.php\">";
+      echo "<meta http-equiv=\"refresh\" content=\"0;URL=Admin_createTemplate.php\">";
     }
     else {
 
@@ -277,7 +277,7 @@ echo makeHeader("Create Template");
 
     if (mysqli_query($conn, $sql)) {
       echo "Record deleted successfully";
-      echo "<meta http-equiv=\"refresh\" content=\"0;URL=create_template.php\">";
+      echo "<meta http-equiv=\"refresh\" content=\"0;URL=Admin_createTemplate.php\">";
     } else {
       echo "Error deleting record: " . mysqli_error($conn);
     }
