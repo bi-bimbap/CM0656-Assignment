@@ -21,31 +21,9 @@ echo makeHeader("Welcome to join competition");
 
 <div class="content">
   <div class ="container">
-    <?php //Only show content to junior members
-    if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
-    (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
-      if (checkUserStatus($conn, $_SESSION['userID']) == "active") { //Only allow if user status is active
-        ?>
-
       <td><a href= "test-13.php"><button>10-13</button></a></td>
       <td><a href= "test-16.php"><button>13-16</button></a></td>
       <td><a href= "test-18.php"><button>16-18</button></a></td>
-
-      <?php
-    }
-    else { //User has been banned; Redirect to home page
-      setCookie(session_name(), "", time() - 1000, "/");
-      $_SESSION = array();
-      session_destroy();
-      echo "<script>alert('You are not allowed here!')</script>";
-      header("Refresh:0;url=../index.php");
-    }
-  }
-  else { //Redirect user to home page
-    echo "<script>alert('You are not allowed here!')</script>";
-    header("Refresh:0;url=../index.php");
-  }
-  ?>
 </div>
 </div>
 
