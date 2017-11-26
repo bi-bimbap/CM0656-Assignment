@@ -18,17 +18,19 @@ $environment = WEB;
 <link rel="stylesheet" href="../css/jquery-ui.min.css" />
 <link rel="stylesheet" href="../css/parsley.css" />
 <link rel="stylesheet" href="../css/stylesheet.css" />
-
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <script src="../scripts/jquery.js"></script>
 <script src="../scripts/parsley.min.js"></script>
-
+<div class="content">
+	<div class="container">
 <!--*******************************************************************************************************************************************************
       DISCUSSION BOARD : Create New Thread Form
 *******************************************************************************************************************************************************-->
 <form id="createThreadForm" data-parsley-validate method="post">
-    <p>Thread Name: <input type="text" id="txtThreadName" name="txtThreadName" data-parsley-required="true" placeholder="Thread Name" /></p>
-    <p>Thread Description: <textarea type="text" id="txtThreadDesc" name="txtThreadDesc" data-parsley-required="true" placeholder="Description" ></textarea></p>
-    <input type='submit' id='createThread_submit' name='createThread_submit' value='Create' />
+    <p><h4>Thread Name:</h4> <input type="text" id="txtThreadName" name="txtThreadName" data-parsley-required="true" placeholder="Thread Name" /></p><br>
+    <p><h4>Thread Description:</h4> <textarea type="text" id="txtThreadDesc" name="txtThreadDesc" data-parsley-required="true" placeholder="Description" ></textarea></p>
+    <input style='    margin-left: 48%;
+    margin-top: 100px;'type='submit' id='createThread_submit' name='createThread_submit' value='Create' />
       </br>
       </br>
       </br>
@@ -84,7 +86,8 @@ $environment = WEB;
       echo "</script>";
     }
 ?>
-
+</div>
+</div>
 <?php
 echo makeFooter("../");
 echo makePageEnd();
