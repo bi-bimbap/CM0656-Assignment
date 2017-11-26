@@ -1,5 +1,3 @@
-<!-- TODO: Unable to add parsley js validation in popup modal -->
-
 <?php
 // ini_set("session.save_path", ""); //TODO: comment out
 session_start();
@@ -41,8 +39,6 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && isset($_
   <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
   <link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
-  <!-- <script src="../scripts/parsley.min.js"></script>
-  <link rel="stylesheet" href="../css/parsley.css" type="text/css" /> -->
 
   <script language="JavaScript" type="text/javascript">
   $(document).ready(function() {
@@ -116,8 +112,6 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && isset($_
                       <h4 class="modal-title">Provide Your Security Question & Answer</h4>
                     </div>
 
-                    <!-- TODO: Unable to add parsley js validation in modal -->
-                    <!-- data-parsley-required="true" data-parsley-errors-messages-disabled -->
                     <div class="modal-body">
                       <div class="form-group">
                         <label for="ddlSecurityQuestion">Security Question *</label>
@@ -176,8 +170,6 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && isset($_
                       <h4 class="modal-title">Provide Your Security Question & Answer</h4>
                     </div>
 
-                    <!-- TODO: Unable to add parsley js validation in modal -->
-                    <!-- data-parsley-required="true" data-parsley-errors-messages-disabled -->
                     <div class="modal-body">
                       <div class="form-group">
                         <label for="ddlSecurityQuestion2">Security Question *</label>
@@ -243,8 +235,6 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && isset($_
                       <h4 class="modal-title">Provide Your Current Security Question & Answer</h4>
                     </div>
 
-                    <!-- TODO: Unable to add parsley js validation in modal -->
-                    <!-- data-parsley-required="true" data-parsley-errors-messages-disabled -->
                     <div class="modal-body">
                       <div class="form-group">
                         <label for="ddlSecurityQuestion4">Security Question *</label>

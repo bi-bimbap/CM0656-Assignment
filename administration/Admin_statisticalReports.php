@@ -1,4 +1,3 @@
-<!-- TODO: Add autocomplete search box for auction & competition -->
 <?php
 // ini_set("session.save_path", ""); //TODO: Comment out
 session_start();
@@ -13,14 +12,6 @@ echo makeProfileButton("../");
 echo makeNavMenu("../");
 echo makeHeader("Statistical Reports");
 $environment = WEB; //TODO: change to server
-
-
-
-
-
-
-
-
 ?>
 
 <?php //Only show content if user is logged in
@@ -44,7 +35,6 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
 <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
 <link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
 
-<!-- <div class="chart-container container-fluid" style="position: relative; height:40vh; width:40vw"> -->
 <div class='content'>
 <div class='container'>
 <div class="chart-container container-fluid">
@@ -208,11 +198,9 @@ $(document).ready(function() {
         datasets : [{
           label: 'User Count',
           backgroundColor: [
-            // 'rgba(255, 99, 132, 0.2)'
             'rgba(54, 162, 235, 0.5)'
           ],
           borderColor: [
-            // 'rgba(255,99,132,1)'
             'rgba(54, 162, 235, 1)'
           ],
           borderWidth: 1,

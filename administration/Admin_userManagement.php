@@ -1,4 +1,3 @@
-<!-- TODO: Feature to allow mainAdmin to bring back removed admin (Consider scenario where he/she remove pending admin, if bring back how to do?) -->
 <?php
 // ini_set("session.save_path", ""); //TODO: comment out
 session_start();

@@ -9,8 +9,6 @@ $function = filter_has_var(INPUT_POST, 'action') ? $_POST['action']: null;
 $function = trim($function);
 $function = filter_var($function, FILTER_SANITIZE_STRING);
 
-// $function = "resetPassword";
-
 if ($function == "forgotPassword") {
   //Obtain passed value, trim whitespace & sanitize value
   $email = filter_has_var(INPUT_POST, 'email') ? $_POST['email']: null;
