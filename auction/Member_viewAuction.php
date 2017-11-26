@@ -44,13 +44,24 @@ mysqli_stmt_bind_result($stmtActiveBid, $totalBid);
 mysqli_stmt_fetch($stmtActiveBid);
 mysqli_stmt_close($stmtActiveBid);
 
+//Check has this user bidded on this auction
+$sqlcheckUserBid = "SELECT COUNT(bidID)
+                          FROM bid WHERE auctionID = ? AND userID = ? AND bidStatus ='active'";
+$stmtCheckUserBid = mysqli_prepare($conn, $sqlcheckUserBid) or die( mysqli_error($conn));
+mysqli_stmt_bind_param($stmtCheckUserBid, "ii", $aucID, $_SESSION['userID']);
+mysqli_stmt_execute($stmtCheckUserBid);
+mysqli_stmt_bind_result($stmtCheckUserBid, $testingBidCount);
+mysqli_stmt_fetch($stmtCheckUserBid);
+mysqli_stmt_close($stmtCheckUserBid);
+
 //Pull bidding history
-$sqlBidHistory = "SELECT b.bidAmount, b.bidTime, u.username
-                          FROM bid b JOIN user u ON b.userID = u.userID WHERE b.auctionID = ? AND b.bidStatus ='active'";
+$sqlBidHistory = "SELECT b.bidAmount, b.bidTime, b.userID, u.username
+                          FROM bid b JOIN user u ON b.userID = u.userID WHERE b.auctionID = ? AND b.bidStatus ='active'
+                          ORDER BY bidTime DESC";
 $stmtBidHistory = mysqli_prepare($conn, $sqlBidHistory) or die( mysqli_error($conn));
 mysqli_stmt_bind_param($stmtBidHistory, "i", $aucID);
 mysqli_stmt_execute($stmtBidHistory);
-mysqli_stmt_bind_result($stmtBidHistory, $bidAmount, $bidTime, $username);
+mysqli_stmt_bind_result($stmtBidHistory, $bidAmount, $bidTime, $bidUser, $username);
 
 //Only show content if user is logged in & is senior
 $_SESSION['userID'] = '1'; //TODO: Remove session
@@ -59,6 +70,7 @@ $_SESSION['username'] = 'seahjm'; //TODO: Remove
 $_SESSION['logged-in'] = true; //TODO: Remove
 
 echo makePageStart($aucTitle);
+echo makeWrapper("../");
 echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
 echo makeProfileButton("../");
 echo makeNavMenu("../");
@@ -70,14 +82,15 @@ echo makeHeader($aucTitle);
 <link rel="stylesheet" href="../css/jquery.dataTables.min.css" />
 <link rel="stylesheet" href="../css/stylesheet.css" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<script src='../scripts/bootstrap.js'></script>
-<script src='../scripts/jquery.dataTables.min.js'></script>
+<script src='../scripts/bootstrap.min.js'></script>
 <script src="../scripts/jquery.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
 <?php
 if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
 (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin" || $_SESSION['userType'] == "senior" ))) {
+
+
 ?>
 <script>
 $(document).ready(function() {
@@ -94,7 +107,7 @@ $(document).ready(function() {
   $('#btnBid').on('click', function(e) { //Show confirm bid pop up box
     var bidAmt = $("#placeBid").val(); //Obtain bid Amount
     if (bidAmt > 0 && !isNaN(bidAmt) && bidAmt!=null) {
-      if (confirm("Are you confirm to bid at £ " + bidAmt + ".00? Please note that we have") == true) {
+      if (confirm("Are you confirm to bid at £ " + bidAmt + ".00? Please note that we have strict rule for withdrawing bid.") == true) {
         var bidAmt = $("#placeBid").val(); //Obtain bid Amount
         var userID = <?php echo $_SESSION['userID']?>;
         var aucID  = <?php echo $aucID?>;
@@ -122,6 +135,9 @@ $(document).ready(function() {
             else if (firstChar == "5") { //Unable to add new admin
               alert(message);
             }
+            else if (firstChar == "6") { //Unable to add new admin
+              alert(message);
+            }
           }
         });
       }
@@ -132,6 +148,8 @@ $(document).ready(function() {
   });
 
   $('#btnAddToWatch').on('click', function(e) { //Submit bid
+    var userID = <?php echo $_SESSION['userID']?>;
+    var aucID  = <?php echo $aucID?>;
     $.ajax({
       url :"viewAuction_serverProcessing.php",
       type: "POST",
@@ -147,19 +165,32 @@ $(document).ready(function() {
         else if (firstChar == "2") { //Admin successfully added
           alert(message);
         }
-        else if (firstChar == "3") { //Failed to send email
+      }
+    });
+  });
+
+  $('#btnWithdraw').on('click', function(e) { //Withdraw bid
+    var userID = <?php echo $_SESSION['userID']?>;
+    var aucID  = <?php echo $aucID?>;
+    $.ajax({
+      url :"viewAuction_serverProcessing.php",
+      type: "POST",
+      data: "action=withdrawBid&userID=" + userID + "&aucID=" + aucID,
+      success: function(data) {
+        var dataString = data;
+        var firstChar  = dataString.charAt(0);
+        var message    = dataString.slice(1);
+
+        if (firstChar == "1") { //Email in use; Unable to add admin
           alert(message);
         }
-        else if (firstChar == "4") { //Failed to add new admin
-          alert(message);
-        }
-        else if (firstChar == "5") { //Unable to add new admin
+        else if (firstChar == "2") { //Admin successfully added
           alert(message);
         }
       }
     });
   });
-});
+}); //end document ready
 </script>
 <?php
   $seconds = strtotime($aucEndDate) - time();
@@ -210,8 +241,11 @@ $(document).ready(function() {
 
     echo "
     <div id=\"biddingHistory\">
-      <input type=\"submit\" class=\"btn btn-primary\" id=\"btnBackToInfo\" name=\"btnBackToInfo\" value=\"Back\" /><br/><br/>
-      <div class=\"panel panel-default\" style=\"width: 80%;\">
+      <input type=\"submit\" class=\"btn btn-primary\" id=\"btnBackToInfo\" name=\"btnBackToInfo\" value=\"Back\" /> ";
+    if ($testingBidCount > 0) { //if user bidded, add withdraw button
+      echo "<input type=\"submit\" class=\"btn btn-primary\" id=\"btnWithdraw\" name=\"btnWithdraw\" value=\"Withdraw bids\" />";
+    }
+    echo "<br/><br/><div class=\"panel panel-default\" style=\"width: 80%;\">
         <div class=\"panel-heading\">Bidding History</div>
         <div class=\"panel-body\">
           Bidders: $bidder Bids: $totalBid Time End: ".date_format($endDatetime, 'd M Y h:i:s A')."
@@ -222,19 +256,27 @@ $(document).ready(function() {
           <th>Bid Amount</th>
           <th>Bid Time</th>";
           while (mysqli_stmt_fetch($stmtBidHistory)){
-          echo "<tr>
-                  <td>$username</td>
-                  <td>$bidAmount</td>
-                  <td>$bidTime</td>
-                </tr>";
+            if ($bidUser == $_SESSION['userID']) {
+              echo "<tr>
+                      <td><b>YOU ($username)</b></td>
+                      <td><b>$bidAmount</b></td>
+                      <td><b>$bidTime</b></td>
+                    </tr>";
+            } else {
+            echo "<tr>
+                    <td>$username</td>
+                    <td>$bidAmount</td>
+                    <td>$bidTime</td>
+                  </tr>";
+            }
           }
           mysqli_stmt_close($stmtBidHistory);
           echo "
         </table>
         <br/>
       </div>
-      <input type=\"text\" id='placeBid' style=\"width: 200px;\" name='placeBid' aria-label=\"Amount (to the nearest dollar)\" data-parsley-required=\"true\" data-parsley-errors-messages-disabled data-parsley-type=\"number\"> .00
-      <input type=\"submit\" class=\"btn btn-primary\" id=\"btnBid\" name=\"btnBackToInfo\" value=\"Bid\" />
+      <input type=\"text\" id='placeBid' style=\"width: 200px;\" name='placeBid' aria-label=\"Amount (to the nearest dollar)\" data-parsley-required=\"true\" data-parsley-errors-messages-disabled data-parsley-type=\"integer\"> .00
+      <input type=\"submit\" class=\"btn btn-primary\" id=\"btnBid\" name=\"btnBid\" value=\"Bid\" />
       <div id=\"errorMsg\"> </div>
     </div>
     ";

@@ -6,10 +6,10 @@ include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Create Auction");
-echo makeWrapper();
-echo "<form method='post'>" . makeLoginLogoutBtn() . "</form>";
-echo makeProfileButton();
-echo makeNavMenu();
+echo makeWrapper("../");
+echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
+echo makeProfileButton("../");
+echo makeNavMenu("../");
 echo makeHeader("Create New Auction");
 $environment = LOCAL; //TODO: Change to server
 ?>
@@ -30,22 +30,6 @@ $(document).ready(function() {
   var dateToday = new Date();
   var yrRange = dateToday.getFullYear() + ":" + (dateToday.getFullYear() + 5); //Allow year range from current year until 5 years later
 
-  // $("#aucStartDate").datetimepicker({
-  //   dateFormat: 'yy-mm-dd', //'Format: 2017-11-01
-  //   showWeek: true,
-  //   yearRange: yrRange,
-  //   changeMonth: true,
-  //   changeYear: true,
-  // });
-  //
-  // $("#aucStartDate").datetimepicker({
-  //   dateFormat: 'yy-mm-dd', //'Format: 2017-11-01
-  //   showWeek: true,
-  //   yearRange: yrRange,
-  //   changeMonth: true,
-  //   changeYear: true,
-  // });
-
   $("#aucBuyItNow").on("change", function() {
    if ($(this).is(":checked")) {
      $("#inputBuyItNow").css('display','block'); //to show item price input box
@@ -57,7 +41,7 @@ $(document).ready(function() {
 });
 </script>
 
-<form id="createAuctionForm" data-parsley-validate method="post">
+<form id="createAuctionForm" data-parsley-validate method="post" enctype="multipart/form-data">
   Title:
   <div class="input-group">
      <input type="text" class="form-control" id='aucTitle' name='aucTitle' data-parsley-required="true" data-parsley-errors-messages-disabled/>
@@ -76,7 +60,7 @@ $(document).ready(function() {
   Start Price:
   <div class="input-group">
     <span class="input-group-addon">£</span>
-    <input type="text" class="form-control" id='aucStartPrice' name='aucStartPrice' aria-label="Amount (to the nearest dollar)" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-type="number">
+    <input type="text" class="form-control" id='aucStartPrice' name='aucStartPrice' aria-label="Amount (to the nearest dollar)" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-type="integer">
     <span class="input-group-addon">.00</span>
   </div>
   <br/>
@@ -89,14 +73,14 @@ $(document).ready(function() {
   <div id="inputBuyItNow">
     Item Price:
     <div class="input-group">
-      <input type="text" class="form-control" id='aucItemPrice' name='aucItemPrice' aria-label="Amount (to the nearest dollar)" data-parsley-type="number" data-parsley-errors-messages-disabled>
+      <input type="text" class="form-control" id='aucItemPrice' name='aucItemPrice' aria-label="Amount (to the nearest dollar)" data-parsley-type="integer" data-parsley-errors-messages-disabled>
     </div>
   </div>
 
   Start Date:
   <div class="input-group">
     <div class="input-group date form_datetime col-md-5" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-field="dtp_input1">
-        <input class="form-control" id="aucStartDate" name="aucStartDate" style="width:250px;" size="16" type="text" value="" data-parsley-required="true" readonly>
+        <input class="form-control" id="aucStartDate" name="aucStartDate" style="width:250px;" size="16" type="text" value="" data-parsley-required="true" data-parsley-lt="#aucEndDate" data-parsley-errors-messages-disabled readonly>
         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
         <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
     </div>
@@ -106,13 +90,17 @@ $(document).ready(function() {
   End Date:
   <div class="input-group">
     <div class="input-group date form_datetime2 col-md-5" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-field="dtp_input1">
-        <input class="form-control" id="aucEndDate" name="aucEndDate" style="width:250px;" size="16" type="text" value="" data-parsley-required="true" readonly>
+        <input class="form-control" id="aucEndDate" name="aucEndDate" style="width:250px;" size="16" type="text" value="" data-parsley-required="true" data-parsley-errors-messages-disabled  data-parsley-gt="#aucStartDate" readonly>
         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
         <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
     </div>
     <input type="hidden" id="dtp_input1" value="" /><br/>
   </div>
 
+  Cover Photo: <input type="file" name="coverPhoto" onchange="previewFile()" data-parsley-required="true" data-parsley-errors-messages-disabled/>
+  <img id="preview" src="" height="200" alt="Image preview..."/><br/>
+  Item Photo(s): <input type="file" name="itemPhotos[]" multiple data-parsley-required="true" data-parsley-error-message="Please upload at least one photo to support the item info."> <br/>
+  Article(s): <input type="file" name="files[]" multiple data-parsley-required="true" data-parsley-error-message="Please upload at least one article to support the auction info."> <br/>
   <input type='submit' value='Submit' name='btnSubmit'/>
 </form>
 
@@ -149,11 +137,38 @@ $('.form_datetime2').datetimepicker({
     showMeridian: 1,
     startDate: dateToday
 });
+
+function previewFile(){
+  var preview = document.querySelector('#preview');
+  var file    = document.querySelector('input[type=file]').files[0];
+  var reader  = new FileReader();
+
+  reader.onloadend = function () {
+     preview.style.display='block';
+    preview.src = reader.result;
+  }
+
+  if (file) {
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = "";
+  }
+}
+
+previewFile();  //calls the function named previewFile()
+
 </script>
 
 <?php
 if (isset($_POST['btnSubmit'])) { //Clicked on submit button
+  $fileStatus = false;
+  $auctionStatus = false;
+
   //Obtain user input
+  $fileCount = count($_FILES['files']['name']);
+  $photoCount = count($_FILES['itemPhotos']['name']);
+  $coverPhotoName = $_FILES['coverPhoto']['name'];
+  $coverPhotoLoc = $_FILES['coverPhoto']['tmp_name'];
   $aucTitle = filter_has_var(INPUT_POST, 'aucTitle') ? $_POST['aucTitle']: null;
   $aucItem = filter_has_var(INPUT_POST, 'aucItem') ? $_POST['aucItem']: null;
   $aucDesc = filter_has_var(INPUT_POST, 'aucTitle') ? $_POST['aucTitle']: null;
@@ -180,21 +195,111 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
   $aucStartDate = filter_var($aucStartDate, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
   $aucEndDate = filter_var($aucEndDate, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-  $sqlCreateAuction = "INSERT INTO auction (auctionTitle, itemName, itemDesc, startDate, endDate, startPrice, itemPrice) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  $aucStatus = 'active';
+
+  $sqlCreateAuction = "INSERT INTO auction (auctionTitle, itemName, itemDesc, startDate, endDate, startPrice, itemPrice, auctionStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
   $stmtCreateAuction = mysqli_prepare($conn, $sqlCreateAuction) or die( mysqli_error($conn));
-  mysqli_stmt_bind_param($stmtCreateAuction, "sssssii", $aucTitle, $aucItem, $aucDesc, $aucStartDate, $aucEndDate, $aucStartPrice, $aucItemPrice);
+  mysqli_stmt_bind_param($stmtCreateAuction, "sssssii", $aucTitle, $aucItem, $aucDesc, $aucStartDate, $aucEndDate, $aucStartPrice, $aucItemPrice, $aucStatus);
   mysqli_stmt_execute($stmtCreateAuction);
   if (mysqli_stmt_affected_rows($stmtCreateAuction) > 0) {
-    echo "<script>alert(\"Insert succesfully!\")</script>";
-    header("Location:../auction/auctionList.php");
+    $auctionStatus = true;
   }
   mysqli_stmt_close($stmtCreateAuction);
+
+  //pull auction ID
+  $sqlAucID  = "SELECT MAX(auctionID) FROM auction";
+  $stmtAucID =  mysqli_prepare($conn, $sqlAucID) or die( mysqli_error($conn));
+  mysqli_stmt_execute($stmtAucID);
+  mysqli_stmt_bind_result($stmtAucID, $aucID);
+  mysqli_stmt_fetch($stmtAucID);
+  mysqli_stmt_close($stmtAucID);
+
+  //upload Cover Photo
+  $target_file = "../uploads/" . basename($_FILES["coverPhoto"]["name"]); //Location where files will be uploaded to
+
+  $coverName = basename($_FILES["coverPhoto"]["name"]);
+  $extCover = pathinfo($coverName, PATHINFO_EXTENSION); //Get file extension of uploaded file
+
+  //Set allowed file extensions
+  $allowedExtension = array('jpg', 'jpeg', 'png');
+  //Set allowed MIME type
+  $allowedMime = array('image/jpg', 'image/jpeg', 'image/pjeg', 'image/png', 'image/x-png');
+  if(in_array($ext, $allowedExtension) && (in_array($_FILES['photo']['type'], $allowedMime))) { //Check for valid file extensions/MIME type & file size
+    if (move_uploaded_file($_FILES["coverPhoto"]["tmp_name"], $target_file)) {
+      $fileName = basename($_FILES["coverPhoto"]["name"]);
+      $filePath = "CM0656-Assignment/uploads/" . basename($_FILES["files"]["name"]);
+      $fileType = 'coverPhoto';
+
+      $uploadSQL = "INSERT INTO file (auctionID, fileName, filePath, fileType) VALUES (?, ?, ?, ?)";
+      $stmtCoverPhoto = mysqli_prepare($conn, $uploadSQL) or die( mysqli_error($conn));
+      mysqli_stmt_bind_param($stmtCoverPhoto, "ssss", $aucID, $fileName, $filePath, $fileType);
+      mysqli_stmt_execute($stmtCoverPhoto);
+      mysqli_stmt_close($stmtCoverPhoto);
+    }
+  }
+  else {
+      echo "<script>alert(\"Please upload your cover photo in image format.\");</script>";
+  }
+
+  if ($photoCount > 0) { //Check if photos are selected
+    for($i = 0; $i < $photoCount; $i++) {
+      $target_file = "../uploads/" . basename($_FILES["itemPhotos"]["name"][$i]); //Location where files will be uploaded to
+
+      if (move_uploaded_file($_FILES["itemPhotos"]["tmp_name"][$i], $target_file)) {
+        $fileName = basename($_FILES["itemPhotos"]["name"][$i]);
+        $filePath = "CM0656-Assignment/uploads/" . basename($_FILES["itemPhotos"]["name"][$i]);
+        $fileType = 'itemPhoto';
+
+        $sqlUploadFile = "INSERT INTO file (auctionID, fileName, filePath, fileType) VALUES (?, ?, ?, ?)";
+        $stmtUploadFile = mysqli_prepare($conn, $sqlUploadFile) or die( mysqli_error($conn));
+        mysqli_stmt_bind_param($stmtUploadFile, "ssss", $aucID, $fileName, $filePath, $fileType);
+        mysqli_stmt_execute($stmtUploadFile);
+
+        if (mysqli_stmt_affected_rows($stmtUploadFile) > 0) {
+          mysqli_stmt_close($stmtUploadFile);
+          $fileStatus = true;
+        }
+      }
+      else {
+        echo "<script>alert(\"Sorry, there was an error uploading your photo(s).\");</script>";
+      }
+    }
+  }
+
+  if ($fileCount > 0) { //Check if files are selected
+    for($i = 0; $i < $fileCount; $i++) {
+      $target_file = "../uploads/" . basename($_FILES["files"]["name"][$i]); //Location where files will be uploaded to
+
+      if (move_uploaded_file($_FILES["files"]["tmp_name"][$i], $target_file)) {
+        $fileName = basename($_FILES["files"]["name"][$i]);
+        $filePath = "CM0656-Assignment/uploads/" . basename($_FILES["files"]["name"][$i]);
+        $fileType = 'article';
+
+        $sqlUploadFile = "INSERT INTO file (auctionID, fileName, filePath, fileType) VALUES (?, ?, ?, ?)";
+        $stmtUploadFile = mysqli_prepare($conn, $sqlUploadFile) or die( mysqli_error($conn));
+        mysqli_stmt_bind_param($stmtUploadFile, "ssss", $aucID, $fileName, $filePath, $fileType);
+        mysqli_stmt_execute($stmtUploadFile);
+
+        if (mysqli_stmt_affected_rows($stmtUploadFile) > 0) {
+          mysqli_stmt_close($stmtUploadFile);
+          $fileStatus = true;
+        }
+      }
+      else {
+        echo "<script>alert(\"Sorry, there was an error uploading your file(s).\");</script>";
+      }
+    }
+  }
+  if ($auctionStatus = true && $fileStatus) {
+    echo "<script>alert(\"Auction has been created succesfully!\");";
+    echo "top.window.location='auctionList.php';</script>";
+  }
   mysqli_close($conn);
 }
-  ?>
+?>
 
 
 <?php
-echo makeFooter();
+echo makeFooter("../");
 echo makePageEnd();
 ?>

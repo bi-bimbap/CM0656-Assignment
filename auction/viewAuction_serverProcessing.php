@@ -50,9 +50,9 @@ if ($function == "placeBid") { //Place bid
       mysqli_stmt_bind_param($stmtBidderList, "i", $aucID);
       mysqli_stmt_execute($stmtBidderList);
       mysqli_stmt_bind_result($stmtBidderList, $email, $fullName, $bidAmt);
-      while (mysqli_stmt_fetch($stmtBidderList)){
+      while (mysqli_stmt_fetch($stmtBidderList)) {
         //encode variable to be used in url
-        $auctionIDEncoded = urlencode(base64_encode($auctionIDEncoded));
+        $auctionIDEncoded = urlencode(base64_encode($auctionID));
         $url = $environment."/CM0656-Assignment/auction/Member_viewAuction.php?auctionID=".$auctionIDEncoded;
         if ($bidAmt == $currentBid) { //notify highest bidder has been outbidded
           if (sendBidUpdateEmail($email, $fullName, 'You have been outbidded on '.$aucTitle.'!', '../email/notifier_outbidded.html', $url, $bidAmount, $aucTitle)) { //Email sent
@@ -77,6 +77,9 @@ if ($function == "placeBid") { //Place bid
       mysqli_stmt_execute($stmtWatchList);
       mysqli_stmt_bind_result($stmtWatchList, $email, $fullName, $bidAmt);
       while (mysqli_stmt_fetch($stmtWatchList)){
+        //encode variable to be used in url
+        $auctionIDEncoded = urlencode(base64_encode($auctionID));
+        $url = $environment."/CM0656-Assignment/auction/Member_viewAuction.php?auctionID=".$auctionIDEncoded;
         if (sendBidUpdateEmail($email, $fullName, 'New bid on '.$aucTitle.'!', '../email/notifier_bidUpdate.html', $url, $bidAmount, $aucTitle)) { //Email sent
           //testing purpose
           echo json_encode("5Watchlist email has been sent.");
@@ -124,11 +127,153 @@ else if ($function == "addToWatch") { //add to watch list
     $stmtAddToWatch = mysqli_prepare($conn, $sqlAddToWatch) or die(mysqli_error($conn));
     mysqli_stmt_bind_param($stmtAddToWatch, "ii", $userID, $aucID);
     mysqli_stmt_execute($stmtAddToWatch);
-    if (mysqli_stmt_affected_rows($stmt) > 0) {
+    if (mysqli_stmt_affected_rows($stmtAddToWatch) > 0) {
         echo json_encode("2Successfully added to watchlist!");
+    }
+    mysqli_stmt_close($stmtAddToWatch);
+  }
+  mysqli_close($conn);
+}
+else if ($function == "withdrawBid") { //withdraw bid
+  $userID = filter_has_var(INPUT_POST, 'userID') ? $_POST['userID']: null;
+  $userID = trim($userID);
+  $userID = filter_var($userID, FILTER_SANITIZE_STRING);
+
+  $aucID = filter_has_var(INPUT_POST, 'aucID') ? $_POST['aucID']: null;
+  $aucID = trim($aucID);
+  $aucID = filter_var($aucID, FILTER_SANITIZE_STRING);
+
+  //get user penalties count
+  $sqlPenalties = "SELECT penaltyCount,bidPenalty FROM user
+                      WHERE userID = ?";
+  $stmtPenalties = mysqli_prepare($conn, $sqlPenalties) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmtPenalties, "i", $userID);
+  mysqli_stmt_execute($stmtPenalties);
+  mysqli_stmt_bind_result($stmtPenalties, $penaltyCount, $bidPenalty);
+  mysqli_stmt_fetch($stmtPenalties);
+  mysqli_stmt_close($stmtPenalties);
+
+  //indicate withdraw status
+  $boolWithdraw = 'true';
+
+  // if user's bid penalty is less than 2
+  if ($bidPenalty < 2) {
+    $bidPenalty = $bidPenalty + 1;
+    //update bid penalty
+    $sqlBidPenalty = "UPDATE user SET bidPenalty = ? WHERE userID = ?";
+    $stmtBidPenalty = mysqli_prepare($conn, $sqlBidPenalty) or die( mysqli_error($conn));
+    mysqli_stmt_bind_param($stmtBidPenalty, "ii", $bidPenalty, $userID);
+    mysqli_stmt_execute($stmtBidPenalty);
+    mysqli_stmt_close($stmtBidPenalty);
+
+    $sqlWithdrawBid = "UPDATE bid SET bidStatus = 'withdrawn' WHERE userID = ? AND auctionID = ?";
+    $stmtWithdrawBid = mysqli_prepare($conn, $sqlWithdrawBid) or die( mysqli_error($conn));
+    mysqli_stmt_bind_param($stmtWithdrawBid, "ii", $userID, $aucID);
+    mysqli_stmt_execute($stmtWithdrawBid);
+    if (mysqli_stmt_affected_rows($stmtWithdrawBid) > 0) {
+      $penaltyLeft = 2 - $bidPenalty;
+      echo json_encode("1Bids have been withdrawn! Your penalty-free withdraw quota: $penaltyLeft");
+    }
+    mysqli_stmt_close($stmtWithdrawBid);
+  }
+  else { //if user's bid penalty is = 2
+    if ($penaltyCount < 3) {
+      $penaltyCount = $penaltyCount + 1;
+      //withdraw bid
+      $sqlWithdrawBid = "UPDATE bid SET bidStatus = 'withdrawn' WHERE userID = ? AND auctionID = ?";
+      $stmtWithdrawBid = mysqli_prepare($conn, $sqlWithdrawBid) or die( mysqli_error($conn));
+      mysqli_stmt_bind_param($stmtWithdrawBid, "ii", $userID, $aucID);
+      mysqli_stmt_execute($stmtWithdrawBid);
+      if (mysqli_stmt_affected_rows($stmtWithdrawBid) > 0) {
+        //update penalty count
+        $sqlPenaltyCount = "UPDATE user SET penaltyCount = ? WHERE userID = ?";
+        $stmtPenaltyCount = mysqli_prepare($conn, $sqlPenaltyCount) or die( mysqli_error($conn));
+        mysqli_stmt_bind_param($stmtPenaltyCount, "ii", $penaltyCount, $userID);
+        mysqli_stmt_execute($stmtPenaltyCount);
+        mysqli_stmt_close($stmtPenaltyCount);
+
+        if ($penaltyCount==3) {
+          $blacklistReason = "Exceed auction penalties";
+          //insert to blacklist
+          $sqlInsertBlacklist = "INSERT INTO user_blacklist (userID,blacklistReason) VALUES (?, ?)";
+          $stmtBlacklist = mysqli_prepare($conn, $sqlInsertBlacklist) or die( mysqli_error($conn));
+          mysqli_stmt_bind_param($stmtBlacklist, "is", $userID, $blacklistReason);
+          mysqli_stmt_execute($stmtBlacklist);
+        }
+        echo json_encode("2Bids have been withdrawn! Your penalty count: $penaltyCount");
+      }
+      mysqli_stmt_close($stmtWithdrawBid);
+    }
+    else {
+      $boolWithdraw = 'false';
+      echo json_encode("3Failed to withdraw! You have exceeded your penalty limit.");
     }
   }
 
-}
+  if ($boolWithdraw == 'true') {
+    //pull auction Title
+    $sqlAucTitle  = "SELECT auctionTitle FROM auction WHERE auctionID = ?";
+    $stmtAucTitle =  mysqli_prepare($conn, $sqlAucTitle) or die( mysqli_error($conn));
+    mysqli_stmt_bind_param($stmtAucTitle, "i", $aucID);
+    mysqli_stmt_execute($stmtAucTitle);
+    mysqli_stmt_bind_result($stmtAucTitle, $aucTitle);
+    mysqli_stmt_fetch($stmtAucTitle);
+    mysqli_stmt_close($stmtAucTitle);
 
+    //check whether user's highest bid = auction's highest bid
+    $sqlCheckHighestBid  = "SELECT MAX(bidAmount) FROM bid WHERE userID = ? AND auctionID = ?";
+    $stmtCheckHighestBid =  mysqli_prepare($conn, $sqlCheckHighestBid) or die( mysqli_error($conn));
+    mysqli_stmt_bind_param($stmtCheckHighestBid, "ii", $userID, $aucID);
+    mysqli_stmt_execute($stmtCheckHighestBid);
+    mysqli_stmt_bind_result($stmtCheckHighestBid, $highestBid);
+    mysqli_stmt_fetch($stmtCheckHighestBid);
+    mysqli_stmt_close($stmtCheckHighestBid);
+
+    $sqlCheckCurrentBid  = "SELECT MAX(bidAmount) FROM bid WHERE userID = ? AND auctionID = ?";
+    $stmtCheckCurrentBid =  mysqli_prepare($conn, $sqlCheckCurrentBid) or die( mysqli_error($conn));
+    mysqli_stmt_bind_param($stmtCheckCurrentBid, "ii", $userID, $aucID);
+    mysqli_stmt_execute($stmtCheckCurrentBid);
+    mysqli_stmt_bind_result($stmtCheckCurrentBid, $aucCurrentBid);
+    mysqli_stmt_fetch($stmtCheckCurrentBid);
+    mysqli_stmt_close($stmtCheckCurrentBid);
+
+    if ($highestBid == $aucCurrentBid) {
+      //select alternate highest bid under this auction
+      $sqlSelectAlternate  = "SELECT MAX(bidAmount) FROM bid WHERE bidStatus = 'active' AND auctionID = ?";
+      $stmtSelectAlternate = mysqli_prepare($conn, $sqlSelectAlternate) or die( mysqli_error($conn));
+      mysqli_stmt_bind_param($stmtSelectAlternate, "i", $aucID);
+      mysqli_stmt_execute($stmtSelectAlternate);
+      mysqli_stmt_bind_result($stmtSelectAlternate, $alternateBid);
+      mysqli_stmt_fetch($stmtSelectAlternate);
+      mysqli_stmt_close($stmtSelectAlternate);
+
+      //replace auction current bid to second highest bid
+      $sqlUpdateCurrentBid = "UPDATE auction SET currentBid = ? WHERE auctionID = ?";
+      $stmtUpdateCurrentBid = mysqli_prepare($conn, $sqlUpdateCurrentBid) or die( mysqli_error($conn));
+      mysqli_stmt_bind_param($stmtUpdateCurrentBid, "ii", $alternateBid, $aucID);
+      mysqli_stmt_execute($stmtUpdateCurrentBid);
+      if (mysqli_stmt_affected_rows($stmtUpdateCurrentBid) > 0) {
+        //notify bidder
+        $sqlBidderList = "SELECT DISTINCT u.emailAddr, u.fullName, b.bidAmount FROM user u JOIN bid b ON u.userID = b.userID WHERE b.auctionID = ? AND b.bidStatus = 'active'";
+        $stmtBidderList = mysqli_prepare($conn, $sqlBidderList) or die( mysqli_error($conn));
+        mysqli_stmt_bind_param($stmtBidderList, "i", $aucID);
+        mysqli_stmt_execute($stmtBidderList);
+        mysqli_stmt_bind_result($stmtBidderList, $email, $fullName, $bidAmt);
+        while (mysqli_stmt_fetch($stmtBidderList)) {
+          //encode variable to be used in url
+          $auctionIDEncoded = urlencode(base64_encode($auctionID));
+          $url = $environment."/CM0656-Assignment/auction/Member_viewAuction.php?auctionID=".$auctionIDEncoded;
+          if ($bidAmt == $alternateBid) { //notify highest bidder has been outbidded
+            sendBidUpdateEmail($email, $fullName, 'You are currently the highest bidder on '.$aucTitle.'!', '../email/notifier_highestBidder.html', $url, $bidAmount, $aucTitle); //Email sent
+          }
+          else {
+            sendBidUpdateEmail($email, $fullName, 'Bid update on '.$aucTitle.'!', '../email/notifier_bidderChanged.html', $url, $bidAmount, $aucTitle); //Email sent
+          }
+        }
+        mysqli_stmt_close($stmtBidderList);
+      }
+    }
+  }
+  mysqli_close($conn);
+}
 ?>

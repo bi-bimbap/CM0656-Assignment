@@ -14,6 +14,8 @@
 <?php
 if (isset($_POST['btnUpload'])) { //Upload button is clicked
   $fileCount = count($_FILES['files']['name']);
+  $coverPhotoName = $_FILES['coverPhoto']['name'];
+  $coverPhotoLoc = $_FILES['coverPhoto']['tmp_name'];
 
   //NOTE: Optional validation (Refer staff_addEvent.php [TyneEvents Assignment])
   // //Set allowed file extensions
