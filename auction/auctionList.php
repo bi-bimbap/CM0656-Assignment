@@ -6,6 +6,7 @@ include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
 echo makePageStart("Auction Lists");
+echo makeWrapper("../");
 echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
 echo makeProfileButton("../");
 echo makeNavMenu("../");
@@ -30,19 +31,30 @@ $_SESSION['logged-in'] = true; //TODO: Remove
 if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
 (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin" || $_SESSION['userType'] == "senior" ))) {
 
+
   $sqlAuctionList = "SELECT auction.auctionID, auction.auctionTitle, auction.itemName, auction.startDate,auction.endDate,
-                            auction.startPrice, auction.itemPrice, auction.currentBid, COUNT(bid.bidID)
-                            FROM auction LEFT JOIN bid ON auction.auctionID = bid.auctionID
-                            WHERE auction.endDate > CURRENT_TIMESTAMP GROUP BY auction.auctionID";
+                            auction.startPrice, auction.itemPrice, auction.currentBid, COUNT(bid.bidID), file.filePath
+                            FROM auction LEFT JOIN bid ON auction.auctionID = bid.auctionID JOIN file ON auction.auctionID = file.auctionID
+                            WHERE auction.endDate > CURRENT_TIMESTAMP AND auction.auctionStatus = 'active' OR file.fileType = 'coverPhoto' GROUP BY auction.auctionID";
   $stmtAuctionList = mysqli_prepare($conn, $sqlAuctionList) or die( mysqli_error($conn));
   mysqli_stmt_execute($stmtAuctionList);
-  mysqli_stmt_bind_result($stmtAuctionList, $aucID, $aucTitle, $aucItem, $aucStartDate, $aucEndDate, $aucStartPrice, $aucItemPrice, $aucCurrentBid,$bids);
+  mysqli_stmt_bind_result($stmtAuctionList, $aucID, $aucTitle, $aucItem, $aucStartDate, $aucEndDate, $aucStartPrice, $aucItemPrice, $aucCurrentBid,$bids,$coverPhoto);
   while (mysqli_stmt_fetch($stmtAuctionList)) {
+    $seconds = strtotime($aucEndDate) - time();
+
+    $days = floor($seconds / 86400);
+    $seconds %= 86400;
+
+    $hours = floor($seconds / 3600);
+    $seconds %= 3600;
+
+    $minutes = floor($seconds / 60);
+    $seconds %= 60;
     echo "
     <div class=\"media\">
       <div class=\"media-left media-middle\">
         <a href=\"#\">
-          <img class=\"media-object\" src=\"...\" alt=\"...\">
+          <img class=\"media-object\" src=\"$environment/$coverPhoto\" alt=\"...\" height=\"200px\" width=\"150px\">
         </a>
       </div>
       <div class=\"media-body\">
@@ -56,7 +68,15 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($
           echo "Currend Bid: $aucCurrentBid<br/>";
         } else {
           echo "Start Price: $aucStartPrice<br/>";
-        } echo "<b>$bids</b> bid(s)
+        }
+        echo "<b>$bids</b> bid(s)<br/>";
+        if ($days == 0) {
+          echo "Time Left: $hours hours and $minutes minutes<br/>";
+        } else if ($days == 0 && $hours == 0 ) {
+          echo "Time Left: $minutes minutes<br/>";
+        } else {
+          echo "Time Left: $days days and $hours hours and $minutes minutes<br/>";
+        } echo"
       </div>
     </div>";
   }
