@@ -132,3 +132,4 @@ function makeLoginLogoutBtn($prefix) { //Display login/logout button based on se
   }
   return $output;
 }
+?>
