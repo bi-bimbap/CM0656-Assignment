@@ -38,14 +38,14 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && isset($_
 
   <link href="../css/bootstrap.css" rel="stylesheet">
   <script src="../scripts/jquery.js"></script>
+  <script src="../scripts/bootstrap.min.js"></script>
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
   <link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
-  <script src="../scripts/bootstrap.min.js"></script>
-  <script src="../scripts/parsley.min.js"></script>
-  <link rel="stylesheet" href="../css/parsley.css" type="text/css" />
+  <!-- <script src="../scripts/parsley.min.js"></script>
+  <link rel="stylesheet" href="../css/parsley.css" type="text/css" /> -->
 
   <script language="JavaScript" type="text/javascript">
   $(document).ready(function() {
@@ -62,6 +62,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && isset($_
     $('[data-toggle="tooltip"]').tooltip(); //Trigger tooltips
   });
   </script>
+
   <div class="content">
     <div class="container">
       <div class="well">
@@ -481,7 +482,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && isset($_
 
   <?php
   if (isset($_POST['btnUpdateDetails2'])) { //Update password
-    //Obtain user input
+    // Obtain user input
     $password = filter_has_var(INPUT_POST, 'txtPassword') ? $_POST['txtPassword']: null;
     $confirmPassword = filter_has_var(INPUT_POST, 'txtConfirmPassword') ? $_POST['txtConfirmPassword']: null;
     $question = filter_has_var(INPUT_POST, 'ddlSecurityQuestion2') ? $_POST['ddlSecurityQuestion2']: null;
@@ -592,6 +593,9 @@ else { //Did not login; Redirect to home page
   header("Refresh:1;url=../index.php");
 }
 ?>
+
+<script src="../scripts/parsley.min.js"></script>
+<link rel="stylesheet" href="../css/parsley.css" type="text/css" />
 
 <?php
 echo makeFooter("../");
