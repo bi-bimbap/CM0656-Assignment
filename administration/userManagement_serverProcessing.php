@@ -310,13 +310,14 @@ else if ($function == "banMember") { //Ban selected member
   mysqli_close($conn);
 }
 else if ($function == "loadReportedContents") {
-  $repotSQL = "SELECT reportID, contentID, contentType, userID, reportReason, reportFrom FROM report";
+  $repotSQL = "SELECT reportID, contentID, contentType, userID, reportReason, reportFrom FROM report where reportStatus = '0' ORDER BY reportDateTime";
   $stmt = mysqli_prepare($conn, $repotSQL) or die( mysqli_error($conn));
   mysqli_stmt_execute($stmt);
   mysqli_stmt_bind_result($stmt, $reportID, $contentID, $contentType, $reportedID, $reason, $reportFrom);
 
   while (mysqli_stmt_fetch($stmt)) {
-    $a_json_row = array("ReportID" => $reportID, "ContentType" => $contentType, "ReportedUser" => $reportedID, "ReportedBy" => $reportFrom);
+	  
+    $a_json_row = array("ReportID" => "<a class='various' data-fancybox-type='iframe' href='manageReport.php?reportid=$reportID'>".$reportID."</a>", "ContentType" => $contentType, "ReportedUser" => $reportedID, "ReportedBy" => $reportFrom);
     array_push($a_json, $a_json_row);
   }
   echo json_encode($a_json, JSON_PRETTY_PRINT); //Convert the array into JSON format

@@ -70,20 +70,11 @@ $environment = WEB;
     *******************************************************************************************************************************************************-->
     <br/><br/><br/>
     <div class='message-report'>
-      <form method='post' action='Member_reportMessage.php'>
-      Report:
-      <select name='reportSelection'>
-        <option value='sexual content'>Sexual content</option>
-        <option value='spam'>Spam</option>
-        <option value='offensive'>Offensive</option>
-        <option value='scam or misleading'>Scam or misleading</option>
-        <option value='false news story'>False news story</option>
-        <option value='violent content'>Violent content</option>
-        <option value='repulsive content'>Repulsive content</option>
-        <option value='others'>Others</option>
-      </select>
-      <input type='submit' id='reportSelection_submit' name='reportSelection_submit' value='Post'/>
-      </form>
+        <form method='post' style='text-align:center'>
+          <input type='text' placeholder ='Description of the inappropriate content...' style='    display: block;
+          margin: 50px auto 20px;' name='report_reason' id='reason'/>
+    		  <input type='submit' id='report_submit' name='report_submit' value='REPORT'/>
+        </form>
     </div>
     <br/><br/><br/>
 
@@ -95,19 +86,11 @@ $environment = WEB;
     if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
     (isset($_SESSION['userType']) && ($_SESSION['userType'] == "junior" || $_SESSION['userType'] == "senior"))) {
 
-      $dropdown = "";
-      if(isset($_POST['reportSelection'])) {
-        $dropdown = $_POST['reportSelection'];
-      }
-
-      if(isset($_POST['reportSelection']) )   {
-
-        if ($conn->connect_error) {
-           die("Connection failed: " . $conn->connect_error);
-        }
+      if(isset($_POST['report_submit']) )   {
+        $reason = $_POST['report_reason'];
 
         $sqlReport = "INSERT INTO report (contentID, userID, reportReason, reportFrom,contentType)
-                      VALUES ('$msgID','$postedUserID','$dropdown','$userID','discussion-message')";
+                      VALUES ('$msgID','$postedUserID','$reason','$userID','discussion-message')";
 
         if (mysqli_query($conn, $sqlReport)) {
             echo "<script>alert('Your report has been posted!!!!')</script>";
