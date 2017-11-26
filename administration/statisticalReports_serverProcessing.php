@@ -8,8 +8,6 @@ $function = filter_has_var(INPUT_POST, 'action') ? $_POST['action']: null;
 $function = trim($function);
 $function = filter_var($function, FILTER_SANITIZE_STRING);
 
-// $function = "auction";
-
 $a_json = array();
 $a_json_row = array();
 
@@ -105,16 +103,6 @@ if ($function == "ageGroup") {
   $a_json_row = array("ageGroup" => ">90", "count" => $age90Count);
   array_push($a_json, $a_json_row);
 
-  // //Age group >100
-  // $ageOthersSQL = "SELECT fullName FROM user WHERE YEAR(CURDATE()) - YEAR(dob) >= 100";
-  // $stmt = mysqli_prepare($conn, $ageOthersSQL) or die( mysqli_error($conn));
-  // mysqli_stmt_execute($stmt);
-  // mysqli_stmt_store_result($stmt);
-  // $ageOthersCount = mysqli_stmt_num_rows($stmt);
-  // mysqli_stmt_close($stmt);
-  // $a_json_row = array("ageGroup" => ">100", "count" => $ageOthersCount);
-  // array_push($a_json, $a_json_row);
-
   echo json_encode($a_json, JSON_PRETTY_PRINT);
 }
 else if ($function == "registeredUsers") { //Get no. of registered users for the past 6 months
@@ -200,8 +188,6 @@ else if ($function == "competition") { //Get no. of users that participated in a
   $testID = filter_has_var(INPUT_POST, 'testID') ? $_POST['testID']: null;
   $testID = trim($testID);
   $testID = filter_var($testID, FILTER_SANITIZE_STRING);
-
-  // $testID = 1;
 
   for ($i = 10; $i <= 16; $i = $i + 3) {
     if ($i == 16) {
