@@ -11,6 +11,13 @@ echo makeHeader("Membership Confirmation");
 $environment = WEB; //TODO: Change to server
 ?>
 
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
+<link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
+<link href="../css/bootstrap.css" rel="stylesheet">
+
 <?php
 if (isset($_GET['mail']) && isset($_GET['exDate'])) { //Get email address & membership confirmation expiry date
   //Decode url-encoded string
@@ -47,7 +54,10 @@ if (isset($_GET['mail']) && isset($_GET['exDate'])) { //Get email address & memb
       mysqli_stmt_execute($stmt);
 
       if (mysqli_stmt_affected_rows($stmt) > 0) { //Update successful
-        $url = $environment . "/CM0656-Assignment/administration/Member_confirmMembership.php?mail=" . $emailAddr . "&exDate=" . $memberConfirmationExpiryDate;
+        $emailEncoded = urlencode(base64_encode($emailAddr));
+        $memberConfirmationExpiryDateEncoded = urlencode($memberConfirmationExpiryDate);
+        $url = $environment . "/CM0656-Assignment/administration/Member_confirmMembership.php?mail=" . $emailEncoded .
+        "&exDate=" . $memberConfirmationExpiryDateEncoded;
         if (sendEmail($emailAddr, $fullName, 'Please Verify Your Email Address', '../email/notifier_verifyEmail.html', $url)) { //Email sent
           echo "<p>The link you clicked on has expired. Another email has been sent to your email address.</p>";
           echo "<p>Follow the instructions to complete the registration process.</p>";
