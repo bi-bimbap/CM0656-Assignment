@@ -5,17 +5,27 @@ session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
+require_once('../functions.php');
 echo makePageStart("Statistical Reports");
+echo makeWrapper("../");
 echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
 echo makeProfileButton("../");
 echo makeNavMenu("../");
 echo makeHeader("Statistical Reports");
 $environment = WEB; //TODO: change to server
+
+
+
+
+
+
+
+
 ?>
 
 <?php //Only show content if user is logged in
 if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
-(isset($_SESSION['userType']) && $_SESSION['userType'] == "admin")) {
+(isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
   if (checkUserStatus($conn, $_SESSION['userID']) == "active") { //Only allow if user status is active
   ?>
 
@@ -23,8 +33,20 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
 <script src="../scripts/jquery.js"></script>
 <script src="../scripts/Chart.min.js"></script>
 <script src="../scripts/bootstrap.min.js"></script>
+<link href="../css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="../css/bootstrap.css" rel="stylesheet">
+<script src="../scripts/jquery.js"></script>
+<script src="../scripts/bootstrap.min.js"></script>
+<script src="../scripts/jquery.dataTables.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
+<link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
 
 <!-- <div class="chart-container container-fluid" style="position: relative; height:40vh; width:40vw"> -->
+<div class='content'>
+<div class='container'>
 <div class="chart-container container-fluid">
   <div class="row">
     <div class="col-lg-6">
@@ -38,9 +60,9 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
 
   <div class="row">
     <div class="col-lg-6">
-      <label for="ddlAuction">Auction: </label>
+      <label class='statisticLabel' for="ddlAuction">Auction: </label>
 
-      <select id='ddlAuction' name='ddlAuction'>
+      <select class='statisticSelect' id='ddlAuction' name='ddlAuction'>
         <?php
         $ddlOptionSQL = "SELECT auctionID, auctionTitle FROM auction WHERE CURDATE() > endDate ORDER BY endDate DESC";
         $stmt = mysqli_prepare($conn, $ddlOptionSQL) or die( mysqli_error($conn));
@@ -57,9 +79,9 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
     </div>
 
     <div class="col-lg-6">
-      <label for="ddlCompetition">Competition: </label>
+      <label class='statisticLabel'for="ddlCompetition">Competition: </label>
 
-      <select id='ddlCompetition' name='ddlCompetition'>
+      <select class='statisticSelect' id='ddlCompetition' name='ddlCompetition'>
         <?php
         $ddlCompetitionSQL = "SELECT testID, testName FROM competition_test WHERE
         CURDATE() > testEndDate ORDER BY testEndDate DESC";
@@ -77,7 +99,8 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
     </div>
   </div>
 </div>
-
+</div>
+</div>
 <script>
 $(document).ready(function() {
   $.ajaxSetup({
