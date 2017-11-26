@@ -1,5 +1,5 @@
 <?php
-ini_set("session.save_path", "");
+// ini_set("session.save_path", "");
 session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
@@ -11,9 +11,6 @@ echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
 echo makeProfileButton("../");
 echo makeNavMenu("../");
 echo makeHeader("Create Inappropriate Phrase");
-$_SESSION['userID'] = '3'; //TODO: Remove
-$_SESSION['userType'] = 'mainAdmin'; //TODO: Remove
-$_SESSION['logged-in'] = true; //TODO: Remove
 $environment = WEB;
 ?>
 <!-- CSS style -->
@@ -22,8 +19,11 @@ $environment = WEB;
 <link rel="stylesheet" href="../css/parsley.css" />
 <link rel="stylesheet" href="../css/stylesheet.css" />
 <script src="../scripts/jquery.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="../scripts/parsley.min.js"></script>
-
+<div class="content">
+	<div class="container" style='text-align:Center'>
 <!--*******************************************************************************************************************************************************
       DISCUSSION BOARD : Create New Inappropriate Phrase Form
 *******************************************************************************************************************************************************-->
@@ -53,11 +53,17 @@ $environment = WEB;
 
               //Sanitize user input
               $inappropriate_phrase = filter_var($inappropriate_phrase, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+              $length = strlen($inappropriate_phrase);
+              $replacementWord = "";
 
+              for($i=0; $i<$length; $i++){
+                $replacementWord.="*";
+              }
+			  
               //Insert user's input into database
-                $sqlInappropriate = "INSERT INTO discussion_inappropriate (InappropriatePhrase)	VALUES (?)";
+                $sqlInappropriate = "INSERT INTO discussion_inappropriate (InappropriatePhrase, replacementWord)	VALUES (?,?)";
                 $stmtInappropriate = mysqli_prepare($conn, $sqlInappropriate) or die( mysqli_error($conn));
-                mysqli_stmt_bind_param($stmtInappropriate, 's', $inappropriate_phrase);
+                mysqli_stmt_bind_param($stmtInappropriate, 'ss', $inappropriate_phrase, $replacementWord);
                 mysqli_stmt_execute($stmtInappropriate);
 
               	if (mysqli_stmt_affected_rows($stmtInappropriate) > 0) {
@@ -77,10 +83,10 @@ $environment = WEB;
       **********************************************************************************************************************************************************/
       echo"
       <div class='displayInappropriateInfo'>
-      <table id='tblInappropriateList' class='display' width='30%'>
+      <table id='tblInappropriateList' style='margin-right: auto;margin-left: auto;    text-align: left;'class='display'>
         <thead>
           <tr>
-            <th>Inappropriate Phrase</th>
+            <th><h3>Inappropriate Phrase</h3></th>
           </tr>
         </thead>";
 
@@ -113,7 +119,8 @@ $environment = WEB;
   mysqli_stmt_close($stmtDisplayInappropriate);
   mysqli_close($conn);
  ?>
-
+</div>
+</div>
 <?php
 echo makeFooter("../");
 echo makePageEnd();

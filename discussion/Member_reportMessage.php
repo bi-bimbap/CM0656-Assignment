@@ -1,5 +1,5 @@
 <?php
-ini_set("session.save_path", "");
+// ini_set("session.save_path", "");
 session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
@@ -73,12 +73,13 @@ $environment = WEB;
       <form method='post' action='Member_reportMessage.php'>
       Report:
       <select name='reportSelection'>
-        <option value='sexual'>Sexual content</option>
+        <option value='sexual content'>Sexual content</option>
         <option value='spam'>Spam</option>
         <option value='offensive'>Offensive</option>
-        <option value='scam'>Scam or misleading</option>
-        <option value='falsenews'>False news story</option>
-        <option value='violent'>Violent or repulsive content</option>
+        <option value='scam or misleading'>Scam or misleading</option>
+        <option value='false news story'>False news story</option>
+        <option value='violent content'>Violent content</option>
+        <option value='repulsive content'>Repulsive content</option>
         <option value='others'>Others</option>
       </select>
       <input type='submit' id='reportSelection_submit' name='reportSelection_submit' value='Post'/>
@@ -106,7 +107,7 @@ $environment = WEB;
         }
 
         $sqlReport = "INSERT INTO report (contentID, userID, reportReason, reportFrom,contentType)
-                      VALUES ('$msgID','$postedUserID','$dropdown','$userID','discussion-message')";
+                      VALUES ('$msgID','$postedUserID','$dropdown','$userID','discussion message')";
 
         if (mysqli_query($conn, $sqlReport)) {
             echo "<script>alert('Your report has been posted!!!!')</script>";

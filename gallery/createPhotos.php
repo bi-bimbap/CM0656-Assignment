@@ -1,6 +1,6 @@
 <?php 
 	include '../db/database_conn.php';
-	ini_set("session.save_path", "../../../sessionData");
+	ini_set("session.save_path", "");
 	session_start();
 	$id = $_GET['albumID']
 ?>
@@ -64,77 +64,63 @@ if(isset($_POST['btn-upload']))
 
 			$status = 1;
 			
-			
-			if(move_uploaded_file($photo_loc,$folder.$final_photo))
-			{
-				$sql =" INSERT INTO `album_photo`(`photoPath`, `photoStatus`, `photoDescription`, `albumID`, `userID`) 
-						VALUES ( CONCAT('../images/',?), ?, ?, ?, ?)";
-				$stmt = mysqli_prepare($conn, $sql); 
-				mysqli_stmt_bind_param($stmt, 'sisii', $final_photo, $status, $photoDescription, $albumid, $user);
-				mysqli_stmt_execute($stmt);
-				?>
+			if (!empty($_FILES["photo"]["name"])) {
+				$name = basename($_FILES["photo"]["name"]);
+				$ext = pathinfo($name, PATHINFO_EXTENSION); //Get file extension of uploaded file
+				//Set allowed file extensions
+				$allowedExtension = array('jpg', 'jpeg', 'png');
+				//Set allowed MIME type
+				$allowedMime = array('image/jpg', 'image/jpeg', 'image/pjeg', 'image/png', 'image/x-png');
 
-				<script>
-				alert("Uploaded Successfully");
-		        </script>
-				<?php
+				if(in_array($ext, $allowedExtension) && (in_array($_FILES['photo']['type'], $allowedMime))) { //Check for valid file extensions/MIME type & file size
+
+				
+				
+					
+					if(move_uploaded_file($photo_loc,$folder.$final_photo))
+					{
+						$sql =" INSERT INTO `album_photo`(`photoPath`, `photoStatus`, `photoDescription`, `albumID`, `userID`) 
+								VALUES ( CONCAT('../images/',?), ?, ?, ?, ?)";
+						$stmt = mysqli_prepare($conn, $sql); 
+						mysqli_stmt_bind_param($stmt, 'sisii', $final_photo, $status, $photoDescription, $albumid, $user);
+						mysqli_stmt_execute($stmt);
+						
+
+						echo "<script>
+						alert('$final_photo has been Uploaded Successfully');
+						</script>";
+						
+					}
+					else
+					{
+						?>
+						<script>
+						alert("Upload Failed");
+					  //  window.location.href='upload_file.php?eventID=<?=$eventID?>&method=upload';
+						</script>
+						<?php
+					}
+				
+				
+				
+			
+			
+			
+						}
+			else {
+				//Uploaded unaccepted file
+				if (!in_array($ext, $allowedExtension) && !in_array($_FILES['fileLinks']['type'], $allowedMime)) {
+					  echo "<script>alert('File type not supported!')</script>";
+				  }
+
 			}
-			else
-			{
-				?>
-				<script>
-				alert("Upload Failed");
-		      //  window.location.href='upload_file.php?eventID=<?=$eventID?>&method=upload';
-		        </script>
-				<?php
-			}
+		}
+		else { //Cannot upload nothing
+			echo "<script>alert('Please choose a file!')</script>";
+		}
 }
 
-			/*if(!is_numeric($price)){
-				echo "Please key in a proper number in price input<br>";
-			}
-			
-			if(strlen($eventName)>256){
-				echo "Please key in a shorter event title<br>";
-			}
-			if(strlen($desc)>256){
-				echo "Please key in a shorter event description<br>";
-			}
-			if(empty($eventName)){
-				echo "Please fill in the event name<br>";
-			}
-			if(empty($desc)){
-				echo "Please fill in the event description<br>";
-			}
-			if($startDate > $endDate){
-				echo "Start date must be hapenning before end date<br>";
-			}
-			if(empty($startDate)){
-				echo "Start date cannot be empty<br>";
-			}
-			if(empty($endDate)){
-				echo "End date cannot be empty<br>";
-			}
 
-			if(is_numeric($price) && strlen($eventName)<=256 && strlen($desc)<=256 && !empty($eventName) && !empty($desc) && $startDate <= $endDate && !empty($startDate) && !empty($startDate)){
-				$sql = "UPDATE te_events SET eventTitle=?, eventDescription=?, venueID=?, catID=?, eventStartDate=?, eventEndDate=?, eventPrice=? WHERE eventID=?";
-				
-				$stmt = mysqli_prepare($conn, $sql); 
-				mysqli_stmt_bind_param($stmt, 'ssssssdi', $eventName, $desc, $venue, $cat, $startDate, $endDate, $price, $eventid);
-				mysqli_stmt_execute($stmt);	
-				
-				
-				echo "Update successfully <br><br>";
-				echo "Your page will be redirected within 3 seconds";
-				header("Refresh:3;url=eventUpdate.php?eventID=$eventid");
-				
-				mysqli_stmt_close($stmt); 
-			}
-			else{
-				echo "Your page will be redirected within 3 seconds";
-				header("Refresh:3;url=eventUpdate.php?eventID=$eventid");
-			}
-			*/
 		
 		
 	

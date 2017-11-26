@@ -1,7 +1,7 @@
 <?php
-  include '../db/database_conn.php';
-  ini_set("session.save_path", "");
+  //ini_set("session.save_path", "");
   session_start();
+  include '../db/database_conn.php';
 ?>
 
 <?php
