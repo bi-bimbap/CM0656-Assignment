@@ -103,7 +103,7 @@ INSERT INTO `bid` (`bidID`, `userID`, `auctionID`, `bidAmount`, `bidStatus`, `bi
 -- Table structure for table `comment`
 --
 
-CREATE TABLE `comment` (
+CREATE TABLE `album_comment` (
   `commentID` int(10) NOT NULL,
   `photoID` int(10) NOT NULL,
   `userID` int(10) NOT NULL,
@@ -276,7 +276,7 @@ CREATE TABLE `payment` (
 -- Table structure for table `photo`
 --
 
-CREATE TABLE `photo` (
+CREATE TABLE `album_photo` (
   `photoID` int(10) NOT NULL,
   `albumID` int(10) NOT NULL,
   `photoStatus` varchar(30) NOT NULL,
