@@ -27,13 +27,17 @@ $environment = WEB; //TODO: Change to server
 <link rel='stylesheet' href='../css/jquery-ui.min.css' />
 <link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
 <link rel="stylesheet" href="../css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="../css/parsley.css" type="text/css" />
 <link rel="stylesheet" href="../css/bootstrapTest.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="../css/bootstrap-datetimepicker.min.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="../css/parsley.css" type="text/css" />
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css" type="text/css" media="all" />
-    <style>
-    #inputBuyItNow { display: none; }
-    </style>
+<script src='../scripts/jquery-ui.min.js'></script>
+<script src="../scripts/bootstrap.min.js"></script>
+<script src="../scripts/parsley.min.js"></script>
+
+<style>
+  #inputBuyItNow { display: none; }
+</style>
 <?php
 if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
 (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
@@ -137,7 +141,6 @@ $(document).ready(function() {
 </form>
 
 <script src="../scripts/moment.js"></script>
-<script src='../scripts/jquery-ui.min.js'></script>
 <script src="../scripts/parsley.min.js"></script>
 <script type="text/javascript" src="../scripts/jquery-1.8.3.min.js" charset="UTF-8"></script>
 <script type="text/javascript" src="../scripts/bootstrap.min.test.js"></script>

@@ -1,4 +1,5 @@
 <?php
+// ini_set("session.save_path", "");
 session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
@@ -12,6 +13,12 @@ echo makeNavMenu("../");
 echo makeHeader("Auction Lists");
 $environment = LOCAL; //TODO: Change to server
 
+//Only show content if user is logged in & is senior
+// $_SESSION['userID'] = '1'; //TODO: Remove session
+// $_SESSION['userType'] = 'admin'; //TODO: Remove
+// $_SESSION['username'] = 'seahjm'; //TODO: Remove
+// $_SESSION['logged-in'] = true; //TODO: Remove
+
 ?>
 <script src="../scripts/jquery.js"></script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -24,6 +31,7 @@ $environment = LOCAL; //TODO: Change to server
 <link rel="stylesheet" href="../css/parsley.css" type="text/css" />
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css" type="text/css" media="all" />
 <script src='../scripts/jquery-ui.min.js'></script>
+<script src="../scripts/bootstrap.min.js"></script>
 <script src="../scripts/parsley.min.js"></script>
 
 <?php
@@ -34,7 +42,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($
   $sqlAuctionList = "SELECT auction.auctionID, auction.auctionTitle, auction.itemName, auction.startDate,auction.endDate,
                             auction.startPrice, auction.itemPrice, auction.currentBid, COUNT(bid.bidID), file.filePath
                             FROM auction LEFT JOIN bid ON auction.auctionID = bid.auctionID JOIN file ON auction.auctionID = file.auctionID
-                            WHERE auction.endDate > CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP > auction.startDate AND auction.auctionStatus = 'active' OR file.fileType = 'coverPhoto' GROUP BY auction.auctionID";
+                            WHERE auction.endDate > CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP > auction.startDate AND auction.auctionStatus = 'active' GROUP BY auction.auctionID";
   $stmtAuctionList = mysqli_prepare($conn, $sqlAuctionList) or die( mysqli_error($conn));
   mysqli_stmt_execute($stmtAuctionList);
   mysqli_stmt_bind_result($stmtAuctionList, $aucID, $aucTitle, $aucItem, $aucStartDate, $aucEndDate, $aucStartPrice, $aucItemPrice, $aucCurrentBid,$bids,$coverPhoto);
@@ -49,6 +57,9 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($
 
     $minutes = floor($seconds / 60);
     $seconds %= 60;
+
+    $auctionIDEncoded = urlencode(base64_encode($aucID));
+
     echo "
     <div class=\"media\">
       <div class=\"media-left media-middle\">
@@ -57,7 +68,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($
         </a>
       </div>
       <div class=\"media-body\">
-        <a class=\"media-heading\" href=\"Member_viewAuction.php?aucID=$aucID\">$aucTitle</a><br/>
+        <a class=\"media-heading\" href=\"Member_viewAuction.php?aucID=$auctionIDEncoded\">$aucTitle</a><br/>
         Item Name: $aucItem <br/>
         Start Date: $aucStartDate | End Date: $aucEndDate <br/>";
         if ($aucItemPrice > 0) {

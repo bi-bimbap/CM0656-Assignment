@@ -8,22 +8,32 @@ header('content-type: application/json');
 $function = filter_has_var(INPUT_POST, 'action') ? $_POST['action']: null;
 $function = trim($function);
 $function = filter_var($function, FILTER_SANITIZE_STRING);
+// $function = "placeBid";
 
 $a_json = array();
 $a_json_row = array();
 
 if ($function == "placeBid") { //Place bid
-  $bidAmount = filter_has_var(INPUT_POST, 'bidAmount') ? $_POST['username']: null;
+  $bidAmount = filter_has_var(INPUT_POST, 'bidAmount') ? $_POST['bidAmount']: null;
   $bidAmount = trim($bidAmount);
   $bidAmount = filter_var($bidAmount, FILTER_SANITIZE_STRING);
+  // $bidAmount = intVal($bidAmount);
+  // $bidAmount = 127;
+  // echo json_encode("1" . $bidAmount);
 
   $userID = filter_has_var(INPUT_POST, 'userID') ? $_POST['userID']: null;
   $userID = trim($userID);
   $userID = filter_var($userID, FILTER_SANITIZE_STRING);
+  // $userID = intVal($userID);
+  // $userID = 1;
+  // echo json_encode("1" . $userID);
 
   $aucID = filter_has_var(INPUT_POST, 'aucID') ? $_POST['aucID']: null;
   $aucID = trim($aucID);
   $aucID = filter_var($aucID, FILTER_SANITIZE_STRING);
+  // $aucID = intVal($aucID);
+// $aucID = 15;
+// echo json_encode("1" . $aucID);
 
   $date = date('Y-m-d H:i:s');
   $status = "active";
@@ -36,6 +46,8 @@ if ($function == "placeBid") { //Place bid
   mysqli_stmt_bind_result($stmtCheckCurrentBid, $currentBid, $aucTitle);
   mysqli_stmt_fetch($stmtCheckCurrentBid);
   mysqli_stmt_close($stmtCheckCurrentBid);
+
+  // echo json_encode("1" . $currentBid . " " . $aucTitle);
 
   if ($bidAmount > $currentBid) {
     $sqlPlaceBid = "INSERT INTO bid (userID,auctionID,bidAmount,bidStatus,bidTime) VALUES (?,?,?,?,?)";
@@ -52,7 +64,7 @@ if ($function == "placeBid") { //Place bid
       mysqli_stmt_bind_result($stmtBidderList, $email, $fullName, $bidAmt);
       while (mysqli_stmt_fetch($stmtBidderList)) {
         //encode variable to be used in url
-        $auctionIDEncoded = urlencode(base64_encode($auctionID));
+        $auctionIDEncoded = urlencode(base64_encode($aucID));
         $url = $environment."/CM0656-Assignment/auction/Member_viewAuction.php?auctionID=".$auctionIDEncoded;
         if ($bidAmt == $currentBid) { //notify highest bidder has been outbidded
           sendBidUpdateEmail($email, $fullName, 'You have been outbidded on '.$aucTitle.'!', '../email/notifier_outbidded.html', $url, $bidAmount, $aucTitle);
@@ -72,7 +84,7 @@ if ($function == "placeBid") { //Place bid
       mysqli_stmt_bind_result($stmtWatchList, $email, $fullName);
       while (mysqli_stmt_fetch($stmtWatchList)){
         //encode variable to be used in url
-        $auctionIDEncoded = urlencode(base64_encode($auctionID));
+        $auctionIDEncoded = urlencode(base64_encode($aucID));
         $url = $environment."/CM0656-Assignment/auction/Member_viewAuction.php?auctionID=".$auctionIDEncoded;
         sendBidUpdateEmail($email, $fullName, 'New bid on '.$aucTitle.'!', '../email/notifier_bidUpdate.html', $url, $bidAmount, $aucTitle);
       }
@@ -83,16 +95,17 @@ if ($function == "placeBid") { //Place bid
       $stmtUpdateAuction = mysqli_prepare($conn, $sqlUpdateAuction) or die( mysqli_error($conn));
       mysqli_stmt_bind_param($stmtUpdateAuction, "ii", $bidAmount, $aucID);
       mysqli_stmt_execute($stmtUpdateAuction);
+
       if (mysqli_stmt_affected_rows($stmtUpdateAuction) > 0) {
         echo json_encode("6Auction latest bid has been updated!");
+        mysqli_stmt_close($stmtUpdateAuction);
       }
-      mysqli_stmt_close($stmtUpdateAuction);
-    }
+    } //End if (mysqli_stmt_affected_rows($stmtPlaceBid) > 0) {
     mysqli_stmt_close($stmtPlaceBid);
     echo json_encode("2Bid has been placed!");
   } else {
-    echo json_encode("1Please enter an amount that is greater than £ $currentBid.00!");
-  }
+     echo json_encode("1Please enter an amount that is greater than £ $currentBid.00!");
+   }
   mysqli_close($conn);
 }
 else if ($function == "addToWatch") { //add to watch list
