@@ -12,15 +12,6 @@ echo makeProfileButton("../");
 echo makeNavMenu("../");
 echo makeHeader("Manage Auction");
 $environment = WEB; //TODO: Change to server
-<<<<<<< HEAD
-
-// //Only show content if user is logged in & is senior
-// $_SESSION['userID'] = '1'; //TODO: Remove session
-// $_SESSION['userType'] = 'admin'; //TODO: Remove
-// $_SESSION['username'] = 'seahjm'; //TODO: Remove
-// $_SESSION['logged-in'] = true; //TODO: Remove
-=======
->>>>>>> 710fc25c9f9693123fc0ae1ff31a5da5dff07ef6
 ?>
 
 <script src="../scripts/jquery.js"></script>
