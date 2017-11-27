@@ -32,7 +32,7 @@ $environment = WEB; //TODO: change to server
 	<link rel="stylesheet" href="../assests/font-awesome/css/font-awesome.min.css">
 	<link rel="stylesheet" href="../assests/jquery-ui/jquery-ui.min.css">
 	<script src="../assests/jquery-ui/jquery-ui.min.js"></script>
-	<link rel="stylesheet" href="../assests/fancybox/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />    
+	<link rel="stylesheet" href="../assests/fancybox/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
     <script type="text/javascript" src="../assests/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 
 <div class="content">
