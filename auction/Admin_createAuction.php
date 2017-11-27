@@ -1,6 +1,6 @@
 <?php
 // ini_set("session.save_path", "");
-session_start();
+// session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
@@ -11,37 +11,20 @@ echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
 echo makeProfileButton("../");
 echo makeNavMenu("../");
 echo makeHeader("Create New Auction");
-$environment = WEB; //TODO: Change to server
-
-// //Only show content if user is logged in & is senior
-// $_SESSION['userID'] = '1'; //TODO: Remove session
-// $_SESSION['userType'] = 'admin'; //TODO: Remove
-// $_SESSION['username'] = 'seahjm'; //TODO: Remove
-// $_SESSION['logged-in'] = true; //TODO: Remove
+$environment = LOCAL; //TODO: Change to server
 ?>
 <script src="../scripts/jquery.js"></script>
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
 <link rel='stylesheet' href='../css/jquery-ui.min.css' />
 <link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
 <link rel="stylesheet" href="../css/bootstrap.css" type="text/css" />
-<link rel="stylesheet" href="../css/parsley.css" type="text/css" />
 <link rel="stylesheet" href="../css/bootstrapTest.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="../css/bootstrap-datetimepicker.min.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="../css/parsley.css" type="text/css" />
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css" type="text/css" media="all" />
-<script src='../scripts/jquery-ui.min.js'></script>
-<script src="../scripts/bootstrap.min.js"></script>
-<script src="../scripts/parsley.min.js"></script>
+    <style>
+    #inputBuyItNow { display: none; }
+    </style>
 
-<style>
-  #inputBuyItNow { display: none; }
-</style>
-<?php
-if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
-(isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
-?>
 <script type="text/javascript">
 $(document).ready(function() {
   var dateToday = new Date();
@@ -76,29 +59,30 @@ $(document).ready(function() {
 
 });
 </script>
-
+<div class='content'>
+<div class='container'>
 <form id="createAuctionForm" data-parsley-validate method="post" enctype="multipart/form-data">
-  Title:
+  <div><h4>Title:</h4>
   <div class="input-group">
      <input type="text" class="form-control" id='aucTitle' name='aucTitle' data-parsley-required="true" data-parsley-errors-messages-disabled/>
-  </div>
+  </div></div>
 
-  Item Name:
+  <div><h4>Item Name: </h4>
   <div class="input-group">
     <input type="text" class="form-control" id='aucItem' name='aucItem' data-parsley-required="true" data-parsley-errors-messages-disabled/>
-  </div>
+  </div></div>
 
-  Description:
+  <div><h4>Description: </h4>
   <div class="input-group">
     <textarea class="form-control" style="width:250px;" id='aucDesc' name='aucDesc' data-parsley-required="true" data-parsley-errors-messages-disabled></textarea>
-  </div>
+  </div></div>
 
-  Start Price:
-  <div class="input-group">
+  <div><h4>Start Price: </h4>
+  <div class="input-group important">
     <span class="input-group-addon">£</span>
     <input type="text" class="form-control" id='aucStartPrice' name='aucStartPrice' aria-label="Amount (to the nearest dollar)" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-type="integer">
     <span class="input-group-addon">.00</span>
-  </div>
+  </div></div>
   <br/>
 
   <div class="input-group">
@@ -107,13 +91,13 @@ $(document).ready(function() {
   <br/>
 
   <div id="inputBuyItNow">
-    Item Price:
+    <h4>Item Price: </h4>
     <div class="input-group">
       <input type="text" class="form-control" id='aucItemPrice' name='aucItemPrice' aria-label="Amount (to the nearest dollar)" data-parsley-type="integer" data-parsley-errors-messages-disabled>
     </div>
   </div>
 
-  Start Date:
+  <div><h4>Start Date: </h4>
   <div class="input-group">
     <div class="input-group date form_datetime col-md-5" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-field="dtp_input1">
         <input class="form-control" id="aucStartDate" name="aucStartDate" style="width:250px;" size="16" type="text" value="" data-parsley-required="true" data-parsley-lt="#aucEndDate" data-parsley-errors-messages-disabled readonly>
@@ -121,9 +105,9 @@ $(document).ready(function() {
         <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
     </div>
     <input type="hidden" id="dtp_input1" value="" /><br/>
-  </div>
+  </div></div>
 
-  End Date:
+ <div><h4>End Date: </h4>
   <div class="input-group">
     <div class="input-group date form_datetime2 col-md-5" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-field="dtp_input1">
         <input class="form-control" id="aucEndDate" name="aucEndDate" style="width:250px;" size="16" type="text" value="" data-parsley-required="true" data-parsley-errors-messages-disabled  data-parsley-gt="#aucStartDate" readonly>
@@ -131,16 +115,17 @@ $(document).ready(function() {
         <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
     </div>
     <input type="hidden" id="dtp_input1" value="" /><br/>
-  </div>
+  </div></div>
 
-  Cover Photo: <input type="file" name="coverPhoto" onchange="previewFile()" data-parsley-required="true" data-parsley-errors-messages-disabled/>
+  <h4>Cover Photo: </h4><input type="file" name="coverPhoto" onchange="previewFile()" data-parsley-required="true" data-parsley-errors-messages-disabled/>
   <img id="preview" src="" height="200" alt="Image preview..."/><br/>
-  Item Photo(s): <input type="file" name="itemPhotos[]" multiple data-parsley-required="true" data-parsley-error-message="Please upload at least one photo to support the item info."> <br/>
-  Article(s): <input type="file" name="files[]" multiple data-parsley-required="true" data-parsley-error-message="Please upload at least one article to support the auction info."> <br/>
+  <h4>Item Photo(s): </h4><input type="file" name="itemPhotos[]" multiple data-parsley-required="true" data-parsley-error-message="Please upload at least one photo to support the item info."> <br/>
+  <h4>Article(s): </h4><input type="file" name="files[]" multiple data-parsley-required="true" data-parsley-error-message="Please upload at least one article to support the auction info."> <br/>
   <input type='submit' value='Submit' name='btnSubmit'/>
 </form>
 
 <script src="../scripts/moment.js"></script>
+<script src='../scripts/jquery-ui.min.js'></script>
 <script src="../scripts/parsley.min.js"></script>
 <script type="text/javascript" src="../scripts/jquery-1.8.3.min.js" charset="UTF-8"></script>
 <script type="text/javascript" src="../scripts/bootstrap.min.test.js"></script>
@@ -318,10 +303,12 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
     echo "<script>alert(\"Failed to create auction! Auction: $auctionStatus, File: $fileStatus, Photo: $photoStatus, Cover: $coverStatus\");";
   }
   mysqli_close($conn);
-  }
-} else {
-  echo "Sorry you have no permission to access to this page.";
 }
+?>
+
+</div>
+</div>
+<?php
 echo makeFooter("../");
 echo makePageEnd();
 ?>
