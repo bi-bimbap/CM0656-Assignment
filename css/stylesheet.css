@@ -27,7 +27,7 @@ a:hover{
     font-size: 20px;
 	position: relative;
 	transition:all 0.3s;
-	
+
 	border:1px dotted black!important;
 }
 .various.outer:hover{
@@ -56,7 +56,7 @@ a:hover{
 }
 .album > div > span:last-child, .photo > div > span:last-child{
 	float:right;
-	
+
 }
 .album a, .photo a{
 	color:white;
@@ -96,7 +96,7 @@ a:hover{
 	width:850px;
 }
 #createAlbum input, #uploadPhoto input{
-	margin-bottom:30px;	
+	margin-bottom:30px;
 }
 #createAlbum > h2+div, #uploadPhoto > h2+div{
 	padding-left:30px;
@@ -209,6 +209,50 @@ span#report{
 	font-size:15px;
 	color:#333;
 }
+#loginLogoutDiv p{
+	color:white;
+}
+.panel-primary > .panel-heading{
+	background:#ac967a!important;
+}
+.panel-primary{
+	border-color:#ac967a!important;
+}
+.panel-primary input[type="text"], .panel-primary input[type="password"]{
+	width:100%;
+}
+.panel-primary input[type="submit"], .panel-primary #button{
+	margin-top:0;
+}
+.btn-primary{
+	border-color:#ac967a!important;
+	background:#ac967a!important;
+}
+.media{
+	background:white;
+	padding:80px 40px 110px;
+	margin-bottom:30px;
+}
+.media span{
+    color: #ac967a;
+    font-size: 19px;
+    margin-right: 5px;
+    margin-left: 5px;
+    font-weight: bold;
+}
+.media a:hover{
+	text-decoration:none!important;
+}
+.media h4{
+	color:#ac967a;
+    font-size: 35px;
+}
+.content.test #button{
+	font-size: 55px;
+    padding: 30px 60px;
+	margin-right: 55px;
+    margin-left: 55px;
+}
 .wrapper #logo + div{
 	display:inline-block;
 	float:right;
@@ -217,7 +261,8 @@ span#report{
 .wrapper .dropdown{
 	display:inline-block;
 	float:right;
-	margin-top: 20px;
+	margin-top: 30px;
+	margin-right:10px;
 }
 .wrapper .dropdown button{
 	background:none;
@@ -430,12 +475,58 @@ footer > div > div:last-child{
 #password{
 	   display: inline-block;
 }
-#signUpForm h4{
+#signUpForm h4, #createAuctionForm h4{
     vertical-align: top;
     width: 160px;
     display: inline-block;
 }
-
+#createAuctionForm h4 + div{
+	display:inline-block;
+	width:400px
+}
+.input-group-addon{
+	width:15px!important;
+	    line-height: 20px!important;
+}
+.input-group .input-group-addon:first-child{
+	
+	position:absolute!important;
+}
+.input-group.important{
+	width:auto!important;
+}
+#createAuctionForm > div{
+	margin-bottom:10px;
+}
+#aucStartPrice{
+    width: 366px;
+    margin-left: 25px;
+    margin-right: 0px;
+}
+#createThreadForm h4{
+	vertical-align: top;
+    width: 175px;
+    display: inline-block;
+}
+#createThreadForm textarea{
+	    padding: 7px 15px;
+    width: 500px;
+    height: 100px;
+}
+#tblInappropriateList td{
+	padding:10px;
+}
+#tblInappropriateList td:before{
+	content:"\f056";
+	margin-right:5px;
+	 font-family: FontAwesome;
+	 color: #d03535;
+ }
+#tblInappropriateList h3 {
+	font-size: 33px;
+    border-bottom: 1px solid black;
+    padding: 15px; 
+}
 #signUpForm input{
     margin-left: 10px;
     left: 270px;
@@ -443,9 +534,65 @@ footer > div > div:last-child{
 	border: 1px solid #e6e6e6;
     padding: 7px 15px;
 }
+#reportSource{
+	text-align: center;
+    font-size: 19px;
+    padding-top: 10px;
+    color: #d02525;
+}
+#reportSource span{
+	font-size:15px;
+	color:#444;
+}
+#reportSource + div{
+	text-align: center;
+    font-size: 19px;
+    padding-top: 10px;
+    color: #d02525;
+}
+#reportSource + div span{
+	font-size:15px;
+	color:#444;
+}
 
+#reportSource + div + div{
+	text-align: center;
+    font-size: 19px;
+    padding-top: 10px;
+    color: #d02525;
+}
+#reportSource + div + div span{
+	font-size:15px;
+	color:#444;
+}
+#reportSource + div + div + form{
+	text-align:center;
+	margin-top:80px;
+}
+#reportSource + div + div + form input{
+	color:white;
+	background:#ac967a;
+	border:1px solid #ac967a;
+	color:white;
+	transition:all 0.2s;
+	outline:none;
+	padding:7px 15px;
+	letter-spacing: 0.7px;
 
+}
+#logo + form{
+	display: inline-block;
+    float: right;
+    margin-top: 30px;
+}
+#reportSource + div + div + form input:hover{
+	color:#ac967a;
+	background:#fff;
+	border:1px solid #ac967a;
+	color:#ac967a;
+	transition:all 0.2s;
 
+}
 #signUpForm #txtConfirmPassword{
 	    left: 830px;
 }
@@ -461,6 +608,83 @@ footer > div > div:last-child{
     height: 45px;
     font-style: italic;
 }
+.index h4{
+	    font-family: 'Lora';
+    font-size: 43px;
+    color: #333333;
+	margin-top:30px;
+	letter-spacing:0.1px;
+}
+.index .left, .index .right{
+	float:none;
+	padding:20px;
+}
+.index .left{
+	margin-right:20px;
+	margin-bottom:30px;
+}
+.index img{
+	z-index:2px;
+}
+.index .block{
+	width: 570px;
+    height: 215px;
+    z-index: 1;
+    margin-left: -40px;
+    background: rgba(173, 147, 122, 0.5);
+    margin-top: -164px;
+}
+.index h6{
+    font-family: 'Lato';
+    font-size: 14px;
+    color: #ad957b;
+    text-transform: uppercase;
+    letter-spacing: 0.1px;
+	margin-bottom:30px;
+}
+.index p{
+	letter-spacing: 0;
+    margin-bottom: 60px;
+}
+.content.index{
+	padding-bottom:0;
+	background:white;
+}
+.content.index .container h3{
+	text-align:center;
+	font-family: 'Lora';
+    font-size: 48px;
+    color: #2f2c2f;
+	margin-top:110px;
+}
+.content.index .container > p{
+    text-align: center;
+    width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 25px;
+    margin-bottom: 60px;
+}
+#concert{
+	background: url(/CM0656-Assignment-master/images/conert.jpg) no-repeat 50%;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center center;
+    height: 600px;
+    width: 100%;
+    text-align: right;
+}
+#concert h4{
+font-family: 'Lora';
+    font-size: 82px;
+    color: #ded9d0;
+    padding-top: 155px;
+}
+#concert h5{
+	font-family: 'Lora';
+    font-size: 40px;
+    color: #ece9e2;
+}
 .well .form-control{
 	width:380px!important;
 }
@@ -469,7 +693,6 @@ footer > div > div:last-child{
     line-height: 50px;
 }
 .well label{
-	    font-size: 21px;
     margin-bottom: 20px;
     margin-top: 25px;
 }
@@ -480,7 +703,7 @@ footer > div > div:last-child{
 .well .dataTables_length label{
 	font-size:15px;
 }
-.tab-pane.active{
+.tab-pane{
 	background:white;
 	padding:20px;
 	 border: 1px solid #ddd;
@@ -489,4 +712,62 @@ footer > div > div:last-child{
 .dataTables_wrapper .dataTables_filter input{
     border: 1px solid #ac967a;
     padding: 5px 10px;
+}
+.dropdown-menu{
+	padding:10px!important;
+}
+#searchBar{
+	    width: 1170px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: right;
+    vertical-align: -35px;
+    margin-bottom: 40px;
+    margin-top: -75px;
+}
+#searchBar input[type='text']{
+	width:280px;
+}
+#searchBar input[type='submit']{
+	    background: #ac967a;
+    border: 1px solid #ac967a;
+    padding: 7px 10px;
+    transition: all 0.3s;
+}
+#searchBar input[type='submit']:hover{
+	background:white;
+	color:#ac967a;
+	transition:all 0.3s
+}
+.variousContainer{
+	width: 115px;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#biddingHistory {
+	display: none;
+}
+
+#errorMsg {
+	display: none;
+	color: red;
+}
+.row canvas{
+	background: white;
+    padding: 20px 10px;
+	height: 305px!important;
+}
+.statisticLabel{
+    margin: 50px 20px 25px 5px;
+    font-size: 18px;
+}
+.statisticSelect{
+
+    padding: 7px 10px;
+}
+.dataTables_paginate, .dataTables_info{
+	margin-top: 15px;
 }
