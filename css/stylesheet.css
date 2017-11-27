@@ -713,12 +713,9 @@ font-family: 'Lora';
     border: 1px solid #ac967a;
     padding: 5px 10px;
 }
-<<<<<<< HEAD
-=======
 .dropdown-menu{
 	padding:10px!important;
 }
->>>>>>> a5f783051a425ec4ac39ca33dd791ce0d8b153aa
 #searchBar{
 	    width: 1170px;
     margin-right: auto;
@@ -758,8 +755,6 @@ font-family: 'Lora';
 	display: none;
 	color: red;
 }
-<<<<<<< HEAD
-=======
 .row canvas{
 	background: white;
     padding: 20px 10px;
@@ -776,4 +771,3 @@ font-family: 'Lora';
 .dataTables_paginate, .dataTables_info{
 	margin-top: 15px;
 }
->>>>>>> a5f783051a425ec4ac39ca33dd791ce0d8b153aa
