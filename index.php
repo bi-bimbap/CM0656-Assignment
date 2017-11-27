@@ -23,14 +23,14 @@ echo makeHeader("Home Page");
 	<div class='container'>
 		<div>
 			<div class='left'>
-				<img src='/CM0656-Assignment-master/images/auction.jpg' width='468px' height ='auto'/>
+				<img src='images/auction.jpg' width='468px' height ='auto'/>
 				<div class="block"></div>
 			</div>
 			<div class='right'>
 				<h4>Win your dream prize</h4>
 				<h6>The auction of Ima's products</h6>
 				<p>Win a prize through bidding for the item you want the most.Win a prize through bidding for the item you want the most.Win a prize through bidding for the item you want the most.</p>
-				<a href='/auction/auctionList.php' id="button">Goto Auction</a>
+				<a href='auction/auctionList.php' id="button">Goto Auction</a>
 			</div>
 		</div>
 		<div>
@@ -38,16 +38,16 @@ echo makeHeader("Home Page");
 			<h4>Getting free prizes</h4>
 				<h6>Competitions for the capable ones</h6>
 				<p>Win a prize through getting the highest score in a competition.Win a prize through getting the highest score in a competition.Win a prize through getting the highest score in a competition.</p>
-				<a href='/competition/Member_joinCompetition.php' id="button">Goto Competition</a>
-				
+				<a href='competition/Member_joinCompetition.php' id="button">Goto Competition</a>
+
 			</div>
 			<div class='right'>
-				<img src='/CM0656-Assignment-master/images/comp.jpg'width='468px' height ='auto' />
+				<img src='images/comp.jpg'width='468px' height ='auto' />
 				<div class="block"></div>
 			</div>
 		</div>
 	</div>
-	
+
 		<div id='concert'>
 			<div class='container'>
 				<h4>JOIN US</h4>

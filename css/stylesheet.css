@@ -666,7 +666,7 @@ footer > div > div:last-child{
     margin-bottom: 60px;
 }
 #concert{
-	background: url(/CM0656-Assignment-master/images/conert.jpg) no-repeat 50%;
+	background: url(../images/conert.jpg) no-repeat 50%;
     overflow: hidden;
     background-size: cover;
     background-position: center center;

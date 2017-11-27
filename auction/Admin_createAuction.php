@@ -11,7 +11,7 @@ echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
 echo makeProfileButton("../");
 echo makeNavMenu("../");
 echo makeHeader("Create New Auction");
-$environment = LOCAL; //TODO: Change to server
+$environment = WEB; //TODO: Change to server
 ?>
 <script src="../scripts/jquery.js"></script>
 <link rel='stylesheet' href='../css/jquery-ui.min.css' />

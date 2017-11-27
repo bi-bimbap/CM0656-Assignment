@@ -11,7 +11,7 @@ echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
 echo makeProfileButton("../");
 echo makeNavMenu("../");
 echo makeHeader("Auction Lists");
-$environment = LOCAL; //TODO: Change to server
+$environment = WEB; //TODO: Change to server
 
 $_SESSION['userID'] = '1'; //TODO: Remove session
 $_SESSION['userType'] = 'senior'; //TODO: Remove
