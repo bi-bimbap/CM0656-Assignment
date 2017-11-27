@@ -1,6 +1,6 @@
 <?php
-// ini_set("session.save_path", "");
-// session_start();
+ini_set("session.save_path", "");
+session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
