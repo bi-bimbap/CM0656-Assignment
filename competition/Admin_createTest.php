@@ -33,20 +33,38 @@ echo makeHeader("Create Competition");
               <div class="panel-heading">Enter Your Test Details</div>
               <div class="panel-body">
 
-                <form>
+                <form method="post">
                   <table class="table table-hover">
                     <tr>
                       <td>Test Name:</td>
                       <td><input type="text" class="form-control" name="t_name" placeholder="Test Name"></td>
                     </tr>
                     <tr>
-                      <td>Template ID:</td>
-                      <td><button class= "btn btn-primary dropdown-toggle" name="templateID" type="button" data-toggle="dropdown">Choose your template
-                        <span class="caret"></span></button>
+                      <td>Template Name:</td>
+                      <td><select class= "btn btn-primary dropdown-toggle" name="templateID" type="button" data-toggle="dropdown">Choose your template
+
+                      <?php
+                      $sql = "select * from competition_template";
+                      $result=mysqli_query($conn,$sql);
+                      while ($row=mysqli_fetch_assoc($result))
+                      {
+                         echo "<option value= '{$row['templateID']}'>{$row['templateTitle']}</option>";
+                        }
+                        ?>
+                      </select></td>
                         <ul class= "dropdown-menu">
                           <li></li>
                         </ul>
-                      </tr>
+                    </tr>
+                    <tr>
+                      <td>Age Range:</td>
+                      <td><select class= "btn btn-primary dropdown-toggle" name="ageRange" type="button" data-toggle="dropdown">Age Range
+                            <option value="10-13">10-13</option>
+                            <option value="13-16">13-16</option>
+                            <option value="16-18">16-18</option>
+                          </select>
+
+                    <tr>
                       <tr>
                         <td>Start Date:</td>
                         <td><input type="date" class="form-control" name="startDate" placeholder="Start"></td>
@@ -60,14 +78,141 @@ echo makeHeader("Create Competition");
                         <td><input type="text" class="form-control" name="prize" placeholder="Prize"></td>
                       </tr>
                       <tr>
-                        <td colspan="2" align="center"><input type="submit" class="btn btn-primary" name="submit" value="Save"></td>
-                      </tr>
-                    </table>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
+                        <td colspan="2" align="center"><input type="submit" class="btn btn-primary" name="submit" value="Create"></td>
+                        </tr>
+                        </table>
+                        </form>
+                        </div>
+                        </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                        </div>
+
+                        </div>
+
+                        <form method="post">
+                        <div class="container">
+                        <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                        <table class="table table-bordered">
+                        <tr>
+                        <th>Test Name</th>
+                        <th>Test Start Date</th>
+                        <th>Test End Date</th>
+                        <th>Age Range</th>
+                        <th>&nbsp;</th>
+                        </tr>
+                        <?php
+                        $testSQL = "SELECT * FROM competition_test";
+                        $testRs = mysqli_query($conn, $testSQL) or die(mysqli_error($conn));
+
+                        while ($row = mysqli_fetch_assoc($testRs)){
+
+                        ?>
+                        <tr>
+                        <td><?php echo $row["testName"]; ?></td>
+                        <td><?php echo $row["testStartDate"]; ?></td>
+                        <td><?php echo $row["testEndDate"]; ?></td>
+                        <td><?php echo $row["ageRange"]; ?></td>
+                        <td><form method ="post"><input type="hidden" name="testName" value ="<?php echo $row["testName"]; ?>"/><input type="submit" name="delete" value="DELETE"></form></td>
+                        </tr>
+                        <?php
+                        }
+
+                        ?>
+                        </table>
+                        </form>
+                        </div>
+                        <div class="col-md-2"></div>
+                        </div>
+                        </div>
+
+
+
+                        </body>
+                        </html>
+
+                        <?php
+                        if (isset($_POST['submit'])) { //Clicked on submit button
+                        //Obtain user input
+                        $t_name = filter_has_var(INPUT_POST, 't_name') ? $_POST['t_name']: null;
+                        //Trim white space
+                        $t_name = trim($t_name);
+                        //Sanitize user input
+                        $t_name = filter_var($t_name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+                        //Obtain user input
+                        $templateID = filter_has_var(INPUT_POST, 'templateID') ? $_POST['templateID']: null;
+                        //Trim white space
+                        $templateID = trim($templateID);
+                        //Sanitize user input
+                        $templateID = filter_var($templateID, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+                        //Obtain user input
+                        $startDate = filter_has_var(INPUT_POST, 'startDate') ? $_POST['startDate']: null;
+                        //Trim white space
+                        $startDate = trim($startDate);
+                        //Sanitize user input
+                        $startDate = filter_var($startDate, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+                        //Obtain user input
+                        $endDate = filter_has_var(INPUT_POST, 'endDate') ? $_POST['endDate']: null;
+                        //Trim white space
+                        $endDate = trim($endDate);
+                        //Sanitize user input
+                        $endDate = filter_var($endDate, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+                        //Obtain user input
+                        $prize = filter_has_var(INPUT_POST, 'prize') ? $_POST['prize']: null;
+                        //Trim white space
+                        $prize = trim($prize);
+                        //Sanitize user input
+                        $prize = filter_var($prize, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+                        $ageRange = $_POST['ageRange'];
+
+                        $testSQL = "INSERT INTO competition_test (`testName`, `templateID`, `testStartDate`, `testEndDate`, `prize`, `ageRange`) VALUES (?,?,?,?,?,?)";
+                        $stmt = mysqli_prepare($conn, $testSQL) or die( mysqli_error($conn));
+                        mysqli_stmt_bind_param($stmt, "sissss", $t_name, $templateID, $startDate, $endDate, $prize, $ageRange);
+                        mysqli_stmt_execute($stmt);
+
+                        if (mysqli_stmt_affected_rows($stmt) > 0) {
+                        echo "<script>alert('Test created!')</script>";
+                        echo "<meta http-equiv=\"refresh\" content=\"0;URL=Admin_createTest.php\">";
+                        }
+                        else {
+                        echo "<script>alert('Failed to create test!')</script>";
+                        }
+                        mysqli_stmt_close($stmt);
+                        }
+                        ?>
+
+                        <?php
+
+                        if (isset($_POST['delete'])) {
+
+                        $testName = $_POST["testName"];
+
+                        ?><script>alert('Your test had been deleted !');</script><?php
+
+                        $sql = "DELETE FROM competition_test WHERE testName='$testName  '";
+
+                        if (mysqli_query($conn, $sql)) {
+                        echo "Record deleted successfully";
+                        echo "<meta http-equiv=\"refresh\" content=\"0;URL=Admin_createTest.php\">";
+                        } else {
+                        echo "Error deleting record: " . mysqli_error($conn);
+                        }
+                        ?>
+
+                        <?php
+                        }
+                        else
+                        {
+
+                        }
+                        ?>
           <?php
         }
         else { //User has been banned; Redirect to home page
@@ -84,7 +229,7 @@ echo makeHeader("Create Competition");
       }
       ?>
     </div>
-  </div>
+  <!-- </div> -->
 
   <?php
   echo makeFooter("../");
