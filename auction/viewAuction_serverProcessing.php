@@ -306,11 +306,11 @@ else if ($function == "buyItNow") { //buy the item with specific price
   mysqli_stmt_fetch($stmtBidInfo);
   mysqli_stmt_close($stmtBidInfo);
 
-  $paymentStatus = 'pending';
+  $paymentStatus = 'awaiting';
   //insert to payment table
-  $sqlInsertPayment = "INSERT INTO payment (auctionID,bidID,paymentStatus) VALUES (?,?,?)";
+  $sqlInsertPayment = "INSERT INTO payment (bidID,paymentStatus) VALUES (?,?)";
   $stmtInsertPayment = mysqli_prepare($conn, $sqlInsertPayment) or die( mysqli_error($conn));
-  mysqli_stmt_bind_param($stmtInsertPayment, "iiiss", $aucID, $bidID, $paymentStatus);
+  mysqli_stmt_bind_param($stmtInsertPayment, "is", $bidID, $paymentStatus);
   mysqli_stmt_execute($stmtInsertPayment);
   mysqli_stmt_close($stmtInsertPayment);
 
@@ -331,7 +331,7 @@ else if ($function == "buyItNow") { //buy the item with specific price
   mysqli_stmt_bind_result($stmtWinningBidder, $email, $fullName);
   mysqli_stmt_fetch($stmtWinningBidder);
   mysqli_stmt_close($stmtWinningBidder);
-  sendPaymentEmail($email, $fullName, 'Congratulation on winning the item on'.$aucTitle.'!', '../email/notifier_paymentInfo.html', $aucTitle, $aucID, $itemPrice); //Email sent
+  sendPaymentEmail($email, $fullName, 'Congratulation on winning the item on '.$aucTitle.'!', '../email/notifier_paymentInfo.html', $aucTitle, $aucID, $itemPrice); //Email sent
 
   //notify the bidders auction has ended
   $sqlBidderList = "SELECT DISTINCT u.emailAddr, u.fullName FROM user u JOIN bid b ON u.userID = b.userID WHERE b.auctionID = ? AND b.bidStatus = 'active'";
@@ -340,7 +340,7 @@ else if ($function == "buyItNow") { //buy the item with specific price
   mysqli_stmt_execute($stmtBidderList);
   mysqli_stmt_bind_result($stmtBidderList, $bidEmail, $bidFullName);
   while (mysqli_stmt_fetch($stmtBidderList)) {
-    sendAuctionEndEmail($bidEmail, $bidFullName, ' '.$aucTitle.'has ended!', '../email/notifier_auctionEnd.html', $aucTitle); //Email sent
+    sendAuctionEndEmail($bidEmail, $bidFullName, ' '.$aucTitle.' has ended!', '../email/notifier_auctionEnd.html', $aucTitle); //Email sent
   }
   mysqli_stmt_close($stmtBidderList);
 
@@ -353,10 +353,10 @@ else if ($function == "buyItNow") { //buy the item with specific price
   mysqli_stmt_execute($stmtWatchList);
   mysqli_stmt_bind_result($stmtWatchList, $watchEmail, $watchFullName);
   while (mysqli_stmt_fetch($stmtWatchList)) {
-    sendAuctionEndEmail($watchEmail, $watchFullName, ' '.$aucTitle.'has ended!', '../email/notifier_auctionEnd.html', $aucTitle); //Email sent
+    sendAuctionEndEmail($watchEmail, $watchFullName, ' '.$aucTitle.' has ended!', '../email/notifier_auctionEnd.html', $aucTitle); //Email sent
   }
   mysqli_stmt_close($stmtWatchList);
-  echo json_encode("You have successfully bought the item. An email has been sent to your inbox with the bank transfer info. Please proceed to the \"Payment\" page to upload your payment receipt once you have made your payment.");
+  echo json_encode("You have successfully bought the item. An email has been sent to your inbox with the bank transfer info. Please check your email for the instruction!");
   mysqli_close($conn);
 }
 ?>

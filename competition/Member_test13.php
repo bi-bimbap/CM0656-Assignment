@@ -42,25 +42,10 @@ echo makeHeader("Competition (10 - 13 Years Old)");
                       <td>Answer 1</td>
                       <td><input type="text" class="form-control" name="answer1" ></td>
                     </tr>
-                    <!-- <tr>
-                    <td>Question 2</td>
-                    <td><input type="text" class="form-control" name="q2ID" placeholder="Enter Question 2" ></td>
-                  </tr>
-                  <tr>
-                  <td>Answer 2</td>
-                  <td><input type="text" class="form-control" name="answer2" ></td>
-                </tr>
-                <tr>
-                <td>Question 3</td>
-                <td><input type="text" class="form-control" name="q3ID" placeholder="Enter Question 3" ></td>
-              </tr>
-              <tr>
-              <td>Answer 3</td>
-              <td><input type="text" class="form-control" name="answer3" ></td>
-            </tr> -->
             <tr>
               <td colspan="2" align="left"><input type="submit" class="btn btn-primary" name="submit" value="Submit"></td>
               <td colspan="2" align="right"><a href="Member_joinCompetition.php" onclick="history.back(1);" class="btn btn-primary">Give up</a></td>
+
             </tr>
           </table>
         </form>
@@ -85,6 +70,57 @@ else { //Redirect user to home page
 ?>
 </div>
 </div>
+
+<?php
+if (isset($_POST['submit'])) { //Clicked on submit button
+  //Obtain user input
+  $title = filter_has_var(INPUT_POST, 'title') ? $_POST['title']: null;
+  //Trim white space
+  $title = trim($title);
+  //Sanitize user input
+  $title = filter_var($title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+  $titleSQL = "INSERT INTO competition_template (templateTitle) VALUES (?)";
+  $stmt = mysqli_prepare($conn, $titleSQL) or die( mysqli_error($conn));
+  mysqli_stmt_bind_param($stmt, "s", $title);
+  mysqli_stmt_execute($stmt);
+
+  if (mysqli_stmt_affected_rows($stmt) > 0) {
+    echo "<script>alert('Your result will be release in two days through your email!')</script>";
+    echo "<meta http-equiv=\"refresh\" content=\"0;URL=Member_joinCompetition.php\">";
+    $sql = "SELECT MAX(templateID) FROM competition_template";
+    $stmt = mysqli_prepare($conn, $sql) or die( mysqli_error($conn));
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_bind_result($stmt, $tempID);
+    mysqli_stmt_fetch($stmt);
+    $tempID = intval($tempID);
+    mysqli_stmt_close($stmt);
+
+    //Obtain user input
+    $question1 = filter_has_var(INPUT_POST, 'q1ID') ? $_POST['q1ID']: null;
+    //Trim white space
+    $question1 = trim($question1);
+    //Sanitize user input
+    $question1 = filter_var($question1, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+
+    $question1SQL = "INSERT INTO competition_question (templateID, questionTitle, questionAns) VALUES (?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $question1SQL) or die( mysqli_error($conn));
+    mysqli_stmt_bind_param($stmt, "iss", $tempID, $question1, $answer1);
+    mysqli_stmt_execute($stmt);
+
+    if (mysqli_stmt_affected_rows($stmt) > 0) {
+      echo "<script>alert('Your result will be release in two days through your email!')</script>";
+      echo "<meta http-equiv=\"refresh\" content=\"0;URL=index.php\">";
+    }
+    else {
+
+    }
+  }
+
+  mysqli_stmt_close($stmt);
+}
+?>
 
 <?php
 echo makeFooter("../");

@@ -5,10 +5,12 @@ include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
-echo makeWrapper("../");
 echo makePageStart("Membership Confirmation");
+echo makeWrapper("../");
 echo makeHeader("Membership Confirmation");
 $environment = WEB; //TODO: Change to server
+echo "</div>";
+echo "</div>";
 ?>
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -82,7 +84,7 @@ if (isset($_GET['mail']) && isset($_GET['exDate'])) { //Get email address & memb
       if (mysqli_stmt_affected_rows($stmt) > 0) { //Membership confirmed
         echo "<p>Membership confirmed!</p>";
         echo "<p>You will be redirected in a short while!</p>";
-        header("Refresh:2;url=../loginForm.php");
+        //header("Refresh:2;url=../loginForm.php");
       }
       else { //Membership confirmation failed
         echo "<p>Membership confimation failed!</p><br />";

@@ -119,7 +119,7 @@ echo makeHeader("Create Template");
                     <tr>
                       <td><?php echo $row["templateID"]; ?></td>
                       <td><?php echo $row["templateTitle"]; ?></td>
-                      <td><a href= "Admin_createTemplate.php?templateID=<?php echo $row["templateID"]; ?>"><button>UPDATE</button></a></td>
+                      <td><a href= "Admin_createTemplate.php?templateID=<?php echo $row["templateID"]; ?>"><button id="button">UPDATE</button></a></td>
                       <td><form method ="post"><input type="hidden" name="templateID" value ="<?php echo $row["templateID"]; ?>"/><input type="submit" name="delete" value="DELETE"></form></td>
                     </tr>
                     <?php

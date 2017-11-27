@@ -1,25 +1,23 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
--- https://www.phpmyadmin.net/
+-- version 4.0.10deb1
+-- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 26, 2017 at 04:58 PM
--- Server version: 10.1.26-MariaDB
--- PHP Version: 7.1.9
+-- Host: localhost
+-- Generation Time: Nov 27, 2017 at 02:21 AM
+-- Server version: 5.5.58-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 
 --
--- Database: `ima_megastar`
+-- Database: `ima-fanbase`
 --
 
 -- --------------------------------------------------------
@@ -28,49 +26,31 @@ SET time_zone = "+00:00";
 -- Table structure for table `discussion_inappropriate`
 --
 
-CREATE TABLE `discussion_inappropriate` (
-  `inappropriatePhraseID` int(10) NOT NULL,
+CREATE TABLE IF NOT EXISTS `discussion_inappropriate` (
+  `inappropriatePhraseID` int(10) NOT NULL AUTO_INCREMENT,
   `inappropriatePhrase` varchar(255) NOT NULL,
-  `replacementWord` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `replacementWord` varchar(255) NOT NULL,
+  PRIMARY KEY (`inappropriatePhraseID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 --
 -- Dumping data for table `discussion_inappropriate`
 --
 
 INSERT INTO `discussion_inappropriate` (`inappropriatePhraseID`, `inappropriatePhrase`, `replacementWord`) VALUES
-(1, 'fuck', '****'),
+(1, 'asshole', '*******'),
 (2, 'ass', '***'),
-(3, 'asshole', '*******'),
-(4, 'bitch', '*****'),
-(5, 'fucker', '******'),
-(6, 'cunt', '****'),
-(7, 'whore', '*****'),
-(8, 'pussy', '*****'),
+(3, 'fuck', '****'),
+(4, 'fucker', '******'),
+(5, 'fucking', '*******'),
+(6, 'bitch', '*****'),
+(7, 'cunt', '****'),
+(8, 'idiot', '*****'),
 (9, 'motherfucker', '************'),
-(11, 'fucking', '*******'),
-(12, 'shit', '****');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `discussion_inappropriate`
---
-ALTER TABLE `discussion_inappropriate`
-  ADD PRIMARY KEY (`inappropriatePhraseID`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `discussion_inappropriate`
---
-ALTER TABLE `discussion_inappropriate`
-  MODIFY `inappropriatePhraseID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-COMMIT;
+(10, 'shit', '****'),
+(11, 'pussy', '*****'),
+(12, 'whore', '*****'),
+(13, 'stupid', '******');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -19,11 +19,11 @@ echo makeHeader("Welcome to join competition");
 <link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
 <link href="../css/bootstrap.css" rel="stylesheet">
 
-<div class="content">
+<div class="content test">
   <div class ="container">
-      <td><a href= "Member_test13.php"><button>10-13</button></a></td>
-      <td><a href= "Member_test16.php"><button>13-16</button></a></td>
-      <td><a href= "Member_test18.php"><button>16-18</button></a></td>
+      <td><a href= "Member_test13.php"><button id="button">10-13</button></a></td>
+      <td><a href= "Member_test16.php"><button id="button">13-16</button></a></td>
+      <td><a href= "Member_test18.php"><button id="button">16-18</button></a></td>
 </div>
 </div>
 

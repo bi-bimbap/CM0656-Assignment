@@ -11,6 +11,7 @@ echo makePageStart("Reset Password");
 echo makeWrapper("");
 echo makeHeader("Reset Password");
 $environment = WEB; //TODO: Change to WEB
+echo "</div>";
 ?>
 
 <?php
@@ -109,7 +110,7 @@ if (isset($_GET['mail']) && isset($_GET['exDate'])) { //Get email address & rese
               <input type="password" id="txtConfirmPassword" name="txtConfirmPassword" data-toggle="tooltip" data-placement="right" title="Min. 5 characters" data-parsley-required="true" data-parsley-errors-messages-disabled data-parsley-equalto="#txtPassword" data-parsley-minlength="5" maxlength="60">
             </div>
 
-            <div id="button"><button type="button" id='btnSave' name="btnSave">Save</button></div>
+            <button type="button" id='btnSave' name="btnSave">Save</button>
           </form>
         </div>
       </div>
