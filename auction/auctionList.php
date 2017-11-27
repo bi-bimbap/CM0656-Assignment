@@ -1,5 +1,4 @@
 <?php
-ini_set("session.save_path", "");
 session_start();
 include '../db/database_conn.php';
 include_once '../config.php';
@@ -13,12 +12,12 @@ echo makeNavMenu("../");
 echo makeHeader("Auction Lists");
 $environment = LOCAL; //TODO: Change to server
 
-$_SESSION['userID'] = '1'; //TODO: Remove session
-$_SESSION['userType'] = 'senior'; //TODO: Remove
-$_SESSION['username'] = 'seahjm'; //TODO: Remove
-$_SESSION['logged-in'] = true; //TODO: Remove
 ?>
 <script src="../scripts/jquery.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
 <link rel='stylesheet' href='../css/jquery-ui.min.css' />
 <link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
 <link rel="stylesheet" href="../css/bootstrap.css" type="text/css" />
@@ -35,7 +34,7 @@ if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($
   $sqlAuctionList = "SELECT auction.auctionID, auction.auctionTitle, auction.itemName, auction.startDate,auction.endDate,
                             auction.startPrice, auction.itemPrice, auction.currentBid, COUNT(bid.bidID), file.filePath
                             FROM auction LEFT JOIN bid ON auction.auctionID = bid.auctionID JOIN file ON auction.auctionID = file.auctionID
-                            WHERE auction.endDate > CURRENT_TIMESTAMP AND auction.auctionStatus = 'active' OR file.fileType = 'coverPhoto' GROUP BY auction.auctionID";
+                            WHERE auction.endDate > CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP > auction.startDate AND auction.auctionStatus = 'active' OR file.fileType = 'coverPhoto' GROUP BY auction.auctionID";
   $stmtAuctionList = mysqli_prepare($conn, $sqlAuctionList) or die( mysqli_error($conn));
   mysqli_stmt_execute($stmtAuctionList);
   mysqli_stmt_bind_result($stmtAuctionList, $aucID, $aucTitle, $aucItem, $aucStartDate, $aucEndDate, $aucStartPrice, $aucItemPrice, $aucCurrentBid,$bids,$coverPhoto);
