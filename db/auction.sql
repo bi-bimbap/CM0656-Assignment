@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 27, 2017 at 01:30 AM
+-- Generation Time: Nov 27, 2017 at 04:15 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.0.15
 
@@ -45,7 +45,7 @@ CREATE TABLE `auction` (
 
 INSERT INTO `auction` (`auctionID`, `auctionTitle`, `itemName`, `itemDesc`, `startDate`, `endDate`, `startPrice`, `itemPrice`, `currentBid`, `auctionStatus`) VALUES
 (1, 'Test Auction', 'Item A', 'This is an item.', '2017-11-13 12:55:09', '2017-11-30 00:00:00', 50, 100, 0, 'ended'),
-(2, 'Auction 2', 'Item B', 'This is an item.', '2017-11-13 12:55:12', '2017-11-30 00:00:00', 20, NULL, 0, 'active'),
+(2, 'Auction 2', 'Item B', 'This is an item.', '2017-11-13 12:55:12', '2017-11-26 00:00:00', 20, NULL, 100, 'active'),
 (3, '123', '123', '123', '2017-11-25 22:50:37', '2017-12-22 22:30:38', 123, 0, 0, ''),
 (4, 'Minimal Black Mug that designed by Ima!', 'Mug with Ima\'s Initial', 'Minimal Black Mug that designed by Ima!', '2017-11-28 23:10:18', '2017-11-27 14:05:18', 20, 0, 0, ''),
 (6, 'abc', 'abc', 'abc', '2017-11-28 07:25:44', '2017-11-30 22:25:44', 1000, 0, 0, ''),

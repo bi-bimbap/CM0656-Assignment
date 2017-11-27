@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 27, 2017 at 01:31 AM
+-- Generation Time: Nov 27, 2017 at 04:15 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.0.15
 
@@ -47,7 +47,11 @@ INSERT INTO `bid` (`bidID`, `userID`, `auctionID`, `bidAmount`, `bidStatus`, `bi
 (5, 3, 2, 10, 'active', '0000-00-00 00:00:00'),
 (6, 1, 2, 123, 'active', '2017-11-27 00:00:00'),
 (7, 3, 2, 125, 'active', '2017-11-27 00:00:00'),
-(8, 1, 1, 100, 'buyItNow', '2017-11-27 01:24:24');
+(8, 1, 1, 100, 'buyItNow', '2017-11-27 01:24:24'),
+(9, 1, 2, 10, 'active', '2017-11-16 00:00:00'),
+(10, 42, 2, 30, 'active', '2017-11-17 00:00:00'),
+(11, 46, 2, 50, 'active', '2017-11-18 00:00:00'),
+(12, 1, 2, 100, 'active', '2017-11-19 00:00:00');
 
 --
 -- Indexes for dumped tables
@@ -67,7 +71,7 @@ ALTER TABLE `bid`
 -- AUTO_INCREMENT for table `bid`
 --
 ALTER TABLE `bid`
-  MODIFY `bidID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `bidID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
