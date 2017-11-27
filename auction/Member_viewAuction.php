@@ -5,7 +5,7 @@ include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
-$environment = LOCAL; //TODO: Change to server
+$environment = WEB; //TODO: Change to server
 
 if(isset($_GET['aucID'])){
   //Decode url-encoded string
