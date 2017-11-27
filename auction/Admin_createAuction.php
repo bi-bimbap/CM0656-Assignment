@@ -24,7 +24,10 @@ $environment = LOCAL; //TODO: Change to server
     <style>
     #inputBuyItNow { display: none; }
     </style>
-
+<?php
+if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
+(isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin"))) {
+?>
 <script type="text/javascript">
 $(document).ready(function() {
   var dateToday = new Date();
@@ -307,6 +310,9 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
 
 
 <?php
+} else {
+  echo "Sorry you have no permission to access to this page.";
+}
 echo makeFooter("../");
 echo makePageEnd();
 ?>

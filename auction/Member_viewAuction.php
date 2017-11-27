@@ -79,8 +79,6 @@ echo makeHeader($aucTitle);
 <?php
 if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) && (isset($_SESSION['userID'])) &&
 (isset($_SESSION['userType']) && ($_SESSION['userType'] == "admin" || $_SESSION['userType'] == "mainAdmin" || $_SESSION['userType'] == "senior" ))) {
-
-
 ?>
 <script>
 $(document).ready(function() {
