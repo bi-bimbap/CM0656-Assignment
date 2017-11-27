@@ -21,6 +21,8 @@ $environment = WEB;
 <!-- <script src='../scripts/bootstrap.js'></script> -->
 <!-- <script src='../scripts/jquery.dataTables.min.js'></script> -->
 <script src="../scripts/jquery.js"></script>
+<div class='content'>
+<div class='container'>
 
 <?php
   //retrieve selected messageID
@@ -104,7 +106,8 @@ $environment = WEB;
       }
     }
 ?>
-
+</div>
+</div>
 <?php
 echo makeFooter("../");
 echo makePageEnd();

@@ -21,7 +21,8 @@ $environment = WEB;
 <!-- <script src='../scripts/bootstrap.js'></script> -->
 <!-- <script src='../scripts/jquery.dataTables.min.js'></script> -->
 <script src="../scripts/jquery.js"></script>
-
+<div class='content'>
+<div class='container'>
 <?php
   //Validation - Only admin can view "Create New Thread " button
   if((isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true) &&
@@ -29,7 +30,11 @@ $environment = WEB;
 
     echo
     "<form method='post' action='Admin_createThread.php'>
-      <input type='submit' value='Create New Thread' name='createThread_submit' />
+      <input type='submit' value='Create New Thread' name='createThread' />
+    </form>";
+
+    echo "<form method='post' action='Admin_manageInappropriate.php'>
+      <input type='submit' value='Add Inappropriate Phrase' name='addInappropriate' />
     </form>";
   }
 ?>
@@ -50,7 +55,7 @@ $environment = WEB;
 
 <?php
     $sqlDiscussion = "SELECT discussion_thread.threadID, discussion_thread.threadName,
-                     discussion_thread.threadDateTime, user.username
+                     discussion_thread.threadDateTime, user.fullName
                     FROM discussion_thread
                     INNER JOIN user ON discussion_thread.userID = user.userID
                     ORDER BY discussion_thread.threadDateTime DESC";
@@ -62,7 +67,7 @@ $environment = WEB;
 						{ // Start looping table row
               $ThreadID = $rows['threadID'];
               $ThreadName = $rows['threadName'];
-              $admin_usr = $rows['username'];
+              $admin_usr = $rows['fullName'];
               $createdDateTime = $rows['threadDateTime'];
 
                 //small process to calculate total message
@@ -91,6 +96,8 @@ $environment = WEB;
     mysqli_close($conn);
 ?>
 </table>
+</div>
+</div>
 </div>
 
 <?php

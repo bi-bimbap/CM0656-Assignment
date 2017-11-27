@@ -1,4 +1,3 @@
-<!-- TODO: Feature to allow mainAdmin to bring back removed admin (Consider scenario where he/she remove pending admin, if bring back how to do?) -->
 <?php
 // ini_set("session.save_path", ""); //TODO: comment out
 session_start();
@@ -26,15 +25,15 @@ $environment = WEB; //TODO: change to server
 <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i" rel="stylesheet">
 <link rel="stylesheet" href="../css/stylesheet.css" type="text/css" />
 
-
 <!-- FOR FANCY BOS  -->
 	<link rel="stylesheet" href="../assests/bootstrap/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="../assests/font-awesome/css/font-awesome.min.css">
 	<link rel="stylesheet" href="../assests/jquery-ui/jquery-ui.min.css">
 	<script src="../assests/jquery-ui/jquery-ui.min.js"></script>
-	<link rel="stylesheet" href="../assests/fancybox/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+	<link rel="stylesheet" href="../assests/fancybox/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />    
     <script type="text/javascript" src="../assests/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
+	
+	
 <div class="content">
 	<div class="container">
 		<?php //Only show content to admin/main admin
@@ -171,7 +170,16 @@ $environment = WEB; //TODO: change to server
 									}
 								}
 							},
-							{ data: null, defaultContent: '<button id="btnDeleteAdmin">Delete</button>' }
+							{
+								mRender: function ( data, type, row ) {
+									if (row.userStatus != "banned") {
+										return '<button id="btnDeleteAdmin">Delete</button>';
+									}
+									else {
+										return '';
+									}
+								}
+							},
 						],
 						columnDefs: [
 							{
@@ -213,6 +221,7 @@ $environment = WEB; //TODO: change to server
 								else if (firstChar == "5") { //Unable to add new admin
 									alert(message);
 								}
+								tblAdminList.ajax.reload(); //Reload data table
 							}
 						});
 					});
@@ -487,8 +496,8 @@ $environment = WEB; //TODO: change to server
 								</div>
 
 								<div class="modal-footer">
-									<input type="submit" class="btn" id="btnCancelBanActive" data-dismiss="modal" name="btnCancelBanActive" value="Cancel" />
-									<input type="submit" class="btn btn-primary" id="btnBanActiveMember" name="btnBanActiveMember" value="Confirm" />
+									<input type="button" class="btn" id="btnCancelBanActive" data-dismiss="modal" name="btnCancelBanActive" value="Cancel" />
+									<input type="button" class="btn btn-primary" id="btnBanActiveMember" name="btnBanActiveMember" value="Confirm" />
 								</div>
 							</div>
 							<!-- End popup modal content -->
@@ -512,12 +521,12 @@ $environment = WEB; //TODO: change to server
 									<label id='lblEmail'></label>
 									<label id='lblUserID' hidden></label>
 									<label id='lblFullName' hidden></label>
-									<input type="text" class="form-control" id='txtEmail' name='txtEmail' value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled/>
+									<input type="text" class="form-control" id='txtEmail' name='txtEmail' value="<?php if (isset($_POST['txtEmail'])) echo $_POST['txtEmail']; ?>" data-parsley-required="true" data-parsley-errors-messages-disabled autofocus/>
 								</div>
 
 								<div class="modal-footer">
-									<input type="submit" class="btn" id="btnCancelEmail" data-dismiss="modal" name="btnCancelEmail" value="Cancel" />
-									<input type="submit" class="btn btn-primary" id="btnUpdateEmail" name="btnUpdateEmail" value="Confirm" />
+									<input type="button" class="btn" id="btnCancelEmail" data-dismiss="modal" name="btnCancelEmail" value="Cancel" />
+									<input type="button" class="btn btn-primary" id="btnUpdateEmail" name="btnUpdateEmail" value="Confirm" />
 								</div>
 							</div>
 							<!-- End popup modal content -->

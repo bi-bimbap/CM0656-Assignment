@@ -36,7 +36,8 @@ cursor: hand;
 }
 
 </style>
-
+<div class='content'>
+<div class='container'>
 <!-- Reply Message -->
 <script>
 function myFunction(msgID,threadID,userID) {
@@ -83,8 +84,7 @@ function myFunction(msgID,threadID,userID) {
 <!--*******************************************************************************************************************************************************
       DISCUSSION BOARD: Messages
 *******************************************************************************************************************************************************-->
-<div class='content'>
-<div class='container'>
+
 <div class='message-group'>
 <table id="t01">
 

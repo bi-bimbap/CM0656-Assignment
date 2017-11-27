@@ -5,12 +5,12 @@ include '../db/database_conn.php';
 include_once '../config.php';
 require_once('../controls.php');
 require_once('../functions.php');
-echo makePageStart("Create Inappropriate Phrase");
+echo makePageStart("Add Inappropriate Phrase");
 echo makeWrapper("../");
 echo "<form method='post'>" . makeLoginLogoutBtn("../") . "</form>";
 echo makeProfileButton("../");
 echo makeNavMenu("../");
-echo makeHeader("Create Inappropriate Phrase");
+echo makeHeader("Add Inappropriate Phrase");
 $environment = WEB;
 ?>
 <!-- CSS style -->
@@ -29,7 +29,7 @@ $environment = WEB;
 *******************************************************************************************************************************************************-->
     <form id="InappropriatePhrase" data-parsley-validate method="post">
           <p>Inappropriate Phrase: <input type="text" id="txtInappropriate" name="txtInappropriate" data-parsley-required="true" /></p>
-          <input type='submit' id='addInappropriate' name='addInappropriate' value='Add' />
+          <input type='submit' id='addInappropriate_submit' name='addInappropriate_submit' value='Add' />
       </br>
       </br>
       </br>
@@ -43,7 +43,7 @@ $environment = WEB;
       /**********************************************************************************************************************************************************
             DISCUSSION BOARD: Create New Inappropriate Phrase "Add" Button Function
       **********************************************************************************************************************************************************/
-            if(isset($_POST['addInappropriate']) && !empty($_POST['txtInappropriate'])){
+            if(isset($_POST['addInappropriate_submit']) && !empty($_POST['txtInappropriate'])){
 
               //obtain user input
               $inappropriate_phrase = filter_has_var(INPUT_POST,'txtInappropriate') ? $_POST['txtInappropriate']: null;
@@ -59,7 +59,7 @@ $environment = WEB;
               for($i=0; $i<$length; $i++){
                 $replacementWord.="*";
               }
-			  
+
               //Insert user's input into database
                 $sqlInappropriate = "INSERT INTO discussion_inappropriate (InappropriatePhrase, replacementWord)	VALUES (?,?)";
                 $stmtInappropriate = mysqli_prepare($conn, $sqlInappropriate) or die( mysqli_error($conn));
