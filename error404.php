@@ -3,6 +3,7 @@ require_once('controls.php');
 echo makePageStart("Page Not Found");
 echo makeWrapper("");
 echo makeHeader("Page Not Found");
+echo "</div>";
 ?>
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -14,7 +15,7 @@ echo makeHeader("Page Not Found");
 
 <div class="content">
   <div class="container">
-    <img src="images/Error-404.png" />
+    <center><img src="images/Error-404.png" width='500' height='350' /></center>
   </div>
 </div>
 

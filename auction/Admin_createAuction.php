@@ -295,7 +295,8 @@ if (isset($_POST['btnSubmit'])) { //Clicked on submit button
     }
   }
 
-  if ($auctionStatus = true && $fileStatus = true && $photoStatus = true && $coverStatus = true) {
+//&& $fileStatus = true && $photoStatus = true && $coverStatus = true
+  if ($auctionStatus) {
     echo "<script>alert(\"Auction has been created succesfully!\");";
     echo "top.window.location='auctionList.php';</script>";
   }

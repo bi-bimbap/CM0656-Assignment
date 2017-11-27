@@ -52,7 +52,7 @@ $(document).ready(function() {
         <input type="text" placeholder="name@email.com" id="txtEmail" name="txtEmail" data-parsley-required="true" data-parsley-type="email" data-parsley-errors-messages-disabled>
       </div>
 
-      <div id="button"><button type="button" id='btnSearch' name="btnSearch">Search</button></div>
+      <button type="button" id='btnSearch' name="btnSearch">Search</button>
     </form>
   </div>
 </div>
